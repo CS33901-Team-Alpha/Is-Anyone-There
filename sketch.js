@@ -2,12 +2,37 @@ let R;
 
 let v1, v2, v3, v4;
 let room;
+let monitor;
+
+function preload() {
+  // Register all models you want to use
+  importSprites.define([
+    { name: "monitor", type: "model", path: "assets/object/monitorIAT.obj", normalize: true }
+  ]);
+
+  // Actually load them
+  importSprites.preloadAll();
+}
 
 function setup() {
-    createCanvas(windowWidth, windowHeight);
+    createCanvas(windowWidth, windowHeight, WEBGL);
     R = new Renderer();
     setupRoom();
+
+    // Create a sprite instance
+    monitorSprite = importSprites.create("monitor", {
+        x: -width/2 + 50,   // move left (–X) + a margin
+        y: -height/2 + 50,  // move up (–Y) + a margin
+        z: 0,
+        scale: 0.5,
+        rx: PI,   // keep upright
+        spinY: 1
+    });
+    R.add(monitorSprite, monitorSprite.layer);
 }
+
+
+  
 
 function draw() {
     background(20);
