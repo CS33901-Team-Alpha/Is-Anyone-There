@@ -52,9 +52,7 @@ function mousePressed() {
 function keyPressed() {
     R.dispatch("keyPressed");
 }
-function mousePressed() {
-    R.dispatch("mousePressed")
-}
+
 function mouseReleased() {
     R.dispatch("mouseReleased");
 }
