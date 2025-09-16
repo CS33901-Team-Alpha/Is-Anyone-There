@@ -1,7 +1,7 @@
 let R;
 
-let v1, v2, v3, v4;
-let room;
+// let v1, v2, v3, v4;
+// let room;
 let monitor;
 
 function preload() {
@@ -17,7 +17,7 @@ function preload() {
 function setup() {
     createCanvas(windowWidth, windowHeight, WEBGL);
     R = new Renderer();
-    setupRoom();
+    // setupRoom();
 
     // Create a sprite instance
     monitorSprite = importSprites.create("monitor", {
@@ -58,15 +58,15 @@ function mouseReleased() {
 }
 
 function setupRoom() {
-    v1 = new EventView();
-    v2 = new TimerView();
-    v3 = new MoveView();
-    v4 = new View(238, 130, 238, "Room 4");
+    // v1 = new EventView();
+    // v2 = new TimerView();
+    // v3 = new MoveView();
+    // v4 = new View(238, 130, 238, "Room 4");
 
-    room = new ViewManager();
-    room.addView(v1);
-    room.addView(v2);
-    room.addView(v3);
-    room.addView(v4);
-    R.add(room);
+    // room = new ViewManager();
+    // room.addView(v1);
+    // room.addView(v2);
+    // room.addView(v3);
+    // room.addView(v4);
+    // R.add(room);
 }
