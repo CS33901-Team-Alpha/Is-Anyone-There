@@ -1,6 +1,7 @@
 let R;
 let gameRoom;
 let roomAssets = {}; // Centralized asset storage
+let lantern;
 
 function preload() {
     // Load all room assets
@@ -11,6 +12,8 @@ function setup() {
     createCanvas(windowWidth, windowHeight);
     R = new Renderer();
     
+    const lantern = new Sprite2D("assets/object/lanternsprite.png", 100, 100, { scale: 0.5 });
+    R.add(lantern);
     // Initialize the game room with loaded assets
     initializeGameRoom();
 }
