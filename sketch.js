@@ -3,7 +3,6 @@ let R;
 let fcView, otherView;
 let room;
 // just for temporary development debugging
-let preloadedAsset;
 let backgroundFC;
 
 let startScreen; 
@@ -30,7 +29,7 @@ function setup() {
 
 
     
-    setupRoom(preloadedAsset);
+    setupRoom();
 }
 
 function draw() {
@@ -80,8 +79,8 @@ function mouseReleased() {
     }
 }
 
-function setupRoom(temp) {
-    fcView = new FileCabinetView(backgroundFC, temp);
+function setupRoom() {
+    fcView = new FileCabinetView(backgroundFC);
     otherView = new View(238, 130, 238, "Some other orientation...");
     v1 = new ComputerView();
     v2 = new TimerView();

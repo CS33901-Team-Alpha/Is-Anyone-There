@@ -104,12 +104,11 @@ class OpenCabinetUIObject {
 
 
 class FileCabinetView extends View {
-    constructor(backgroundImg, fcImg, cabinetCount=4) {
+    constructor(backgroundImg, cabinetCount=4) {
         super(172, 170, 172, "");
         this.fadoutRate = 0.03 // smaller, slower
         this.secretNumber = "8"; // number to display
         this.cabinets = []
-        this.fcImg = fcImg
         this.backgroundImg = backgroundImg
 
         // fadeout and stuff
