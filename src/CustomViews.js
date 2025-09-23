@@ -257,7 +257,6 @@ class TimerView extends View {
         this.timer = new Timer(30000);
         this.timeLabel = 0;
     }
-
     draw(){
         super.draw();
         push();

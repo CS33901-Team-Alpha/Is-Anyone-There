@@ -11,8 +11,7 @@ let showStartScreen = true;
 let gameFont; // could be changed, just adding to make startScreen look better
 
 function preload() { 
-    gameFont = loadFont('assets/font/PressStart2P-Regular.ttf');
-    backgroundFC = loadImage('assets/background/EastWallNoFC&Paper.png');
+    gameFont = loadFont('assets/font/PressStart2P-Regular.ttf')
 }
 
 function setup() {
@@ -29,7 +28,7 @@ function setup() {
 
 
     
-    setupRoom();
+    R.add(new ScreenTimer(), 99);
 }
 
 function draw() {
@@ -86,12 +85,14 @@ function setupRoom() {
     v2 = new TimerView();
     v3 = new MoveView();
     v4 = new View(238, 130, 238, "Room 4");
+    fcView = new FileCabinetView();
+    otherView = new View(238, 130, 238, "Some other orientation...");
 
     room = new ViewManager();
     room.addView(v1);
     room.addView(v2);
     room.addView(v3);
-    room.addView(v4)
+    room.addView(v4);
     room.addView(fcView);
     room.addView(otherView);
     R.add(room);

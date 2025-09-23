@@ -4,6 +4,7 @@ class FileCabinetObject {
         this.x = x;
         this.y = y;
         
+        
         this.cabinetSprite = new Sprite2D(imageFile, x, y, {width: xsize, height: ysize})
 
         this.xsize = xsize;
@@ -104,12 +105,13 @@ class OpenCabinetUIObject {
 
 
 class FileCabinetView extends View {
-    constructor(backgroundImg, cabinetCount=4) {
+    constructor(cabinetCount=4) {
         super(172, 170, 172, "");
         this.fadoutRate = 0.03 // smaller, slower
         this.secretNumber = "8"; // number to display
         this.cabinets = []
-        this.backgroundImg = backgroundImg
+
+        this.backgroundImg = loadImage('../assets/background/EastWallNoFC&Paper.png')
 
         // fadeout and stuff
         this.lockedVisibility = 0;
