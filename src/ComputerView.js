@@ -213,6 +213,12 @@ class ComputerView extends View {
         else if(keyCode === BACKSPACE) {
             this.givenCommand_ = this.givenCommand_.substring(0, this.givenCommand_.length - 1); 
         }
+        else if(keyCode === DELETE || keyCode === RETURN || keyCode === TAB || 
+            keyCode === ESCAPE || keyCode ===  SHIFT || keyCode ===  CONTROL || 
+            keyCode === OPTION || keyCode ===  ALT || keyCode === UP_ARROW || 
+            keyCode === DOWN_ARROW || keyCode === LEFT_ARROW || keyCode === RIGHT_ARROW) {
+            this.givenCommand_ = this.givenCommand_;
+        }
         else {
             this.givenCommand_ = this.givenCommand_ + key;
         }
