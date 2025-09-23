@@ -24,21 +24,28 @@ class Timer {
 
 class ScreenTimer {
     constructor(onEnd = () => {}) {
-        this.timer = new Timer(300000);   
+        this.timer = new Timer(61000);   
         this.label = '';
         this.onEnd = onEnd;
+        this.paused = false;
+    }
+
+    pause() {
+        this.paused = true;
     }
 
     update(dt){
-        if (!this.timer.isFinished()) {
-            this.label = this.timer.getSeconds() + ' s';
-            let secs = floor(this.timer.getRemaining() / 1000);
-            let m = floor(secs / 60);
-            let s = secs % 60;
-            this.label = `${m}:${nf(s, 2)}`;
-        } else {
-            this.label = '0:00';
-            this.onEnd();
+        if(!this.paused) {
+            if (!this.timer.isFinished()) {
+                this.label = this.timer.getSeconds() + ' s';
+                let secs = floor(this.timer.getRemaining() / 1000);
+                let m = floor(secs / 60);
+                let s = secs % 60;
+                this.label = `${m}:${nf(s, 2)}`;
+            } else {
+                this.label = '0:00';
+                this.onEnd();
+            }
         }
     }
 
@@ -52,7 +59,7 @@ class ScreenTimer {
         let tw = textWidth(this.label) + pad * 2;
         let th = textAscent() + textDescent() + pad * 2;
 
-        let x = 10;
+        let x = 1100;
         let y = 10;
 
         rectMode(CORNER);

@@ -6,6 +6,8 @@ let room;
 let startScreen; 
 let showStartScreen = true; 
 
+let countDown;
+
 let gameFont; // could be changed, just adding to make startScreen look better
 
 function preload() { 
@@ -23,10 +25,8 @@ function setup() {
 
         textFont('sans-serif') // resetting font for the game itself 
     });
-
-
-    
-    R.add(new ScreenTimer(), 99);
+    countDown = new ScreenTimer()
+    R.add(countDown, 99);
 }
 
 function draw() {
@@ -78,18 +78,14 @@ function mouseReleased() {
 
 function setupRoom() {
     v1 = new ComputerView();
-    v2 = new TimerView();
-    v3 = new MoveView();
-    v4 = new View(238, 130, 238, "Room 4");
-    fcView = new FileCabinetView();
-    otherView = new View(238, 130, 238, "Some other orientation...");
+    v2 = new BlankWall('assets/WestWall.png')
+    v3 = new BlankWall('assets/SouthWall.png')
+    v4 = new FileCabinetView();
 
     room = new ViewManager();
     room.addView(v1);
     room.addView(v2);
     room.addView(v3);
     room.addView(v4);
-    room.addView(fcView);
-    room.addView(otherView);
     R.add(room);
 }
