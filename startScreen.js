@@ -31,15 +31,18 @@ class StartScreen {
     }
 
     drawStarField() {
+        push()
         for (let star of this.stars) {
             star.alpha += random(-5,5);
             stroke(255, star.alpha); // white, transparent
             strokeWeight(star.size);
             point(star.x, star.y);
         }
+        pop()
     }
 
     drawShootingStar() {
+        push()
         if (this.step >= 2.5) {
             // make a new star after the last one ends
             this.fromX = random(windowWidth);
@@ -72,6 +75,7 @@ class StartScreen {
 
             this.step = nextStep; // go to the next step -> continue animation
         }
+        pop()
     }
 
     // made this function to not conflict with existing Button class 

@@ -13,6 +13,8 @@ class ComputerView extends View {
         this.ScreenHeight_ = height - 100;
         this.PinWidth_ = width/2;
         this.PinHeight_ = this.ScreenHeight_;
+        
+        this.textNotifHandler = new TextNotificationHandler(30, 150)
 
         this.bttn = new ConditionalButton(width/7, height/20, 800,() => {
             this.openComputer();
@@ -77,6 +79,10 @@ class ComputerView extends View {
         //-------------------------Console Interaction---------------------
         this.givenCommand_ = "";
         this.EnterPressed_ = false;
+    }
+
+    update(dt){
+        this.textNotifHandler.update(dt)
     }
 
     draw(){
@@ -175,6 +181,7 @@ class ComputerView extends View {
 
     openPin() {
         this.PinIsOpen_ = true;
+        this.textNotifHandler.addText('You have opened the super secret pinpad.')
     }
 
     closePin() {
@@ -247,6 +254,8 @@ class ComputerView extends View {
         R.remove(this.pinbttn7);
         R.remove(this.pinbttn8);
         R.remove(this.pinbttn9);
+
+        this.textNotifHandler.cleanup()
     }
 
 }

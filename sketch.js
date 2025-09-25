@@ -80,20 +80,10 @@ function mouseReleased() {
 
 function setupRoom() {
     fcView = new FileCabinetView(backgroundFC);
-    otherView = new View(238, 130, 238, "Some other orientation...");
     v1 = new ComputerView();
-    v2 = new TimerView();
-    v3 = new MoveView();
-    v4 = new View(238, 130, 238, "Room 4");
-    fcView = new FileCabinetView();
-    otherView = new View(238, 130, 238, "Some other orientation...");
 
     room = new ViewManager();
     room.addView(v1);
-    room.addView(v2);
-    room.addView(v3);
-    room.addView(v4);
     room.addView(fcView);
-    room.addView(otherView);
     R.add(room);
 }

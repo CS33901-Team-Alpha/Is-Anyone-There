@@ -107,16 +107,12 @@ class OpenCabinetUIObject {
 class FileCabinetView extends View {
     constructor(cabinetCount=4) {
         super(172, 170, 172, "");
-        this.fadoutRate = 0.03 // smaller, slower
         this.secretNumber = "8"; // number to display
         this.cabinets = []
 
         this.backgroundImg = loadImage('../assets/background/EastWallNoFC&Paper.png')
 
-        // fadeout and stuff
-        this.lockedVisibility = 0;
-        this.holdFadeout = false;
-        this.timer = 0;
+        this.textNotifHandler = new TextNotificationHandler(30, 150)
 
         let randx;
         let randy;
@@ -142,8 +138,7 @@ class FileCabinetView extends View {
                     }
                     else{
                         console.log('This file cabinet is locked.')
-                        this.lockedVisibility = 1;
-                        this.holdFadeout = true;
+                        this.textNotifHandler.addText('This file cabinet is locked.')
                     }
                 }
             ))
@@ -174,28 +169,29 @@ class FileCabinetView extends View {
         // }
 
         // displaying locked cabinet
-        if(this.holdFadeout == false){
-            this.lockedVisibility = this.lockedVisibility * (1-this.fadoutRate);
-            if(this.lockedVisibility < 0.1){
-                this.lockedVisibility = 0; 
-            }
-        }
+        // if(this.holdFadeout == false){
+        //     this.lockedVisibility = this.lockedVisibility * (1-this.fadoutRate);
+        //     if(this.lockedVisibility < 0.1){
+        //         this.lockedVisibility = 0; 
+        //     }
+        // }
 
-        fill(0, 0, 0, 255*this.lockedVisibility)
-        textSize(30)
-        text("This file cabinet is locked...", 30, 60)
+        // fill(0, 0, 0, 255*this.lockedVisibility)
+        // textSize(30)
+        // text("This file cabinet is locked...", 30, 60)
     }
 
     update(dt) {
-        if(this.holdFadeout){
-            this.timer += dt;
+        this.textNotifHandler.update(dt)
+        // if(this.holdFadeout){
+        //     this.timer += dt;
 
-            // if text has been on screen for 1 seconds, enable fadeout
-            if(this.timer > 1){
-                this.holdFadeout = false;
-                this.timer = 0;
-            }
-        }
+        //     // if text has been on screen for 1 seconds, enable fadeout
+        //     if(this.timer > 1){
+        //         this.holdFadeout = false;
+        //         this.timer = 0;
+        //     }
+        // }
     }
 
     keyPressed() {
@@ -217,5 +213,7 @@ class FileCabinetView extends View {
             R.remove(c)
         }
         R.remove(this.uiObject, 100)
+
+        this.textNotifHandler.cleanup()
     }
 }
