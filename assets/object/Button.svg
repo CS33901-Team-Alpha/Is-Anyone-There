@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<svg version="1.1" width="88" height="88" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges">
+<rect x="0" y="0" width="88" height="11" fill="#E4EBEF" />
+<rect x="0" y="11" width="22" height="11" fill="#E4EBEF" />
+<rect x="22" y="11" width="44" height="11" fill="#EF4A4A" />
+<rect x="66" y="11" width="22" height="11" fill="#E4EBEF" />
+<rect x="0" y="22" width="11" height="66" fill="#E4EBEF" />
+<rect x="11" y="22" width="11" height="11" fill="#EF4A4A" />
+<rect x="22" y="22" width="33" height="11" fill="#E62D2D" />
+<rect x="55" y="22" width="22" height="44" fill="#DE2C2C" />
+<rect x="77" y="22" width="11" height="66" fill="#E4EBEF" />
+<rect x="11" y="33" width="11" height="11" fill="#E62D2D" />
+<rect x="22" y="33" width="33" height="44" fill="#DE2C2C" />
+<rect x="11" y="44" width="11" height="22" fill="#DE2C2C" />
+<rect x="11" y="66" width="11" height="11" fill="#C4D2DA" />
+<rect x="55" y="66" width="11" height="11" fill="#DE2C2C" />
+<rect x="66" y="66" width="11" height="11" fill="#C4D2DA" />
+<rect x="11" y="77" width="11" height="11" fill="#E4EBEF" />
+<rect x="22" y="77" width="11" height="11" fill="#C4D2DA" />
+<rect x="33" y="77" width="22" height="11" fill="#ADB7BD" />
+<rect x="55" y="77" width="11" height="11" fill="#C4D2DA" />
+<rect x="66" y="77" width="11" height="11" fill="#E4EBEF" />
+</svg>
