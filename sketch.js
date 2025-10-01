@@ -136,7 +136,7 @@ function setupRoom() {
   // room.addView(computerView);    // 0: North (start here) - pcWall
   // room.addView(boxesView);       // 1: East (right arrow) - boxesWall  
   // room.addView(billboardView);   // 2: South (continue right) - billBoardWall
-  // room.addView(fcView);          // 3: West (continue right, left from start) - cabinetWall
+  room.addView(fcView);          // 3: West (continue right, left from start) - cabinetWall
 
   let spaceWindowView = new SpaceWindowView();
   room.addView(spaceWindowView)

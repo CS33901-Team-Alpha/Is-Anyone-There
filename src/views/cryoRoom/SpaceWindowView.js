@@ -8,11 +8,31 @@ class SpaceWindow{
         this.y = y;
         this.scale = scale;
 
+        // for hitbox, I just manually guessed, we need a good method to calculate these
+        this.width = 6.13
+        this.height = 4.1
+
         this.background = SM.get(img);
         this.background.setPos(this.x, this.y);
         this.background.setScale(this.scale);
 
         this.onClick = onClick;
+
+        // this.highlight = new HighlightEvent(this.x, this.y, this.width, this.height);
+
+        // for window, temporary
+        this.borderSize = 0.15;
+    }
+
+    draw(){
+        const u = VM.u();
+        const v = VM.v();
+
+        push()
+        fill(0,0,0)
+        rect((this.x-this.borderSize) * u, (this.y-this.borderSize) * v,
+         (this.width+this.borderSize*2) * u, (this.height+this.borderSize*2)*v)
+        pop()
     }
 
     isMouseInBounds(mx, my) {
@@ -27,10 +47,12 @@ class SpaceWindow{
     }
 
     onEnter() {
-        R.add(this.background, 3333)
+        R.add(this.background, 15)
+        // R.add(this.highlight)
     }
     onExit() {
         R.remove(this.background);
+        // R.remove(this.highlight)
     }
 
     mousePressed(p) {
@@ -50,10 +72,16 @@ class SpaceWindowView extends View{
         this.background = SM.get("placeholderWall");
         this.background.setSize(16, 9);
 
-        this.wind = new SpaceWindow(5, 1.5, 0.4, 'placeholderWindow')
+        this.textNotif = new TextNotificationHandler(0.5, 0.85, {zind: 20, fadeoutRate: 0.02, holdFadeoutFor: 2});
+
+        this.wind = new SpaceWindow(5, 1.5, 0.4, 'placeholderWindow', (obj) => {
+            console.log('window clicked')
+            this.textNotif.addText('You quietly stare into the emptiness of space, then ask yourself: "Is anyone there?"')
+        })
     }
 
     update(dt){
+        this.textNotif.update(dt)
     }
 
     draw() {
@@ -62,7 +90,7 @@ class SpaceWindowView extends View{
 
     onEnter() {
         R.add(this.background);
-        R.add(this.wind)
+        R.add(this.wind, 15)
 
         // call onenters
         this.wind.onEnter()
@@ -74,5 +102,8 @@ class SpaceWindowView extends View{
 
         // call onexits
         this.wind.onExit()
+
+        // required clean up for notification handler
+        this.textNotif.cleanup()
     }
 }

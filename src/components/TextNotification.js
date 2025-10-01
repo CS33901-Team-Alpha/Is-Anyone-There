@@ -53,19 +53,19 @@ class TextNotificationHandler {
      * 
      * @param {Number} x - x coordinate to place text
      * @param {Number} y - y coordinate to place text
-     * @param {Number} z_ind - z index
-     * @param {Number} fadeoutRate - how fast the text will fade, must be in range (0,1), lower => slower
+     * @param {{zind: Number, fadeoutRate: Number, holdFadeoutFor: Number}} options - options 
      */
-    constructor(x, y, zind=100, fadeoutRate=0.03){
+    constructor(x, y, options={}){
         this.x = x;
         this.y = y;
-        this.z_index = zind;
-        this.fadeoutRate = fadeoutRate
+
+        // defaults for options
+        this.z_index = options.zind ?? 100;
+        this.fadeoutRate = options.fadeoutRate ?? 0.03;
+        this.holdFadeoutFor = options.holdFadeoutFor ?? 1; // how many seconds to hold fadeout for
 
         this.size = 20; // just have it as constant so it's uniform across all views
         this.alphaCutoff = 5; // remove text notif when alpha less than this value
-
-        this.holdFadeoutFor = 1; // how many seconds to hold fadeout for
 
         // each element is an array where index: 0 is the text object, 1 is the timer for that object's fading mechanics
         // will look something like [[textObject1, 0.3],[textObject2, 0.93],[textObject3, 3.1],...]
@@ -102,14 +102,14 @@ class TextNotificationHandler {
 
         // add to front at top
         this.textContainer.unshift([new DisplayText(this.x, this.y, text, this.size), 0])
-        R.add(this.textContainer[0][0], this.zind)
+        R.add(this.textContainer[0][0], this.z_index)
 
     }
 
     // call this in onExit in your view.
     cleanup(){
         for(let i = 0; i < this.textContainer.length; i++){
-            R.remove(this.textContainer[0][i])
+            R.remove(this.textContainer[i][0])
         }
         this.textContainer = [] // wipe array
     }
