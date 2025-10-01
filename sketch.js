@@ -126,11 +126,20 @@ function setupRoom() {
   let fcView = new FileCabinetView();           // West wall (cabinetWall.webp) - behind start
 
   room = new ViewManager();
-  // Add views in navigation order: North -> East -> South -> West
-  room.addView(computerView);    // 0: North (start here) - pcWall
-  room.addView(boxesView);       // 1: East (right arrow) - boxesWall  
-  room.addView(billboardView);   // 2: South (continue right) - billBoardWall
-  room.addView(fcView);          // 3: West (continue right, left from start) - cabinetWall
+
+  /**
+   * NOTE FOR CRYOCHAMBER: I have temporarily commented these views out, just so we can see our cryochamber views for development.
+   * We'll fix this out later for merging with the other rooms when we have the mechanics to switch rooms and all of that.
+   */
+
+  // // Add views in navigation order: North -> East -> South -> West
+  // room.addView(computerView);    // 0: North (start here) - pcWall
+  // room.addView(boxesView);       // 1: East (right arrow) - boxesWall  
+  // room.addView(billboardView);   // 2: South (continue right) - billBoardWall
+  // room.addView(fcView);          // 3: West (continue right, left from start) - cabinetWall
+
+  let spaceWindowView = new SpaceWindowView();
+  room.addView(spaceWindowView)
 
   R.add(room);
 }

@@ -26,6 +26,11 @@ function loadSprites() {
     SM.add("SlidingDoor3", loadImage('assets/object/SlidingDoor3.svg'));
     SM.add("SlidingDoor4", loadImage('assets/object/SlidingDoor4.svg'));
     SM.add("connectionTerminated", loadImage('assets/secrets/henry/connectionTerminated.jpg'));
+
+    // Cryo Chamber Assets
+    SM.add("placeholderWall", loadImage('assets/placeholders/placeholderWall.png'))
+    SM.add("placeholderWindow", loadImage('assets/placeholders/spaceWindow.png'))
+
 }
 
 
