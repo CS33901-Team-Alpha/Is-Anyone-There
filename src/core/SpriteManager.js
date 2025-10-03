@@ -13,6 +13,11 @@ function loadSprites() {
     SM.add("WestWall", loadImage('assets/background/cabinetWall.webp'));
     SM.add("pinpad", loadImage('assets/object/keypad.webp'));
 
+    SM.add("Rm2NorthWall", loadImage('assets/background/NWall.png'));
+    SM.add("Rm2SouthWall", loadImage('assets/background/SWall.png'));
+    SM.add("Rm2WestWall", loadImage('assets/background/WWall.png'));
+    SM.add("Rm2EastWall", loadImage('assets/background/EWall.png'));
+
     SM.add("FileCabinet1", loadImage('assets/object/fileCabinet.webp'));
     SM.add("FileCabinet2", loadImage('assets/object/fileCabinet.webp'));
     SM.add("FileCabinet3", loadImage('assets/object/fileCabinet.webp'));

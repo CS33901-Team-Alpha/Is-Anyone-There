@@ -11,6 +11,7 @@ let activeInterface = null; // tracks if Terminal, Pinpad, or other interface is
 // Views and game elements
 let startScreen;
 let room;
+let room2;
 
 // Assets
 let gameFont;
@@ -118,12 +119,30 @@ function keyPressed() {
   if (R) R.dispatch('keyPressed');
 }
 
+function transitionToRoom2(){
+  if(room){
+    R.selfRemove(room);
+  }
+  setupRoom2();
+  room = room2;
+}
+
+
 function setupRoom() {
   // Create the view instances
   let computerView = new ComputerView();        // North wall (pcWall.webp) - starting view
   let boxesView = new BoxesView();              // East wall (boxesWall.webp) - right from start
   let billboardView = new BillboardView();      // South wall (billBoardWall.webp) - left from start  
   let fcView = new FileCabinetView();           // West wall (cabinetWall.webp) - behind start
+<<<<<<< Updated upstream
+=======
+  let sdView = new SlidingDoorView([{
+    x:12, 
+    y:2.5,
+    scale:0.8, 
+    onTransition: transitionToRoom2
+  }]); 
+>>>>>>> Stashed changes
 
   room = new ViewManager();
   // Add views in navigation order: North -> East -> South -> West
@@ -133,4 +152,22 @@ function setupRoom() {
   room.addView(fcView);          // 3: West (continue right, left from start) - cabinetWall
 
   R.add(room);
+}
+
+function setupRoom2(){
+  let northWall = new NorthWall();
+  let eastWall = new EastWall();
+  let southWall = new SouthWall();
+  let westWall = new WestWall();
+
+  room2 = new ViewManager();
+  // Add views in navigation order: North -> East -> South -> West
+  room2.addView(northWall);      // 0: North (start here) - pcWall
+  room2.addView(eastWall);       // 1: East (right arrow) - boxesWall  
+  room2.addView(southWall);      // 2: South (continue right) - billBoardWall
+  room2.addView(westWall);       // 3: West (continue right, left from start) - cabinetWall
+  
+
+  R.add(room2);
+
 }

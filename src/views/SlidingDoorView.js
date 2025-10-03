@@ -7,11 +7,22 @@ const doorClickHeight = 6;
 const frameDuration = 0.1; 
 
 class SlidingDoor {
+<<<<<<< Updated upstream
     constructor(x, y, scale, onClick = () => {}) {
+=======
+    constructor(x, y, scale, onClick = () => {}, targetView = null, onTransition = null) {
+>>>>>>> Stashed changes
         this.x = x;
         this.y = y;
         this.scale = scale;
         this.onClick = onClick;
+<<<<<<< Updated upstream
+=======
+        this.targetView = targetView; 
+        this.onTransition = onTransition,
+        this.highlight = new HighlightEvent(this.x, this.y, doorWidth, doorHeight);
+
+>>>>>>> Stashed changes
 
 
         // loading frames of sliding door
@@ -46,9 +57,26 @@ class SlidingDoor {
             !this.animating
         ) {
             this.toggle();
+<<<<<<< Updated upstream
             this.onClick(this);
+=======
+
+  
+                // Use a setTimeout to allow the animation to play
+                setTimeout(() => {
+                // Check if the onTransition function exists and call it
+                if (typeof this.onTransition === 'function') {
+                    this.onTransition();
+                }
+                // You can keep the targetView logic as a fallback
+                else if (this.targetView) {
+                    room.gotoView(this.targetView);
+                }
+            }, 450); 
+>>>>>>> Stashed changes
         }
     }
+    
 
     // switching between open and closed 
     toggle() {
@@ -108,7 +136,13 @@ class SlidingDoorView extends View {
             config.x,
             config.y, 
             config.scale, 
+<<<<<<< Updated upstream
             config.onClick ?? (() => {})
+=======
+            config.onClick ?? (() => {}),
+            config.targetView ?? null, 
+            config.onTransition ?? null
+>>>>>>> Stashed changes
         ));
         }
 
@@ -132,6 +166,7 @@ class SlidingDoorView extends View {
     }
 
     mousePressed(p) {
+        console.log("sliding door clicked")
         this.door.forEach(door => door.mousePressed(p));
     }
 }
