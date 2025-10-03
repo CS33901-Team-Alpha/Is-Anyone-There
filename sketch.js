@@ -134,15 +134,12 @@ function setupRoom() {
   let boxesView = new BoxesView();              // East wall (boxesWall.webp) - right from start
   let billboardView = new BillboardView();      // South wall (billBoardWall.webp) - left from start  
   let fcView = new FileCabinetView();           // West wall (cabinetWall.webp) - behind start
-<<<<<<< Updated upstream
-=======
   let sdView = new SlidingDoorView([{
     x:12, 
     y:2.5,
     scale:0.8, 
     onTransition: transitionToRoom2
   }]); 
->>>>>>> Stashed changes
 
   room = new ViewManager();
   // Add views in navigation order: North -> East -> South -> West
