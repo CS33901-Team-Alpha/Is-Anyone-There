@@ -147,6 +147,7 @@ function setupRoom() {
   room.addView(boxesView);       // 1: East (right arrow) - boxesWall  
   room.addView(billboardView);   // 2: South (continue right) - billBoardWall
   room.addView(fcView);          // 3: West (continue right, left from start) - cabinetWall
+  room.addView(sdView);
 
   R.add(room);
 }
