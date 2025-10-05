@@ -108,6 +108,8 @@ class FileCabinetView extends View {
 
         this.textNotificationHandler = new TextNotificationHandler(0.5, 0.85);
         this.secretId = 2; // index of cabinet that will be unlocked
+
+        this.testText = new TextInput(5, 3.5, 6, 1);
         
         this.cabinetUI = new OpenCabinetUI();
 
@@ -142,6 +144,7 @@ class FileCabinetView extends View {
     onEnter() {
         // add objects to renderer
         R.add(this.background);
+        R.add(this.testText, 5);
         for(let i = 0; i < 4; i++){
             R.add(this.allFileCabinets[i])
         }
@@ -153,6 +156,7 @@ class FileCabinetView extends View {
 
     onExit() {
         R.remove(this.background);
+        R.remove(this.testText);
         
         // make sure we remove UI on view change
         this.cabinetUI.onRemove()
