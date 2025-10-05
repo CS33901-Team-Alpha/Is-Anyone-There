@@ -40,6 +40,9 @@ class TextInput {
         if (keyCode === BACKSPACE) {
             this.text = this.text.slice(0, -1);
         }
+        if (keyCode === ENTER || keyCode === RETURN) {
+            this.text = "";
+        }
         else if (key.length === 1){
             this.text += typedKey;
         }
