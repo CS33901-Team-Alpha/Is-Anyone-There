@@ -58,6 +58,9 @@ function setup() {
 
   R = new Renderer();
 
+  // insert checkers here
+  GS.checkFor("ended", () => { return GS.is("pin entered") || GS.is("timeout"); })
+
   startScreen = new StartScreenView(() => {
     if (startScreenMusic && startScreenMusic.isPlaying()) startScreenMusic.stop();
     R.selfRemove(startScreen);
@@ -85,7 +88,7 @@ function draw() {
     endScreen = new EndScreenView(GS.is("pin entered")); //update endscreen state
   }
 
-  if(GS.is("pin entered") || GS.is("timeout")) {
+  if(GS.is("ended")) {
     ended = true;
     R.add(endScreen, 999);
   }

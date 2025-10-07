@@ -13,11 +13,15 @@ class GameState {
     // void, adds
     set(str) {
         this.states.add(str);
-        //this.update();
+        this.update();
+    }
+    // private and to prevent infinite looping
+    set_(str) {
+        this.states.add(str);
     }
     // bool, only on string in set
     is(str) {
-        if(str in this.states) {
+        if(this.states.has(str)) {
             return true;
         }
         return false;
@@ -30,7 +34,7 @@ class GameState {
     update() {
         for(const [name,f] of this.checks) {
             if(f()) {
-                this.set(name);
+                this.set_(name);
             }
         }
     }
