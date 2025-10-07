@@ -82,10 +82,10 @@ function draw() {
 
   const dt = deltaTime / 1000;
   if(!ended) {
-    endScreen = new EndScreenView(GS.getSolved()); //update endscreen state
+    endScreen = new EndScreenView(GS.is("pin entered")); //update endscreen state
   }
 
-  if(GS.getSolved() || GS.getTimer()) {
+  if(GS.is("pin entered") || GS.is("timeout")) {
     ended = true;
     R.add(endScreen, 999);
   }
@@ -156,7 +156,7 @@ function setupWorld() {
   roomA.addView(boxesView);
   roomA.addView(fcView);
   roomA.addView(sdViewA);
-  sdViewA.setRoom?.(roomA);
+  sdViewA.setRoom?.(roomA); //
 
   // --- Room B (plain colors + label) ---
   class PlainView extends View { constructor(r,g,b,label){ super(r,g,b,label); } }
@@ -179,7 +179,7 @@ function setupWorld() {
   roomB.addView(greenView);
   roomB.addView(blueView);
   roomB.addView(sdViewB);
-  sdViewB.setRoom?.(roomB);
+  sdViewB.setRoom?.(roomB); // ?. lets you safely call something that might be null or undefined without throwing an error
 
 
     // --- Room C (start here) ---

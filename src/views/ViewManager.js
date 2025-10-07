@@ -84,7 +84,7 @@ class ViewManager {
   }
 }
 
-
+/*
 class GameState {
   constructor() {
     this.timerUp = false;
@@ -111,3 +111,4 @@ class GameState {
     return this.solved || this.timerUp;
   }
 }
+*/

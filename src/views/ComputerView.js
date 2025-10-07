@@ -239,7 +239,7 @@ class Pinpad {
                             this.feedbackColor = null;
                             this.isProcessing = false;
                             if(isCorrect) {
-                                GS.Solved();
+                                GS.set("pin entered");
                             }
                         }, 500);
                     }
@@ -322,7 +322,7 @@ class Pinpad {
                     this.feedbackColor = null;
                     this.isProcessing = false;
                     if(isCorrect) {
-                        GS.Solved();
+                        GS.set("pin entered");
                     }
                 }, 500);
             }

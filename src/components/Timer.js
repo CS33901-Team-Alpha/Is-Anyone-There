@@ -39,7 +39,7 @@ class ScreenTimer {
         } else {
             setTimeout(() => {
                 this.label = '0:00';
-                GS.TimerDone();
+                GS.set("timeout");
                 this.onEnd();
             }, 500);
         }
