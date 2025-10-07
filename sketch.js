@@ -60,7 +60,7 @@ function setup() {
 
   // insert checkers here
   GS.checkFor("ended", () => { return GS.is("pin entered") || GS.is("timeout"); })
-
+  
   startScreen = new StartScreenView(() => {
     if (startScreenMusic && startScreenMusic.isPlaying()) startScreenMusic.stop();
     R.selfRemove(startScreen);
