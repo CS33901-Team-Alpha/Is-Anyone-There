@@ -58,6 +58,7 @@ class OxygenPressureView extends View {
   }
 
   draw() {
+    push();
     this.background?.draw();
 
     // Draw bars
@@ -101,5 +102,6 @@ class OxygenPressureView extends View {
     textAlign(CENTER, CENTER);
     text(`Active: ${this.keys[this.activeIndex]}`, 8 * VM.U, 8.5 * VM.V);
 
+    pop();
   }
 }

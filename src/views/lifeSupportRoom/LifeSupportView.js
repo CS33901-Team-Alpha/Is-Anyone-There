@@ -13,6 +13,7 @@ class LifeSupportView extends View {
   }
 
   draw() {
+    push();
     this.background?.draw();
 
     fill("white");
@@ -47,5 +48,7 @@ class LifeSupportView extends View {
       8 * VM.U,
       8.5 * VM.V
     );
+
+    pop();
   }
 }
