@@ -167,7 +167,9 @@ function mouseDragged() {
 }
 
 function mouseReleased() {
-  if (R) R.dispatch('mouseReleased');
+  const m = VM.mouse();
+  if (!VM.insideUnits(m)) return;
+  R.dispatch('mouseReleased', m);
 }
 
 function keyPressed() {
@@ -233,12 +235,12 @@ function setupWorld() {
     lockedCondition : () => true
   }],SM.get("MetalWall"));
 
-  // Door in Room B -> to Room D (index 4), land on view TBD
+  // Door in Room B -> to Room D (index 3), land on view TBD
   const LifeSupportDoorB = new SlidingDoorView([{
     x:12, y:2, scale:1,
-    targetRoom: null,        // not set yet
-    targetViewIndex: 4,
-    lockedCondition : () => false
+    targetRoom: 3,   
+    targetViewIndex: 0,
+    lockedCondition : () => true
   }],SM.get("MetalWall"));
 
   const roomB = new ViewManager();
@@ -275,9 +277,28 @@ function setupWorld() {
   roomC.addView(sdViewC);
   sdViewC.setRoom?.(roomC);
 
+  // --- Room D (Life Support Room) ---
+  const oxygenPressureView = new OxygenPressureView();
+  const temperatureView    = new TemperaturePuzzleView();
+  const lifeSupportView = new LifeSupportView();
+  const roomDoorView = new SlidingDoorView([{
+    x:2, y:2, scale:1,
+    targetRoom: 1,        // back to Room B
+    targetViewIndex: 3,
+    lockedCondition : () => true
+  }],SM.get("MetalWall"));
+
+  const roomD = new ViewManager();
+  roomD.addView(oxygenPressureView);
+  roomD.addView(temperatureView);
+  roomD.addView(lifeSupportView);
+  roomD.addView(roomDoorView);
+  roomDoorView.setRoom?.(roomD);
+
   // register rooms (A=0, B=1, C=2) and let WORLD receive key events
   WORLD.addRoom(roomA);   // index 0
   WORLD.addRoom(roomB);   // index 1
   WORLD.addRoom(roomC);   // index 2
+  WORLD.addRoom(roomD);   // index 3
   R.add(WORLD, 1000);
 }

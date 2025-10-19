@@ -12,7 +12,7 @@ class SlidingDoor {
         this.y = y;
         this.scale = scale;
         this.onClick = onClick;
-        this.locked = cfg.locked ?? true; 
+        this.locked = cfg.lockedCondition?.() === false ? false : cfg.locked ?? true;
         this.lockedCondition = cfg.lockedCondition ?? (() => false);
 
         this.autoCloseDelay = cfg.autoCloseDelay ?? 2; // seconds
