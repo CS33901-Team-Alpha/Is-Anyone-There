@@ -40,8 +40,7 @@ function repairItemUsed(itemName, x, y, width, height, notifHandler){
             else if((itemName == 'electricalTape') && (targetId == BROKEN_COMPONENT_ID)){
                 notifHandler.addText('You have fixed a broken component!')
                 
-                let string  = '>_  SYSTEM CONDITION STABILIZING... \n>_  RETURNING TO NORMAL OPERATION... \n>_  --- THANK YOU USER ---';
-                AI.addText(string);
+                AI.addText('>_  SYSTEM CONDITION STABILIZING... \n>_  RETURNING TO NORMAL OPERATION... \n>_  --- THANK YOU USER ---');
                 
                 setTimeout(() => {
                     GS.set("Game Complete");
