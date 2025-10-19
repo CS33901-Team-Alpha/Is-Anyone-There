@@ -1,6 +1,7 @@
 let cnv;
 let R;
 let SM = new SpriteManager(); // Sprite Manager
+let AM = new AudioManager(); 
 let GS;
 let WORLD;
 let AI = new AiMessageHandler(1, 7.3);
@@ -42,6 +43,7 @@ function fit16x9() {
 
 function preload() {
   loadSprites();
+  loadSounds();
 
   gameFont     = loadFont('assets/font/PressStart2P-Regular.ttf');
   terminusFont = loadFont('assets/font/terminus.ttf');
