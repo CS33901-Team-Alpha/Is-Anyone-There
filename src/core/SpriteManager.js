@@ -12,6 +12,7 @@ function loadSprites() {
     SM.add("SouthWall", loadImage('assets/background/billBoardWall.webp'));
     SM.add("WestWall", loadImage('assets/background/cabinetWall.webp'));
     SM.add("pinpad", loadImage('assets/object/keypad.webp'));
+    SM.add("FullKeypad", loadImage('assets/object/FullKeypad.webp'));
 
     SM.add("FileCabinet1", loadImage('assets/object/fileCabinet.webp'));
     SM.add("FileCabinet2", loadImage('assets/object/fileCabinet.webp'));

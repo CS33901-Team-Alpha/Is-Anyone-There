@@ -226,6 +226,7 @@ function setupWorld() {
 
   const repairView = new RepairView();
   const wiresView = new WiresView();
+  const eastWallView = new EastWall();
 
   // Door in Room B -> back to Room A (index 1), land on doorView (view 4)
   const EntranceB = new SlidingDoorView([{
@@ -246,6 +247,7 @@ function setupWorld() {
   const roomB = new ViewManager();
   roomB.addView(repairView);
   roomB.addView(wiresView);
+  roomB.addView(eastWallView);
   roomB.addView(EntranceB);
   roomB.addView(LifeSupportDoorB);
   EntranceB.setRoom?.(roomB);
@@ -284,7 +286,7 @@ function setupWorld() {
   const roomDoorView = new SlidingDoorView([{
     x:2, y:2, scale:1,
     targetRoom: 1,        // back to Room B
-    targetViewIndex: 3,
+    targetViewIndex: 2,   // eastWallView is at index 2
     lockedCondition : () => true
   }],SM.get("MetalWall"));
 
