@@ -32,14 +32,6 @@ function loadSprites() {
     SM.add("placeholderWall", loadImage('assets/placeholders/placeholderWall.png'))
     SM.add("placeholderWindow", loadImage('assets/placeholders/spaceWindow.png'))
     SM.add("MetalWall", loadImage('assets/placeholders/MetalWall.png'));
-    // SM.add("EmptyChamber1", loadImage('assets/placeholders/CryoChamberEmpty.png'));
-    // SM.add("EmptyChamber2", loadImage('assets/placeholders/CryoChamberEmptycopy.png'));
-    // SM.add("EmptyChamber3", loadImage('assets/placeholders/CryoChamberEmptycopy2.png'));
-    // SM.add("EmptyChamber4", loadImage('assets/placeholders/CryoChamberEmptycopy3.png'));
-    // SM.add("ActiveChamber1", loadImage('assets/placeholders/CryoChamber.png'));
-    // SM.add("ActiveChamber2", loadImage('assets/placeholders/CryoChambercopy.png'));
-    // SM.add("ActiveChamber3", loadImage('assets/placeholders/CryoChambercopy2.png'));
-    // SM.add("ActiveChamber4", loadImage('assets/placeholders/CryoChambercopy3.png'));
     
     // New Cryo Chamber sprites (distinct for each chamber)
     SM.add("emptyCryo1", loadImage('assets/object/emptyCryo.webp'));
@@ -63,6 +55,10 @@ function loadSprites() {
     SM.add("cpu2", loadImage('assets/object/RedCPU.png'));
     SM.add("cpu3", loadImage('assets/object/GreenCPU.png'));
     SM.add("cpu4", loadImage('assets/object/GrayCPU.png'));
+    SM.add("northWallBreaker", loadImage('assets/background/electric.png'))
+    SM.add("southWallBreaker", loadImage('assets/background/lifeSupport.webp'))
+    SM.add("eastWallBreaker", loadImage('assets/background/warning.webp'))
+    SM.add("westWallBreaker", loadImage('assets/background/blankWall.png'))
 }
 
 

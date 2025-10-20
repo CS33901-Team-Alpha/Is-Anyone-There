@@ -4,7 +4,7 @@ class WiresView extends View
   super();
 
   // Background sprite for the view
-  this.background = SM.get("MetalWall"); // Load background sprite
+  this.background = SM.get("eastWallBreaker"); // Load background sprite
   this.background.setSize(16, 9);        // Match canvas size
 
   // Define wire colors used in the puzzle

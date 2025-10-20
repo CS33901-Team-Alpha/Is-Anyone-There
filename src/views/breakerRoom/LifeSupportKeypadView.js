@@ -76,7 +76,7 @@ class LifeSupportKeypad {
         R.add(this._exitBtn, 15);
         
         // Add background image
-        this.background = SM.get("MetalWall");
+        this.background = SM.get("westWallBreaker");
         if (this.background) {
             this.background = this.background.clone();
             this.background.setPos(0, 0);

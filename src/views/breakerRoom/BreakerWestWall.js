@@ -1,7 +1,7 @@
 class WestWall extends View {
   constructor() {
     super(0, 0, 0, '');
-    this.background = SM.get("placeholderWall");
+    this.background = SM.get("westWallBreaker");
     this.background.setSize(16, 9);
   }
 
