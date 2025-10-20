@@ -44,7 +44,7 @@ function repairItemUsed(itemName, x, y, width, height, notifHandler){
                 
                 setTimeout(() => {
                     GS.set("Game Complete");
-                }, 8000);
+                }, 6000);
             }
             else if((itemName == 'voltimeter') && (targetId != BROKEN_COMPONENT_ID)){
                 notifHandler.addText('This component seems to be working fine.')
@@ -406,7 +406,7 @@ class RepairView extends View {
 
         this.componentHolder = new ComponentHolderObject(1.2, 5, 0.6, this.textNotificationHandler, ()=>{});
 
-        this.slidingDoor = new StandaloneSlidingDoor(12, 2, 1, () => {}, true, 2, null, 2, 0, () => GS.is("Wires Solved"));
+        this.slidingDoor = new StandaloneSlidingDoor(12, 2, 1, () => {}, true, 2, null, 2, 0, () => false);
 
         this.slidingDoor.setRoom(this);
     }

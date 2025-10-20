@@ -306,21 +306,27 @@ class EndScreenView extends View {
     // Clear any active interfaces
     window.activeInterface = null;
 
+    //get the curent death count
+    let currentDeaths = GS.getDeaths();
+
+    //if the game is not solved then incriment the deaths
+    if(!this.solved){
+      currentDeaths++;
+    }
+
+    const newGame = new GameState();
+    newGame.deaths = currentDeaths;
+
+    //conert current game state object to string
+    const newGameString = JSON.stringify(newGame); 
+    //save game state string in local storage with unique key
+    localStorage.setItem('currentGameState', newGameString);
+    console.log(`New game ready to start. Total deaths: ${newGame.deaths}`);
+
     const finalStateString = JSON.stringify(GS);
     localStorage.setItem('completedGame', finalStateString);
     console.log("Final score has been saved!");
-
-
-    const newGame = new GameState();
-    //conert current game state object to string
-    const newGameString = JSON.stringify(newGame); 
-    //save gmae state string in local storage with unique key
-    localStorage.setItem('currentGameState', newGameString);
-    console.log("New game ready to start.");
-    // Restart the game by reloading the page
-    // This is the simplest way to ensure a clean restart
   
     location.reload();
-  
   }
 }

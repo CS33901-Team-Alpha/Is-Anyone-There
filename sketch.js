@@ -63,15 +63,11 @@ function setup() {
   const savedState = localStorage.getItem('currentGameState');
 
   if(savedState){
-    console.log("saved state found...");
     const savedData = JSON.parse(savedState);
+    console.log(`saved state found...Current death count: ${savedData.deaths || 0}`);
     GS = new GameState();
-    if(savedData.solved && GS.is("Game Complete")) {
-      GS.unset("Game Complete")
-    }
-    if(savedData.timerUp && GS.is("Timer Up")) {
-      GS.unset("Timer Up")
-    }
+    // Load the saved death count into the new GameState object
+    GS.deaths = savedData.deaths || 0;
   } else{
     console.log("no state found, creating new state...");
     GS = new GameState();
@@ -136,13 +132,9 @@ function draw() {
 
 //block to handle initial AI startup Text
 function bootupAI() {
-  let string  = '>_  A.I.A. - ARTIFICIAL INTELLIGENCE ASSISTANT: TERMINAL v3.2.1 \n>_  INITIATING SECURE BOOT PROTOCOL... \n>_  BOOTING DRIVERS...';
+  let string  = '>_  H.A.L. - Heuristically Programmed Algorithmic Computer v 3.2.1 \n>_  INITIATING SECURE BOOT PROTOCOL... \n>_  NETWORK CONNECTION: SECURE';
   AI.addText(string);
-  string  = '>_  SCANNING FOR PERIPHERALS... \n>_  NETWORK CONNECTION: SECURE \n>_  WARNING: UNUSUAL ACTIVITY DETECTED. ALL SESSIONS ARE LOGGED.';
-  AI.addText(string);
-  string  = '>_  LOADING VESSEL CONDITION... \n>_  SCANNING SYSTEM DIAGNOSTIC REPORTS... \n>_  COMPILING ANALYTICS...';
-  AI.addText(string);
-  string  = '>_  MULTIPLE SYSTEMS CRITICAL \n>_  ESTIMATED HUMAN HABITABILITY WINDOW SHOWN IN TOP LEFT \n>_  FAILURE IMMINENT - FIX IMMEDIATELY';
+  string  = '>_  LOADING VESSEL CONDITION... \n>_  MULTIPLE SYSTEMS CRITICAL \n>_  FAILURE IMMINENT - FIX IMMEDIATELY';
   AI.addText(string);
   GS.unset("Show AI Startup");
 }
@@ -226,7 +218,7 @@ function setupWorld() {
 
   const repairView = new RepairView();
   const wiresView = new WiresView();
-  const eastWallView = new EastWall();
+  const LifeSupportDoorView = new EastWall();
 
   // Door in Room B -> back to Room A (index 1), land on doorView (view 4)
   const EntranceB = new SlidingDoorView([{
@@ -237,21 +229,20 @@ function setupWorld() {
   }],SM.get("MetalWall"));
 
   // Door in Room B -> to Room D (index 3), land on view TBD
+  /*
   const LifeSupportDoorB = new SlidingDoorView([{
     x:12, y:2, scale:1,
     targetRoom: 3,   
     targetViewIndex: 0,
     lockedCondition : () => true
-  }],SM.get("MetalWall"));
+  }],SM.get("MetalWall"));*/
 
   const roomB = new ViewManager();
   roomB.addView(repairView);
   roomB.addView(wiresView);
-  roomB.addView(eastWallView);
+  roomB.addView(LifeSupportDoorView);
   roomB.addView(EntranceB);
-  roomB.addView(LifeSupportDoorB);
   EntranceB.setRoom?.(roomB);
-  LifeSupportDoorB.setRoom?.(roomB);
 
   // --- Room C (Cryo Chamber Room) ---
   //class PlainView extends View { constructor(r,g,b,label){ super(r,g,b,label); } }

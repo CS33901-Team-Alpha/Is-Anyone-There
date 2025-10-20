@@ -323,6 +323,6 @@ class LifeSupportKeypad {
 // Factory function to create and show the keypad
 function showLifeSupportKeypad(onExit = () => {}) {
     const keypad = new LifeSupportKeypad(onExit);
-    R.add(keypad, 20); // High z-index to render on top
+    R.add(keypad, 30); // High z-index to render on top
     return keypad;
 }

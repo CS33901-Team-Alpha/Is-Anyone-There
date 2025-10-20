@@ -6,12 +6,29 @@ GameState is a Set that can hold anything, this file contains the basic
 Game State Strings  :   meaning
 pin entered         :   Room 1 Veiw 1 pinpad had the correct password inputed
 timeout             :   the timmer ran down to 0:00
+
+Game State Variables Currently in Use:
+- "Game Started" - denotes when game begins
+- "Show AI Startup" - denotes to start AI Bootup text, unset after done once
+- 'Showing AI Message" - denotes when a message is currently being shown on screen, unset afterwards
+- "Timer Up" - denotes when the timer reaches zero
+- "Pin Solved" - denotes when the correct PIN is entered in ComputerView
+- "Life Support Access Granted" - denotes when wordle puzzle solved, allows entering the Life Support door
+- "Player Died" - denotes when the player dies somehow
+- "Game Complete" - denotes when the game's win condition is met, completing the game
+- "Wires Solved" - denotes when wires/flow puzzle solved, unlocks cryo door
+- "regulateOxygenPuzzleSolved" - denotes when oxygen puzzle has been solved in Life Support
+- "regulateTempPuzzleSolved" - denotes when the temperature puzzle has been solved in Life Support
+- "Ended" - checkfor value thatis set when an end condition for the game is met
+            right now that is "Game Complete", "Timer Up", and "Player Died"
+- 
 */
 
 class GameState {
     constructor() {
         this.states = new Set(); // simple states, string set
         this.checks = new Map(); // array for functions
+        this.deaths = 0          // count for deaths 
     }
     /**
      * Adds to the state list. this will check for exact values.
@@ -65,10 +82,14 @@ class GameState {
             }
         }
     }
+
+    incrimentDeaths(){
+        this.deaths++;
+    }
+    getDeaths() {
+        return this.deaths;
+    }
+
     // Object?
     //get(name) {}
-
-    getDeaths() {
-        return 5;
-    }
 }

@@ -6,11 +6,11 @@ class EastWall extends View {
     
     // Life Support Keypad Panel
     this.keypadPanel = {
-      x: 11,
+      x: 7.5,
       y: 3,
       width: 3,
       height: 2.5,
-      highlight: new HighlightEvent(11, 3, 3, 2.5)
+      highlight: new HighlightEvent(7.5, 3, 3, 2.5)
     };
     
     // Load the keypad graphic
@@ -20,10 +20,20 @@ class EastWall extends View {
       this.keypadGraphic.setPos(this.keypadPanel.x, this.keypadPanel.y);
       this.keypadGraphic.setSize(this.keypadPanel.width, this.keypadPanel.height);
     }
+
+    this.textNotificationHandler = new TextNotificationHandler(0.5, 0.85, {holdFadeoutFor: 4});
+
+    this.slidingDoor = new StandaloneSlidingDoor(12, 2, 1, () => {}, true, 2, null, 3, 0, () => GS.is("Life Support Access Granted"));
+
+    this.slidingDoor.setRoom(this);
+
+    this.showingPad = false;
   }
 
   mousePressed(p) {
     const m = p || VM.mouse();
+
+    if (this.slidingDoor.mousePressed(m)) {return true;} // stop propagation
     
     // Check if clicked on keypad panel
     if (m.x >= this.keypadPanel.x && 
@@ -31,6 +41,7 @@ class EastWall extends View {
         m.y >= this.keypadPanel.y && 
         m.y <= this.keypadPanel.y + this.keypadPanel.height) {
       
+      this.showingPad = true;
       // Show the life support keypad
       showLifeSupportKeypad(() => {
         // Callback when keypad is closed - return to this view
@@ -38,18 +49,25 @@ class EastWall extends View {
       });
       
       return true; // Consume the click
+
     }
     
     return false;
   }
 
-  update(dt) {}
+  update(dt) {
+    this.slidingDoor.update(dt);
+    this.textNotificationHandler.update(dt);
+  }
 
   draw() {
     const u = VM.u();
     const v = VM.v();
     
     push();
+    if(this.showingPad) {
+      this.slidingDoor.draw();
+    }
     
     // The keypad graphic is now handled by the renderer
     // Just draw the label below the keypad
@@ -70,6 +88,7 @@ class EastWall extends View {
       R.add(this.keypadGraphic);
     }
     R.add(this.keypadPanel.highlight);
+    this.slidingDoor.onEnter();
   }
 
   onExit() {
@@ -78,5 +97,7 @@ class EastWall extends View {
       R.remove(this.keypadGraphic);
     }
     R.remove(this.keypadPanel.highlight);
+    this.slidingDoor.onExit();
+    this.textNotificationHandler.cleanup(); 
   }
 }
