@@ -222,22 +222,22 @@ class RepairToolCabinet {
 
         // cabinet
         this.closedSprite = SM.get("closedRepair");
-        this.closedSprite.setPos(this.x, this.y);
+        this.closedSprite.setPos(this.x+0.5, this.y);
         this.closedSprite.setScale(this.scale);
 
         this.openSprite = SM.get("openRepair");
-        this.openSprite.setPos(this.x, this.y);
-        this.openSprite.setScale(this.scale);
+        this.openSprite.setPos(this.x-0.6, this.y);
+        this.openSprite.setScale(this.scale+0.1);
 
         // items - scale and pos manually set for now
-        this.voltimeter = new MoveableRepairItem(this.x + 2.3, this.y + 1.72, 'voltimeter', 0.08, notifHandler, repairItemUsed);
-        this.electricalTape = new MoveableRepairItem(this.x + 1.2, this.y + 1.95, 'electricalTape', 0.1, notifHandler, repairItemUsed);
+        this.voltimeter = new MoveableRepairItem(this.x + 2.4, this.y + 2.02, 'voltimeter', 0.08, notifHandler, repairItemUsed);
+        this.electricalTape = new MoveableRepairItem(this.x + 1.3, this.y + 2.25, 'electricalTape', 0.1, notifHandler, repairItemUsed);
 
         // --- lock visuals and mechanics
         // should be in lower right corner of repair tool cabinet, manually placed for now
         this.lockSprite = SM.get("rustyLock");
-        this.lockSprite.setPos(this.x + 1.9, this.y + 2.2);
-        this.lockSprite.setScale(0.1);
+        this.lockSprite.setPos(this.x + 2.6, this.y + 2.5);
+        this.lockSprite.setScale(0.5);
 
         this.animationPlaying = false;
         this.clicks = 0;
@@ -342,10 +342,10 @@ class ComponentHolderObject{
         }
 
         this.ecs = [];
-        this.ecs.push(new ElectricalComponent(0, 1.8, 6, 'cpu1', 0.1, componentClickMessage))
-        this.ecs.push(new ElectricalComponent(1, 1.95, 6.9, 'cpu2', 0.09, componentClickMessage))
-        this.ecs.push(new ElectricalComponent(2, 7.2, 6.6, 'cpu3', 0.12, componentClickMessage))
-        this.ecs.push(new ElectricalComponent(3, 5.3, 6.3, 'cpu4', 0.15, componentClickMessage))
+        this.ecs.push(new ElectricalComponent(0, 1.8, 6, 'cpu1', 0.8, componentClickMessage))
+        this.ecs.push(new ElectricalComponent(1, 1.95, 7.2, 'cpu2', 0.6, componentClickMessage))
+        this.ecs.push(new ElectricalComponent(2, 7.2, 6.6, 'cpu3', 0.75, componentClickMessage))
+        this.ecs.push(new ElectricalComponent(3, 5.3, 6.3, 'cpu4', 0.75, componentClickMessage))
 
         this.onClick = onClick;
     }
@@ -394,7 +394,7 @@ class RepairView extends View {
             holdFadeoutFor: 2.5,
         });
 
-        this.repairCabinet = new RepairToolCabinet(1, 1, 0.4, this.textNotificationHandler, (clickCount) => {
+        this.repairCabinet = new RepairToolCabinet(0.9, 0.9, 1, this.textNotificationHandler, (clickCount) => {
             if (clickCount == 0) {
                 this.textNotificationHandler.addText(
                     "A lock seems to be holding this cabinet shut."
@@ -404,7 +404,7 @@ class RepairView extends View {
             }
         });
 
-        this.componentHolder = new ComponentHolderObject(1.2, 5, 0.6, this.textNotificationHandler, ()=>{});
+        this.componentHolder = new ComponentHolderObject(1.2, 5, 1.9, this.textNotificationHandler, ()=>{});
 
         this.slidingDoor = new StandaloneSlidingDoor(12, 2, 1, () => {}, true, 2, null, 2, 0, () => false);
 
