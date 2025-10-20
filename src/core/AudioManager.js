@@ -1,5 +1,6 @@
 function loadSounds(){
     AM.add("titleScreen", loadSound('assets/Is_Anybody_There.mp3'));
+    AM.add("creepyBackground", loadSound('assets/sounds/creepy-background.mp3'));
 }
 
 class AudioManager{

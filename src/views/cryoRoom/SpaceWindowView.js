@@ -74,8 +74,8 @@ class SpaceWindowView extends View{
         this.background.setSize(16, 9);
         
         // min and max delay (in seconds) for the next random message to popup
-        this.minDelay = 5;
-        this.maxDelay = 10;
+        this.minDelay = 7;
+        this.maxDelay = 12;
 
         this.timer = 0;
         this.countDown = this.getRandomSeconds();
@@ -99,6 +99,8 @@ class SpaceWindowView extends View{
         // })
         
         this.wind = new SpaceWindow(3, 1, 0.6, 'placeholderWindow', (obj) => {})
+
+        this.firstMessageSent = false;
     }
 
     // get a random time in seconds
@@ -111,12 +113,19 @@ class SpaceWindowView extends View{
 
         this.timer += dt; // count seconds
 
-        console.log(`${this.timer} - ${this.countDown}`)
+        //console.log(`${this.timer} - ${this.countDown}`)
         if(this.timer > this.countDown){
             this.timer = 0;
             this.countDown = this.getRandomSeconds();
 
             this.textNotif.addText(this.sentences[Math.floor(Math.random() * this.sentences.length)])
+
+            if(this.firstMessageSent == false) {
+                this.firstMessageSent = true;
+                
+                AM.setVolume('creepyBackground', 0.1)
+                AM.play('creepyBackground')
+            }
         }
     }
 
@@ -141,5 +150,11 @@ class SpaceWindowView extends View{
 
         // required clean up for notification handler
         this.textNotif.cleanup()
+
+        // stop playing background sounds
+        AM.fadeOut('creepyBackground', 2000)
+
+        // reset first time message so sound plays on first message
+        this.firstMessageSent = false;
     }
 }
