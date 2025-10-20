@@ -75,12 +75,12 @@ class CryoView extends View{
             let index = i + (4*num);
             let newChamber;
             if(index <= GS.getDeaths()) {
-                newChamber = new CryoChamber(0.5+(4*(i-1)), 3.6, 1.15, `emptyCryo${i}`, (obj) => {
+                newChamber = new CryoChamber(0.5+(4*(i-1)), 3.6, 1.8, `emptyCryo${i}`, (obj) => {
                     this.textNotificationHandler.addText('This Cryo Chamber does not appear to have a person inside of it anymore....')
                 });
             }
             else {
-                newChamber = new CryoChamber(0.5+(4*(i-1)), 3.6, 1.15, `fullCryo${i}`, (obj) => {
+                newChamber = new CryoChamber(0.5+(4*(i-1)), 3.6, 1.8, `fullCryo${i}`, (obj) => {
                     this.textNotificationHandler.addText('A Standard Cryo Chamber, with a person deep in Cryo Sleep')
                 });
             }
