@@ -228,20 +228,11 @@ function setupWorld() {
     lockedCondition : () => true
   }],SM.get("MetalWall"));
 
-  // Door in Room B -> to Room D (index 3), land on view TBD
-  /*
-  const LifeSupportDoorB = new SlidingDoorView([{
-    x:12, y:2, scale:1,
-    targetRoom: 3,   
-    targetViewIndex: 0,
-    lockedCondition : () => true
-  }],SM.get("MetalWall"));*/
-
   const roomB = new ViewManager();
   roomB.addView(repairView);
   roomB.addView(wiresView);
-  roomB.addView(LifeSupportDoorView);
   roomB.addView(EntranceB);
+  roomB.addView(LifeSupportDoorView);
   EntranceB.setRoom?.(roomB);
 
   // --- Room C (Cryo Chamber Room) ---
