@@ -268,7 +268,7 @@ function setupWorld() {
   const roomDoorView = new SlidingDoorView([{
     x:2, y:2, scale:1,
     targetRoom: 1,        // back to Room B
-    targetViewIndex: 2,   // eastWallView is at index 2
+    targetViewIndex: 3,   // eastWallView is at index 2
     lockedCondition : () => true
   }],SM.get("MetalWall"));
 
