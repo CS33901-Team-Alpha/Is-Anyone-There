@@ -1,7 +1,7 @@
 class EastWall extends View {
   constructor() {
     super(0, 0, 0, '');
-    this.background = SM.get("eastWallBreaker");
+    this.background = SM.get("southWallBreaker");
     this.background.setSize(16, 9);
     
     // Life Support Keypad Panel

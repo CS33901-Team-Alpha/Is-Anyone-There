@@ -226,7 +226,7 @@ function setupWorld() {
     targetRoom: 0,        // <-- to room A
     targetViewIndex: 4,
     lockedCondition : () => true
-  }],SM.get("MetalWall"));
+  }],SM.get("northWallBreaker"));
 
   // Door in Room B -> to Room D (index 3), land on view TBD
   /*

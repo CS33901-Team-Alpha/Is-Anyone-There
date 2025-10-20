@@ -387,7 +387,7 @@ class ComponentHolderObject{
 class RepairView extends View {
     constructor() {
         super(0, 0, 0, "");
-        this.background = SM.get("northWallBreaker");
+        this.background = SM.get("eastWallBreaker");
         this.background.setSize(16, 9);
 
         this.textNotificationHandler = new TextNotificationHandler(0.5, 0.85, {
