@@ -69,7 +69,7 @@ class WiresView extends View
 
   this.textNotificationHandler = new TextNotificationHandler(0.5, 0.85, {holdFadeoutFor: 4});
 
-  this.slidingDoor = new StandaloneSlidingDoor(12, 2, 1, () => {}, true, 2, null, 2, 0, () => GS.is("Wires Solved"));
+  this.slidingDoor = new StandaloneSlidingDoor(12, 1.2, 1, () => {}, true, 2, null, 2, 0, () => GS.is("Wires Solved"));
 
   this.slidingDoor.setRoom(this);
 }

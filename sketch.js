@@ -222,7 +222,7 @@ function setupWorld() {
 
   // Door in Room B -> back to Room A (index 1), land on doorView (view 4)
   const EntranceB = new SlidingDoorView([{
-    x:6, y:2, scale:2,
+    x:6, y:1.5, scale:2,
     targetRoom: 0,        // <-- to room A
     targetViewIndex: 4,
     lockedCondition : () => true

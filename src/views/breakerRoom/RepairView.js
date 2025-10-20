@@ -406,7 +406,7 @@ class RepairView extends View {
 
         this.componentHolder = new ComponentHolderObject(1.2, 5, 1.9, this.textNotificationHandler, ()=>{});
 
-        this.slidingDoor = new StandaloneSlidingDoor(12, 2, 1, () => {}, true, 2, null, 2, 0, () => false);
+        this.slidingDoor = new StandaloneSlidingDoor(12, 2.3, 1, () => {}, true, 2, null, 2, 0, () => false);
 
         this.slidingDoor.setRoom(this);
     }

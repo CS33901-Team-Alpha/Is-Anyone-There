@@ -23,7 +23,7 @@ class EastWall extends View {
 
     this.textNotificationHandler = new TextNotificationHandler(0.5, 0.85, {holdFadeoutFor: 4});
 
-    this.slidingDoor = new StandaloneSlidingDoor(12, 2, 1, () => {}, true, 2, null, 3, 0, () => GS.is("Life Support Access Granted"));
+    this.slidingDoor = new StandaloneSlidingDoor(12, 1.5, 1, () => {}, true, 2, null, 3, 0, () => GS.is("Life Support Access Granted"));
 
     this.slidingDoor.setRoom(this);
 
