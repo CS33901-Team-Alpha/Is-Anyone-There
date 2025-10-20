@@ -117,7 +117,7 @@ class TemperaturePuzzleView extends View {
         this.maxY = 5;
 
         this.textHandler = new TextNotificationHandler(0.5, 1);
-        this.screenTimer = null; // use to increase time if puzzle is solved 
+        this.screenTimer = screenTimer; // use to increase time if puzzle is solved 
 
     }
 

@@ -39,6 +39,8 @@ class OxygenPressureView extends View {
     }
 
     this.resetButton = new Button(13, 6, 1.5, () => this.resetPuzzle());
+
+    this.screenTimer = screenTimer
   }
 
   resetPuzzle() {
@@ -79,6 +81,8 @@ class OxygenPressureView extends View {
 
   onSolved() {
     console.log("Oxygen puzzle solved");
+    GS.set("regulateOxygenPuzzleSolved");
+    this.screenTimer.addTime(30)
   }
 
   update(dt) {

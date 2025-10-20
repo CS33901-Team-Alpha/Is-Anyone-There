@@ -7,8 +7,8 @@ class LifeSupportView extends View {
 
     this.puzzles = [
       { label: "Wires Puzzle", flag: "Wires Solved" },
-      { label: "Oxygen Pressure", flag: "Oxygen Stabilized" },
-      { label: "Temperature Pipes", flag: "Temperature Stabilized" }
+      { label: "Oxygen Pressure", flag: "regulateOxygenPuzzleSolved" },
+      { label: "Temperature Pipes", flag: "regulateTempPuzzleSolved" }
     ];
   }
 
@@ -32,11 +32,11 @@ class LifeSupportView extends View {
       fill("white");
       textSize(0.5 * VM.U);
       textAlign(LEFT, CENTER);
-      text(puzzle.label, 4 * VM.U, y * VM.V);
+      text(puzzle.label, 0.5 * VM.U, y * VM.V);
 
       fill(statusColor);
       textAlign(RIGHT, CENTER);
-      text(statusText, 12 * VM.U, y * VM.V);
+      text(statusText, 14.3 * VM.U, y * VM.V);
     }
 
     const allSolved = this.puzzles.every(p => GS.is(p.flag));
