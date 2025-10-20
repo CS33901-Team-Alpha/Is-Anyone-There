@@ -1,6 +1,17 @@
 function loadSounds(){
     AM.add("titleScreen", loadSound('assets/Is_Anybody_There.mp3'));
+
+    // cryo chamber
     AM.add("creepyBackground", loadSound('assets/sounds/creepy-background.mp3'));
+
+    // first room
+    AM.add("buttonBeep", loadSound('assets/sounds/buttonPressBeep.mp3'));
+    AM.add("successPinpad", loadSound('assets/sounds/successPinpad.mp3'));
+    AM.add("failurePinpad", loadSound('assets/sounds/pinpadFailure.mp3'));
+
+    AM.add("drawerOpen", loadSound('assets/sounds/drawerOpen.mp3'));
+    AM.add("drawerClose", loadSound('assets/sounds/drawerClose.mp3'));
+    AM.add("drawerLocked", loadSound('assets/sounds/drawerLocked.mp3'));
 }
 
 class AudioManager{

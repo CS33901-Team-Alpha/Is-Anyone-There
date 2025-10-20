@@ -60,6 +60,8 @@ class OpenCabinetUI {
       R.remove(this);
       onExit();
       this.onRemove()
+
+      AM.play('drawerClose')
     });
     
     this.numberImage = SM.get('secondNumber');
@@ -122,9 +124,11 @@ class FileCabinetView extends View {
                     this.textNotificationHandler.addText('You opened a mysterious file cabinet.')
                     this.cabinetUI.onAdd()
                     R.add(this.cabinetUI, 10)
+                    AM.play('drawerOpen')
                 }else{
                     this.textNotificationHandler.addText('This file cabinet appears to be locked...')
                     console.log('this is a locked cabinet.')
+                    AM.play('drawerLocked')
                 }
             }));
         }

@@ -228,6 +228,10 @@ class Pinpad {
                 val,
                 () => {
                     if (this.isProcessing) return; // Prevent spamming
+
+                    // play sound
+                    AM.play('buttonBeep')
+
                     this.label += val;
                     if (this.label.length === 3) {
                         this.isProcessing = true;
@@ -240,6 +244,11 @@ class Pinpad {
                             this.isProcessing = false;
                             if(isCorrect) {
                                 GS.set("Pin Solved");
+
+                                AM.play('successPinpad')
+                            }
+                            else{
+                                AM.play('failurePinpad')
                             }
                         }, 500);
                     }
