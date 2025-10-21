@@ -56,3 +56,6 @@
 - NOTE:
     - You can update the rate at which they fade in the handler's constructor
     - If they are not showing up or appearing beneath your objects, adjust z-index (also in constructor, default=100)
+
+# Documentation to Add
+- `R.add()`
