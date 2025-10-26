@@ -395,6 +395,11 @@ class ComputerView extends View {
     }
 
     onEnter() {
+        
+        if (!AM.isLooping("startGame")) {
+            AM.stopAll()
+            AM.loop("startGame");      
+        }
         R.add(this.background);
         R.add(this.pinpad);
         R.add(this.terminalHighlight);
