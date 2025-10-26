@@ -430,6 +430,11 @@ _onPuzzleComplete() {
 
 onEnter() {
   // Register this view with the renderer
+  AM.stop("startGame")
+  if(!AM.isLooping("technoLoop")){
+      AM.stop("cryoLoop")
+      AM.loop('technoLoop')
+    }
   R.add(this);
   this.slidingDoor.onEnter();
 }
