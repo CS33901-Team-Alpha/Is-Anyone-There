@@ -6,6 +6,7 @@ const doorClickHeight = 6;
 
 const frameDuration = 0.1; 
 
+
 class SlidingDoor {
     constructor(x, y, scale, onClick = () => { }, cfg = {}) {
         this.x = x;
@@ -69,11 +70,13 @@ class SlidingDoor {
         if(!canOpen){
             if(textNotificationHandler) textNotificationHandler.addText("It seems as though you need to complete something to open the door..");
                 this.locked = true; 
+                AM.play('door-lock')
                 return true; 
         }
 
         if(canOpen){
             if(textNotificationHandler) textNotificationHandler.addText("Door unlocked!");
+            AM.play('doorOpen')
             this.locked = false; 
         }
 
@@ -143,10 +146,12 @@ class SlidingDoor {
     }
 
     onEnter() {
+        if(!AM.isLooping("startGame")){
+            AM.stopAll()
+            AM.loop("startGame")
+        }
         R.add(this);
         R.add(this.highlight);
-
-
     }
 
     onExit() {
@@ -219,12 +224,14 @@ class StandaloneSlidingDoor {
 
         if(!canOpen){
             if(textNotificationHandler) textNotificationHandler.addText("It seems as though you need to complete something to open the door..");
-                this.locked = true; 
+                this.locked = true;
+                AM.play('door-lock') 
                 return true; 
         }
 
         if(canOpen){
             if(textNotificationHandler) textNotificationHandler.addText("Door unlocked!");
+            AM.play('doorOpen')
             this.locked = false; 
         }
 
