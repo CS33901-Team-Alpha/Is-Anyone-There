@@ -1,164 +1,291 @@
 class Terminal {
-  constructor(onExit = () => {}) {
+  constructor(onExit = () => {}, onFullCleanup = () => {}) {
     this.onExit = onExit;
+    this.onFullCleanup = onFullCleanup;
     this.input = "";
     this.history = [];
-    this.maxLines = 8;    // how many lines to show in the modal
+    this.maxLines = 8;
 
-    // Mark interface as active
-    window.activeInterface = 'Terminal';
+    // claim input focus
+    window.activeInterface = "Terminal";
 
-    this._closeBtn = new Button(13.3, 1.1, 0.6, (self) => {
-      R.selfRemove(self);
-      R.remove(this);
-      window.activeInterface = null; // Clear active interface flag
-      this.onExit();
+    // spawn close button
+    this._closeBtn = new Button(13.3, 1.1, 0.6, () => {
+      this.close();
     });
     R.add(this._closeBtn, 11);
+
+    // command registry
+    this.commands = {};
+    this._registerCommands();
   }
 
-  draw() {
-    const u = VM.u(), v = VM.v();
-
-    push();
-    // Draw the terminal background using the screen.webp image
-    let screenSprite = SM.get("screen");
-    if (screenSprite && screenSprite.src) {
-        image(screenSprite.src, 2 * u, 1 * v, 12 * u, 7 * v);
-    } else {
-        // fallback: draw a black background if image not loaded
-        fill(0); // Black background
-        stroke(128); // Gray border instead of green
-        strokeWeight(2);
-        rect(2 * u, 1 * v, 12 * u, 7 * v, 10);
-    }
-
-    // Terminal header bar
-    noStroke();
-    fill(60); // Slightly lighter gray for header
-    rect(2 * u, 1 * v, 12 * u, 0.8 * v, 10);
-    
-    // Terminal header text with green glow
-    fill(0, 255, 0, 150); // Bright green with transparency for glow effect
-    textAlign(LEFT, CENTER);
-    textSize(0.45 * v);
-    // Draw text multiple times for glow effect
-    textFont(terminusFont);
-    text("Terminal", (2.3) * u + 1, (1.4) * v + 1); // Offset for glow
-    fill(0, 255, 0); // Bright green
-    text("Terminal", (2.3) * u, (1.4) * v);
-
-    const left = 2.3 * u;
-    const top = (1.9) * v;
-    const lh = 0.6 * v;
-
-    // Add scan lines effect
-    stroke(0, 0, 0, 30);
-    strokeWeight(1);
-    for (let i = 0; i < 7 * v; i += 4) {
-        line(2 * u, (1 * v) + i, 14 * u, (1 * v) + i);
-    }
-    noStroke();
-
-    const start = Math.max(0, this.history.length - this.maxLines);
-    let y = top;
-    textAlign(LEFT, TOP);
-    textSize(0.4 * v); // Slightly smaller for retro look
-
-    for (let i = start; i < this.history.length; i++) {
-        // Draw text with glow effect
-        fill(0, 255, 0, 100); // Glow
-        text("> " + this.history[i], left + 1, y + 1);
-        fill(0, 255, 0); // Main text
-        text("> " + this.history[i], left, y);
-        y += lh;
-    }
-
-    // Blinking Cursor with glow
-    const cursor = frameCount % 60 < 30 ? "_" : " ";
-    fill(0, 255, 0, 100); // Glow
-    text("> " + this.input + cursor, left + 1, y + 1);
-    fill(0, 255, 0); // Main text
-    text("> " + this.input + cursor, left, y);
-
-    pop();
-  }
-
-  update(dt) {}
-
-  keyPressed() {
-    // Ensure this terminal is the active interface
-    if (window.activeInterface !== 'Terminal') {
-      return false; // Don't handle the event
-    }
-
-    // Arrow keys exit the terminal
-    if (keyCode === LEFT_ARROW || keyCode === RIGHT_ARROW) {
-      R.selfRemove(this._closeBtn);
-      R.remove(this);
-      window.activeInterface = null; // Clear active interface flag
+  close() {
+    if (typeof this.onExit === "function") {
       this.onExit();
-      return true; // Event handled
     }
 
-    // Submit
-    if (keyCode === ENTER || keyCode === RETURN) {
-      //check if it starts with * and look through the list of passwords to see if it matches, case sensitive. if it does, run that command. else, check it for the list of regular commands, and if it matches, run it.
-      // Check if it's a password command before adding to history
-      if (this.input.startsWith('*')) {
-        // Try to check password
-        if (typeof checkPassword === 'function' && checkPassword(this.input)) {
-          // Password was correct, close terminal and execute sequence
-          R.selfRemove(this._closeBtn);
-          R.remove(this);
-          window.activeInterface = null;
-          this.onExit();
-          return true; // Event handled
-        } else {
-          // Invalid password, show error
-          this.history.push(this.input);
-          this.history.push("Invalid password");
-        }
-      } else {
-        // Regular command, just add to history for now
-        this.history.push(this.input);
-      }
-      
-      // keep history bounded
-      if (this.history.length > 200) this.history.shift();
-      this.input = "";
-      return true; // Event handled
-    }
+    R.selfRemove(this._closeBtn);
+    R.remove(this);
 
-    // Backspace
-    if (keyCode === BACKSPACE) {
-      this.input = this.input.slice(0, -1);
-      return true; // Event handled
-    }
-
-    // Accept only ASCII
-    if (typeof key === "string" && /^[\x20-\x7E]$/.test(key)) {
-      this.input += key;
-      return true; // Event handled
-    }
-
-    // If we get here, the key wasn't handled
-    return false;
+    window.activeInterface = null;
   }
 
-  // Clean up if you ever remove it externally
+  // force end for "win"
+  forceEndGame() {
+    if (typeof this.onFullCleanup === "function") {
+      this.onFullCleanup();
+    }
+
+    // remove terminal
+    R.selfRemove(this._closeBtn);
+    R.remove(this);
+
+    window.activeInterface = null;
+
+    if (typeof GS !== "undefined" && GS.set) {
+      GS.set("Game Complete");
+      GS.set("Ended");
+    }
+
+    if (typeof WORLD !== "undefined" && WORLD.gotoRoom) {
+      WORLD.gotoRoom(3, 0);
+    }
+  }
+
   onRemove() {
-    window.activeInterface = null; // Ensure interface state is cleared
+    window.activeInterface = null;
     R.remove(this._closeBtn);
   }
 
-  // Method to force reset the terminal state
   static resetInterface() {
     console.log("Resetting terminal interface state");
     window.activeInterface = null;
   }
-}
 
+
+  _registerCommands() {
+    this.registerCommand("help", () => {
+      this.print("Available commands:");
+      this.print(Object.keys(this.commands).join(", "));
+    });
+
+    this.registerCommand("clear", () => {
+      this.history = [];
+      this.print("(screen cleared)");
+    });
+
+    this.registerCommand("win", () => {
+      this.print("FORCING MISSION SUCCESS...");
+      this.forceEndGame();
+    });
+
+    this.registerCommand("*henry", () => {
+      this.print("CONNECTION: HENRY CHANNEL OPEN");
+
+      const henrySequence = new HenryPasswordSequence();
+      R.add(henrySequence, 100); 
+
+      
+      try {
+        if (
+          typeof henrySequence.startAudio === "function"
+        ) {
+          henrySequence.startAudio();
+        }
+      } catch (_) {
+      }
+
+      this.close();
+    });
+
+    this.registerCommand("*lab", () => {
+      this.print("ACCESS: LAB SECURITY OVERRIDE ACCEPTED");
+
+      if (typeof GS !== "undefined" && GS.set) {
+        GS.set("Life Support Access Granted");
+      }
+
+      this.close();
+    });
+
+    this.registerCommand("*root", () => {
+      this.print("PRIVILEGE ESCALATION: ROOT ACCESS GRANTED");
+
+      if (typeof GS !== "undefined" && GS.set) {
+        GS.set("Life Support Access Granted");
+        GS.set("Pin Solved");
+        GS.set("Wires Solved");
+        GS.set("regulateOxygenPuzzleSolved");
+        GS.set("regulateTempPuzzleSolved");
+        GS.set("Root Access Granted");
+      }
+    });
+  }
+
+  registerCommand(name, fn) {
+    // make commands case-insensitive
+    this.commands[name.toLowerCase()] = fn;
+  }
+
+  runCommand(line) {
+    // first word is the command
+    const firstSpace = line.indexOf(" ");
+    let cmdName, args;
+    if (firstSpace === -1) {
+      cmdName = line;
+      args = "";
+    } else {
+      cmdName = line.slice(0, firstSpace);
+      args = line.slice(firstSpace + 1);
+    }
+
+    cmdName = cmdName.toLowerCase();
+
+    const handler = this.commands[cmdName];
+    if (handler) {
+      handler(args);
+    } else {
+      this.print(`Unknown command: ${cmdName} (type "help")`);
+    }
+  }
+
+  print(text) {
+    this.history.push(text);
+    if (this.history.length > 200) {
+      this.history.shift();
+    }
+  }
+
+  _echoInput() {
+    this.print(this.input);
+  }
+
+  keyPressed() {
+    if (window.activeInterface !== "Terminal") {
+      return false;
+    }
+
+    // arrow keys = normal close
+    if (keyCode === LEFT_ARROW || keyCode === RIGHT_ARROW) {
+      this.close();
+      return true;
+    }
+
+    // ENTER submits
+    if (keyCode === ENTER || keyCode === RETURN) {
+      this._handleSubmit();
+      return true;
+    }
+
+    // BACKSPACE edits
+    if (keyCode === BACKSPACE) {
+      this.input = this.input.slice(0, -1);
+      return true;
+    }
+
+    // printable ASCII only
+    if (typeof key === "string" && /^[\x20-\x7E]$/.test(key)) {
+      this.input += key;
+      return true;
+    }
+
+    return false;
+  }
+
+  _handleSubmit() {
+    // push the typed text (like a real terminal)
+    this._echoInput();
+
+    // run that string as a command
+    this.runCommand(this.input);
+
+    // clear input field
+    this.input = "";
+  }
+
+  update(dt) {}
+
+  draw() {
+    const u = VM.u();
+    const v = VM.v();
+
+    push();
+
+    // monitor background / frame
+    const screenSprite = SM.get("screen");
+    if (screenSprite && screenSprite.src) {
+      image(screenSprite.src, 2 * u, 1 * v, 12 * u, 7 * v);
+    } else {
+      fill(0);
+      stroke(128);
+      strokeWeight(2);
+      rect(2 * u, 1 * v, 12 * u, 7 * v, 10);
+    }
+
+    // header bar
+    noStroke();
+    fill(60);
+    rect(2 * u, 1 * v, 12 * u, 0.8 * v, 10);
+
+    // header text w/ glow
+    textAlign(LEFT, CENTER);
+    textFont(terminusFont);
+    textSize(0.45 * v);
+
+    fill(0, 255, 0, 150);
+    text("Terminal", 2.3 * u + 1, 1.4 * v + 1);
+
+    fill(0, 255, 0);
+    text("Terminal", 2.3 * u, 1.4 * v);
+
+    // scanlines
+    stroke(0, 0, 0, 30);
+    strokeWeight(1);
+    for (let i = 0; i < 7 * v; i += 4) {
+      line(2 * u, 1 * v + i, 14 * u, 1 * v + i);
+    }
+    noStroke();
+
+    // terminal log
+    const left = 2.3 * u;
+    const top = 1.9 * v;
+    const lineH = 0.6 * v;
+
+    textAlign(LEFT, TOP);
+    textFont(terminusFont);
+    textSize(0.4 * v);
+
+    const startIndex = Math.max(0, this.history.length - this.maxLines);
+    let y = top;
+
+    for (let i = startIndex; i < this.history.length; i++) {
+      const lineText = "> " + this.history[i];
+
+      // glow
+      fill(0, 255, 0, 100);
+      text(lineText, left + 1, y + 1);
+
+      // body
+      fill(0, 255, 0);
+      text(lineText, left, y);
+
+      y += lineH;
+    }
+
+    // input row + blinking cursor
+    const cursor = frameCount % 60 < 30 ? "_" : " ";
+    const inputLine = "> " + this.input + cursor;
+
+    fill(0, 255, 0, 100);
+    text(inputLine, left + 1, y + 1);
+
+    fill(0, 255, 0);
+    text(inputLine, left, y);
+
+    pop();
+  }
+}
 
 class PinButton extends Button {
     constructor(x, y, size, val, onClick = () => {}) {
@@ -362,13 +489,19 @@ class ComputerView extends View {
                 
                 R.selfRemove(self);
                 R.remove(this.pinpadHighlight);
-                R.add(new Terminal(() => {
-                    // Add a small delay before re-enabling highlights to prevent immediate re-triggering
-                    setTimeout(() => {
-                        R.add(this.terminalHighlight);
-                        R.add(this.pinpadHighlight);
-                    }, 100);
-                }));
+                R.add(new Terminal(
+                    () => {
+                        setTimeout(() => {
+                            R.add(this.terminalHighlight);
+                            R.add(this.pinpadHighlight);
+                        }, 100);
+                    },
+                    () => {
+                        R.remove(this.terminalHighlight);
+                        R.remove(this.pinpadHighlight);
+                        R.remove(this.pinpad);
+                    }
+                ));
             }
         );
 

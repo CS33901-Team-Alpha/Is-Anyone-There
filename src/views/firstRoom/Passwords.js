@@ -159,12 +159,12 @@ class HenryPasswordSequence {
 }
 
 // Password checking function that can be called from Terminal
-function checkPassword(input) {
-  if (input.startsWith('*') && input.slice(1).toLowerCase() === 'henry') {
-    // Trigger henry sequence
-    const henrySequence = new HenryPasswordSequence();
-    R.add(henrySequence, 100); // High z-index to render on top of everything
-    return true;
-  }
-  return false;
-}
+// function checkPassword(input) {
+//   if (input.startsWith('*') && input.slice(1).toLowerCase() === 'henry') {
+//     // Trigger henry sequence
+//     const henrySequence = new HenryPasswordSequence();
+//     R.add(henrySequence, 100); // High z-index to render on top of everything
+//     return true;
+//   }
+//   return false;
+// }
