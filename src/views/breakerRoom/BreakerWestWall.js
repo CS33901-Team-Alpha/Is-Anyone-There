@@ -10,6 +10,10 @@ class WestWall extends View {
   draw() {}
 
   onEnter() {
+    AM.stop("startGame")
+    if(!AM.isLooping("technoLoop")){
+            AM.loop('technoLoop')
+        }
     R.add(this.background);
   }
 
