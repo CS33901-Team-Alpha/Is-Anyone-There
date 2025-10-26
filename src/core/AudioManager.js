@@ -1,3 +1,4 @@
+
 function loadSounds(){
     AM.add("titleScreen", loadSound('assets/Is_Anybody_There.mp3'));
 
@@ -12,6 +13,12 @@ function loadSounds(){
     AM.add("drawerOpen", loadSound('assets/sounds/drawerOpen.mp3'));
     AM.add("drawerClose", loadSound('assets/sounds/drawerClose.mp3'));
     AM.add("drawerLocked", loadSound('assets/sounds/drawerLocked.mp3'));
+    AM.add("door-lock", loadSound('assets/sounds/door-lock.mp3'));
+    AM.add("doorOpen", loadSound('assets/sounds/doorOpen.mp3'));
+    AM.add("technoLoop", loadSound('assets/sounds/technoLoop.mp3'));
+    AM.add("startGame", loadSound('assets/sounds/startGame.mp3'));
+    AM.add("cryoLoop", loadSound('assets/sounds/cryoLoop.mp3'));
+
 }
 
 class AudioManager{
@@ -119,6 +126,24 @@ class AudioManager{
             }
         }
         this.pausedSounds.clear(); // Clear after resuming
+    }
+
+    stopAll() {
+        for (let [name, sound] of this.sounds.entries()) {
+            if (sound.isPlaying()) {
+                sound.stop();
+            }
+        }
+    }
+
+    isPlaying(name) {
+        const sound = this.get(name);
+        return sound ? sound.isPlaying() : false;
+    }
+
+    isLooping(name) {
+        const sound = this.get(name);
+        return sound ? sound.isLooping() : false;
     }
 }
     

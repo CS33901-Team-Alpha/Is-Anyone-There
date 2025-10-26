@@ -98,6 +98,9 @@ class CryoView extends View{
     }
 
     onEnter() {
+        AM.stop("startGame")
+        AM.stop("technoLoop")
+        AM.loop("cryoLoop")
         R.add(this.background);
 
          for(let i = 0; i < 4; i++){
