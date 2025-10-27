@@ -70,7 +70,7 @@ class SpaceWindowView extends View{
      */
     constructor() {
         super(0,0,0,'');
-        this.background = SM.get("MetalWall");
+        this.background = SM.get("blankCryo");
         this.background.setSize(16, 9);
         
         // min and max delay (in seconds) for the next random message to popup

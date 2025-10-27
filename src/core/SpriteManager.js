@@ -42,6 +42,12 @@ function loadSprites() {
     SM.add("fullCryo2", loadImage('assets/object/fullCryo.webp'));
     SM.add("fullCryo3", loadImage('assets/object/fullCryo.webp'));
     SM.add("fullCryo4", loadImage('assets/object/fullCryo.webp'));
+
+    SM.add("blankCryo", loadImage('assets/background/CryoBlank.png'));
+    SM.add("cryoLeft1", loadImage('assets/background/Cryoleft1.png'));
+    SM.add("cryoLeft2", loadImage('assets/background/Cryoleft2.png'));
+    SM.add("cryoRight1", loadImage('assets/background/Cryoright1.png'));
+    SM.add("cryoRight2", loadImage('assets/background/Cryoright2.png'));
     
     // breaker room
     SM.add("closedRepair", loadImage('assets/object/CabinetClosed.png'));
@@ -59,6 +65,31 @@ function loadSprites() {
     SM.add("southWallBreaker", loadImage('assets/background/lifeSupport.webp'))
     SM.add("eastWallBreaker", loadImage('assets/background/warning.webp'))
     SM.add("westWallBreaker", loadImage('assets/background/blankWall.png'))
+
+    //Life Support Room
+    SM.add("StatusSign", loadImage('assets/object/SupportStatusSign.png'));
+    SM.add("TemperatureSign", loadImage('assets/object/TempSign.png'));
+    SM.add("OxygenSign", loadImage('assets/object/OxygenSign.png'));
+    SM.add("ElectricalSign", loadImage('assets/object/ElectricalSign.png'));
+    SM.add("RedLight1", loadImage('assets/object/RedStatusLight.png'));
+    SM.add("RedLight2", loadImage('assets/object/RedStatusLight2.png'));
+    SM.add("RedLight3", loadImage('assets/object/RedStatusLight3.png'));
+    SM.add("GreenLight1", loadImage('assets/object/GreenStatusLight.png'))
+    SM.add("GreenLight2", loadImage('assets/object/GreenStatusLight2.png'))
+    SM.add("GreenLight3", loadImage('assets/object/GreenStatusLight3.png'))
+    SM.add("OffLight1", loadImage('assets/object/offStatusLight.png'))
+    SM.add("OffLight2", loadImage('assets/object/offStatusLight2.png'))
+    SM.add("OffLight3", loadImage('assets/object/offStatusLight3.png'))
+    SM.add("OffLight4", loadImage('assets/object/offStatusLight4.png'))
+    SM.add("OffLight5", loadImage('assets/object/offStatusLight5.png'))
+    SM.add("OffLight6", loadImage('assets/object/offStatusLight6.png'))
+    SM.add("OxygenScreen", loadImage('assets/object/OxygenScreen.png'))
+    SM.add("TemperatureScreen", loadImage('assets/object/TemperatureScreen.png'))
+
+    SM.add("northWallSupport", loadImage('assets/background/OxygenView.png'))
+    SM.add("southWallSupport", loadImage('assets/background/SupportDoorView.png'))
+    SM.add("eastWallSupport", loadImage('assets/background/TemperatureView.png'))
+    SM.add("westWallSupport", loadImage('assets/background/StatusView.png'))
 
     // botanical assets
     SM.add("placeholderPlant", loadImage('assets/placeholders/botanical/dummyPlant.png'))

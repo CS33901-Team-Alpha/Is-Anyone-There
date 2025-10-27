@@ -60,7 +60,7 @@ class LifeSupportKeypad {
     constructor(onExit = () => {}) {
         this.input = "";
         this.onExit = onExit;
-        this.password = "LIFESUPPORT"; // The required password
+        this.password = "LIFE"; // The required password
         this.isProcessing = false;
         this.feedbackColor = null; // null, 'green', or 'red'
         this.feedbackMessage = "";

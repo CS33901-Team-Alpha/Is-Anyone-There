@@ -64,7 +64,7 @@ class CryoDoorView extends View{
      */
     constructor(num) {
         super(0,0,0,'');
-        this.background = SM.get("MetalWall");
+        this.background = SM.get("blankCryo");
         this.background.setSize(16, 9);
 
         this.textNotificationHandler = new TextNotificationHandler(0.5, 0.85);

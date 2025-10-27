@@ -5,8 +5,8 @@ class Button {
     this.size = size;
     this.onClick = onClick;
 
-    this.baseColor = color(200);
-    this.hoverColor = color(150);
+    this.baseColor = color(100);
+    this.hoverColor = color(50);
   }
 
   isMouseInBounds(mx, my) {
@@ -29,7 +29,7 @@ class Button {
 
     noStroke();
     fill(c);
-    rect(this.x * u, this.y * v, this.size * u, this.size * v, 0.5 * u);
+    rect(this.x * u, this.y * v, this.size * u, this.size * v, 0.2 * u);
   }
 
   mousePressed(p) {

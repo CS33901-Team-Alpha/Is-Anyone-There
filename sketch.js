@@ -261,7 +261,7 @@ function setupWorld() {
     targetRoom: 1,        // <-- to breaker room
     targetViewIndex: 1,
     lockedCondition : () => true
-  }],SM.get("MetalWall"));
+  }],SM.get("blankCryo"));
 
   cryoRoom.addView(cryoView1);
   cryoRoom.addView(cryoView2);
@@ -276,16 +276,16 @@ function setupWorld() {
   const temperatureView    = new TemperaturePuzzleView();
   const lifeSupportView = new LifeSupportView();
   const sdLifeToBreaker = new SlidingDoorView([{
-    x:2, y:2, scale:1,
+    x:2, y:1.5, scale:1,
     targetRoom: 1,        // back to breaker room
     targetViewIndex: 3,   // eastWallView is at index 2
     lockedCondition : () => true
-  }],SM.get("MetalWall"));
+  }],SM.get("southWallSupport"));
 
   lifeSupportRoom.addView(oxygenPressureView);
   lifeSupportRoom.addView(temperatureView);
-  lifeSupportRoom.addView(lifeSupportView);
   lifeSupportRoom.addView(sdLifeToBreaker);
+  lifeSupportRoom.addView(lifeSupportView);
   sdLifeToBreaker.setRoom?.(lifeSupportRoom);
   
   // --- Room E (Reactor Room) ---

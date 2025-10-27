@@ -64,7 +64,18 @@ class CryoView extends View{
      */
     constructor(num) {
         super(0,0,0,'');
-        this.background = SM.get("MetalWall");
+        if(num == 0) {
+            this.background = SM.get("cryoLeft1");
+        }
+        else if(num == 1) {
+            this.background = SM.get("cryoRight1");
+        }
+        else if(num == 2) {
+            this.background = SM.get("cryoLeft2");
+        }
+        else if(num == 3) {
+            this.background = SM.get("cryoRight2");
+        }
         this.background.setSize(16, 9);
 
         this.textNotificationHandler = new TextNotificationHandler(0.5, 0.85);

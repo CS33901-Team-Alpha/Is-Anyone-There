@@ -2,15 +2,15 @@ class OxygenPressureView extends View {
   constructor() {
     super();
 
-    this.background = SM.get("MetalWall");
+    this.background = SM.get("northWallSupport");
     this.background.setSize(16, 9);
 
     this.startingPressures = [0.2, 0.4, 0.5, 0.2];
     this.bars = [
-      { label: "A", pressure: 0.2, x: 2,  y: 4, width: 1, height: 3 },
-      { label: "B", pressure: 0.4, x: 5,  y: 4, width: 1, height: 3 },
-      { label: "C", pressure: 0.5, x: 8,  y: 4, width: 1, height: 3 },
-      { label: "D", pressure: 0.2, x: 11, y: 4, width: 1, height: 3 },
+      { label: "", pressure: 0.2, x: 2,  y: 2, width: 1, height: 3 },
+      { label: "", pressure: 0.4, x: 5,  y: 2, width: 1, height: 3 },
+      { label: "", pressure: 0.5, x: 8,  y: 2, width: 1, height: 3 },
+      { label: "", pressure: 0.2, x: 11, y: 2, width: 1, height: 3 },
     ];
 
     this.influenceMatrix = [
@@ -24,8 +24,8 @@ class OxygenPressureView extends View {
     this.solved = false;
 
     this.buttons = [];
-    const buttonY = 7;
-    const buttonSize = 1.2;
+    const buttonY = 5.5;
+    const buttonSize = 1;
 
     for (let i = 0; i < 4; i++) {
       const buttonX = 2 + i * 3;
@@ -38,9 +38,32 @@ class OxygenPressureView extends View {
       this.buttons.push(button);
     }
 
-    this.resetButton = new Button(13, 6, 1.5, () => this.resetPuzzle());
+    this.resetButton = new Button(13, 4, 1.5, () => this.resetPuzzle());
 
     this.screenTimer = screenTimer
+
+    this.closeBtn = new Button(14, 1.2, 0.8, (self) => {
+      this.activeInterface = "ScreenView";
+      R.add(this.highlight);
+      R.add(this.screenSprite);
+      R.remove(this.closeBtn);
+    });
+
+    // clickable highlight
+    this.highlight = new HighlightEvent(6, 2.5, 4.4, 2.8, 255,255,255,() =>{
+      R.remove(this.highlight);
+      R.remove(this.screenSprite);
+      R.add(this.closeBtn);
+      this.activeInterface = "PuzzleView";
+    });
+
+    this.screenSprite = SM.get("OxygenScreen");
+    this.screenSprite.setPos(5.1, 2);
+    this.screenSprite.setScale(0.5);
+
+    this.locked = false;
+
+    this.activeInterface = "ScreenView";
   }
 
   resetPuzzle() {
@@ -81,6 +104,7 @@ class OxygenPressureView extends View {
 
   onSolved() {
     console.log("Oxygen puzzle solved");
+    AI.addText('>_  ACTION RECOGNIZED... \n>_  OXYGEN SUPPORT SYSTEM STABILIZING... \n>_  SYSTEM REMAINS CRITICAL - MANUAL ACTIONS REQUIRED');
     GS.set("regulateOxygenPuzzleSolved");
     this.screenTimer.addTime(30)
   }
@@ -92,46 +116,73 @@ class OxygenPressureView extends View {
   }
 
   draw() {
+    const u = VM.u();
+    const v = VM.v();
+
     this.background?.draw();
 
-    const solved = this.solved;
+    if(this.activeInterface == "PuzzleView") {
+      const solved = this.solved;
 
-    for (const bar of this.bars) {
-      const u = VM.u();
-      const v = VM.v();
+      fill(0, 0, 0, 180); // Red, Green, Blue
+      rect(1*u, 1*v, 14*u, 6.25*v);
 
-      stroke(solved ? "green" : "red");
-      strokeWeight(2);
-      fill(0, 100, 255); // blue fill
+      for (const bar of this.bars) {
+        push();
+        strokeWeight(2);
+        fill(0, 100, 255); // blue fill
 
-      rect(bar.x * u, bar.y * v, bar.width * u, bar.height * v);
+        rect(bar.x * u, bar.y * v, bar.width * u, bar.height * v);
 
-      fill(0, 150, 255);
-      noStroke();
-      rect(
-        bar.x * u,
-        (bar.y + bar.height * (1 - bar.pressure)) * v,
-        bar.width * u,
-        bar.height * bar.pressure * v
-      );
+        fill(0, 150, 255);
+        noStroke();
+        rect(
+          bar.x * u,
+          (bar.y + bar.height * (1 - bar.pressure)) * v,
+          bar.width * u,
+          bar.height * bar.pressure * v
+        );
 
-      fill("white");
-      textAlign(CENTER, CENTER);
-      textSize(0.5 * u);
-      text(bar.label, (bar.x + 0.5) * u, (bar.y + bar.height + 0.5) * v);
+        fill("white");
+        textAlign(CENTER, CENTER);
+        textSize(0.5 * u);
+        text(bar.label, (bar.x + 0.5) * u, (bar.y + bar.height + 0.5) * v);
+      }
+
+      for (const button of this.buttons) button.draw();
+
+      if(!GS.is("regulateOxygenPuzzleSolved")) {
+        this.resetButton.draw();
+        fill("black");
+        textAlign(CENTER, CENTER);
+        textSize(0.2 * VM.U);
+        text("Reset", (13 + 0.75) * VM.U, (4 + 0.75) * VM.V);
+      }
+      pop();
     }
+    else if(this.activeInterface == "ScreenView") {
 
-    for (const button of this.buttons) button.draw();
-
-    this.resetButton.draw();
-    fill("black");
-    textAlign(CENTER, CENTER);
-    textSize(0.6 * VM.U);
-    text("Reset", (13 + 0.75) * VM.U, (6 + 0.6) * VM.V);
+    }
   }
 
   mousePressed(p) {
-    for (const button of this.buttons) button.mousePressed(p);
-    this.resetButton.mousePressed(p);
+    if(this.activeInterface == "PuzzleView") {
+      for (const button of this.buttons) button.mousePressed(p);
+      this.resetButton.mousePressed(p);
+    }
+    else {
+      this.highlight.mousePressed(p);
+    }
+  }
+
+  onEnter() {
+    R.add(this.highlight);
+    R.add(this.screenSprite);
+  }
+
+  onExit() {
+    this.activeInterface = "ScreenView";
+    R.remove(this.highlight);
+    R.remove(this.screenSprite);
   }
 }

@@ -40,10 +40,9 @@ function repairItemUsed(itemName, x, y, width, height, notifHandler){
             else if((itemName == 'electricalTape') && (targetId == BROKEN_COMPONENT_ID)){
                 notifHandler.addText('You have fixed a broken component!')
                 
-                AI.addText('>_  SYSTEM CONDITION STABILIZING... \n>_  RETURNING TO NORMAL OPERATION... \n>_  --- THANK YOU USER ---');
+                AI.addText('>_  ACTION RECOGNIZED... \n>_  ELECTRICAL SYSTEM STABILIZING... \n>_  SYSTEM REMAINS CRITICAL - MANUAL ACTIONS REQUIRED');
                 
                 GS.set("fixedElectricalComponent");
-                
             }
             else if((itemName == 'voltimeter') && (targetId != BROKEN_COMPONENT_ID)){
                 notifHandler.addText('This component seems to be working fine.')
@@ -169,7 +168,7 @@ class ElectricalComponent {
         [this.width, this.height] = this.sprite.getWH()
 
         // add to repair target registry for collision checking with items
-        repairTargetRegistry[id] = {x:this.x, y:this.y, w:this.width, h:this.height};
+        repairTargetRegistry[id] = {x:this.x-0.3, y:this.y-0.3, w:this.width, h:this.height};
     }
 
     isMouseInBounds(mx, my) {
@@ -275,7 +274,9 @@ class RepairToolCabinet {
 
     onEnter() {
         R.add(this.closedSprite, 9);
-        R.add(this.lockSprite, 10);
+        if(!this.lockBroken) {
+            R.add(this.lockSprite, 10);
+        }
     }
     onExit() {
         R.remove(this.closedSprite);
@@ -342,7 +343,7 @@ class ComponentHolderObject{
 
         this.ecs = [];
         this.ecs.push(new ElectricalComponent(0, 1.8, 6, 'cpu1', 0.8, componentClickMessage))
-        this.ecs.push(new ElectricalComponent(1, 1.95, 7.2, 'cpu2', 0.6, componentClickMessage))
+        this.ecs.push(new ElectricalComponent(1, 1.9, 7.2, 'cpu2', 0.7, componentClickMessage))
         this.ecs.push(new ElectricalComponent(2, 7.2, 6.6, 'cpu3', 0.75, componentClickMessage))
         this.ecs.push(new ElectricalComponent(3, 5.3, 6.3, 'cpu4', 0.75, componentClickMessage))
 

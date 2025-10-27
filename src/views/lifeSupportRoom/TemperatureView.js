@@ -102,23 +102,45 @@ class TemperaturePuzzleView extends View {
 
         // 3 temperatures for the user to interact with 
         this.nodes = {
-            A: new ThermalNode("A", 50, 4, 4),
-            B: new ThermalNode("B", 50, 5.5, 4),
-            C: new ThermalNode("C", 50, 7, 4)
+            A: new ThermalNode("A", 50, 6.5, 5),
+            B: new ThermalNode("B", 50, 8, 5),
+            C: new ThermalNode("C", 50, 9.5, 5)
         };
         
-        this.background = SM.get("MetalWall");
+        this.background = SM.get("eastWallSupport");
         
         // target temperatures 
-        this.target = { A: 2, B: 93, C: 60 };
+        this.target = { A: 13, B: 81, C: 66 };
 
         // slider's vertical limits 
-        this.minY = 3;
-        this.maxY = 5;
+        this.minY = 4;
+        this.maxY = 6;
 
         this.textHandler = new TextNotificationHandler(0.5, 1);
         this.screenTimer = screenTimer; // use to increase time if puzzle is solved 
 
+        this.closeBtn = new Button(12.9, 1.7, 0.8, (self) => {
+            this.activeInterface = "ScreenView";
+            R.add(this.highlight);
+            R.add(this.screenSprite);
+            R.remove(this.closeBtn);
+        });
+
+        // clickable highlight
+        this.highlight = new HighlightEvent(7.9, 3.5, 4.8, 3.1, 255,255,255,() =>{
+        R.remove(this.highlight);
+        R.remove(this.screenSprite);
+        R.add(this.closeBtn);
+        this.activeInterface = "PuzzleView";
+        });
+
+        this.screenSprite = SM.get("TemperatureScreen");
+        this.screenSprite.setPos(6.8, 3.1);
+        this.screenSprite.setScale(0.5);
+
+        this.solved = false;
+
+        this.activeInterface = "ScreenView";
     }
 
     // checking if the puzzle is solved 
@@ -169,49 +191,63 @@ class TemperaturePuzzleView extends View {
 
         const u = width / 16, v = height / 9;
 
-        // === PANEL BACKGROUND === 
-        push();
-        fill(25);
-        stroke(120);
-        strokeWeight(3);
-        rect(2 * u, 1 * v, 7 * u, 5 * v, 5);
-        pop();
+        if(this.activeInterface == "PuzzleView") {
 
-        // === HEADER STRIP   === 
-        push();
-        fill(40);
-        rect(2 * u, 1 * v, 7 * u, 0.8 * v, 10, 10, 0, 0);
-        fill('#6eb3caff');
-        textAlign(CENTER, CENTER);
-        textSize(14);
-        text('CALIBRATION PANEL', 5.5 * u, 1.4 * v);
-        pop();
+            fill(0, 0, 0, 180); // Red, Green, Blue
+            rect(2*u, 1.5*v, 12*u, 6.25*v);
 
-        // draw the nodes 
-        for (const node of Object.values(this.nodes)) node.draw(u, v);
-
-        // drawing the sliders 
-        for (const node of Object.values(this.nodes)) {
-            const cx = node.x * u;
-            const topY = this.minY * v;
-            const botY = this.maxY * v;
+            // === PANEL BACKGROUND === 
             push();
-            stroke(80);
-            strokeWeight(6);
-            line(cx, topY, cx, botY);
+            fill(25);
+            stroke(120);
+            strokeWeight(3);
+            rect(4.5 * u, 2.1 * v, 7 * u, 5 * v, 5);
             pop();
+
+            // === HEADER STRIP   === 
+            push();
+            fill(40);
+            rect(4.5 * u, 2.1 * v, 7 * u, 0.8 * v, 10, 10, 0, 0);
+            fill('#6eb3caff');
+            textAlign(CENTER, CENTER);
+            textSize(14);
+            text('CALIBRATION PANEL', 8 * u, 2.5 * v);
+            pop();
+
+            // draw the nodes 
+            for (const node of Object.values(this.nodes)) node.draw(u, v);
+
+            // drawing the sliders 
+            for (const node of Object.values(this.nodes)) {
+                const cx = node.x * u;
+                const topY = this.minY * v;
+                const botY = this.maxY * v;
+                push();
+                stroke(80);
+                strokeWeight(6);
+                line(cx, topY, cx, botY);
+                pop();
+            }
+        }
+        else if(this.activeInterface == "ScreenView") {
+
         }
     }
 
     // if node is clicked, begin dragging
     mousePressed(p) {
         const u = width / 16, v = height / 9;
-        for (const node of Object.values(this.nodes)) {
-            if (node.contains(mouseX, mouseY, u, v)) {
-                node.dragging = true;
-                node.offsetX = node.x - mouseX / u;
-                node.offsetY = node.y - mouseY / v;
+        if(this.activeInterface == "PuzzleView") {
+            for (const node of Object.values(this.nodes)) {
+                if (node.contains(mouseX, mouseY, u, v)) {
+                    node.dragging = true;
+                    node.offsetX = node.x - mouseX / u;
+                    node.offsetY = node.y - mouseY / v;
+                }
             }
+        }
+        else {
+            this.highlight.mousePressed(p);
         }
     }
 
@@ -233,13 +269,25 @@ class TemperaturePuzzleView extends View {
         if (this.checkOverflow()) {
             console.log("OVERLOAD! You died!");
             GS.set("Player Died");
-        } else if (this.checkSolved()) {
-            console.log("Puzzle solved! Door unlocked!");
-            this.textHandler.addText("Puzzle solved! Door unlocked!");
+        } else if (this.checkSolved() && !this.solved) {
+            console.log("Puzzle solved!");
+            AI.addText('>_  ACTION RECOGNIZED... \n>_  TEMPERATURE REGULATION SYSTEM STABILIZING... \n>_  SYSTEM REMAINS CRITICAL - MANUAL ACTIONS REQUIRED');            GS.set("regulateTempPuzzleSolved");
             GS.set("regulateTempPuzzleSolved");
             if (this.screenTimer) {
-                this.screenTimer.addTime(30); // add 30 seconds
+                this.screenTimer.addTime(60); // add 60 seconds
             }
+            this.solved = true;
         }
+    }
+
+    onEnter() {
+        R.add(this.highlight);
+        R.add(this.screenSprite);
+    }
+
+    onExit() {
+        this.activeInterface = "ScreenView";
+        R.remove(this.highlight);
+        R.remove(this.screenSprite);
     }
 }
