@@ -59,6 +59,14 @@ function loadSprites() {
     SM.add("southWallBreaker", loadImage('assets/background/lifeSupport.webp'))
     SM.add("eastWallBreaker", loadImage('assets/background/warning.webp'))
     SM.add("westWallBreaker", loadImage('assets/background/blankWall.png'))
+
+    // botanical assets
+    SM.add("placeholderPlant", loadImage('assets/placeholders/botanical/dummyPlant.png'))
+    SM.add("placeholderPlant2", loadImage('assets/placeholders/botanical/dummyPlant2.png'))
+    SM.add("placeholderMolecule", loadImage('assets/placeholders/botanical/potassiumSuperoxide.png'))
+    SM.add("placeholderMoleculeIcon", loadImage('assets/placeholders/botanical/potassiumSuperoxideIcon.png'))
+    SM.add("placeholderMolecule2", loadImage('assets/placeholders/botanical/testosterone.png'))
+    SM.add("placeholderMoleculeIcon2", loadImage('assets/placeholders/botanical/testosteroneIcon.png'))
 }
 
 

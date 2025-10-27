@@ -201,6 +201,7 @@ function setupWorld() {
   const cryoRoom = new ViewManager();
   const lifeSupportRoom = new ViewManager();
   const reactorRoom = new ViewManager();
+  const botanicalRoom = new ViewManager();
   
   // --- Room A (Start Room | start here) ---
   const computerView = new ComputerView(); // start view (index 0)
@@ -287,9 +288,15 @@ function setupWorld() {
   // --- Room E (Reactor Room) ---
   const operationReactorView = new OperationReactorPuzzleView();
   const restartReactorView = new RestartReactorView();
-  const sdReactorToBreaker = new SlidingDoorView([{ 
+  const sdReactorToBreaker = new SlidingDoorView([{ // back to breaker
     x:12, y:2.5, scale:0.8,
     targetRoom: 1,         // <-- breaker room
+    targetViewIndex: 0, 
+    lockedCondition : () => true
+  }], SM.get("MetalWall"));
+  const sdReactorToBotanical = new SlidingDoorView([{ // to botanical
+    x:12, y:2.5, scale:0.8,
+    targetRoom: 5,         // <-- botanical index
     targetViewIndex: 0, 
     lockedCondition : () => true
   }], SM.get("MetalWall"));
@@ -297,6 +304,18 @@ function setupWorld() {
   reactorRoom.addView(operationReactorView);
   reactorRoom.addView(restartReactorView);
   reactorRoom.addView(sdReactorToBreaker);
+  reactorRoom.addView(sdReactorToBotanical);
+  
+  // --- Room F (Botanical Room) ---
+  const plantsView = new PlantsView();
+  const plantsView2 = new PlantsView2();
+  const plantsView3 = new PlantsView3();
+  const synthesisView = new SynthesisView();
+
+  botanicalRoom.addView(plantsView);
+  botanicalRoom.addView(plantsView2);
+  botanicalRoom.addView(plantsView3);
+  botanicalRoom.addView(synthesisView);
 
   // register rooms (A=0, B=1, C=2) and let WORLD receive key events
   WORLD.addRoom(startRoom);   // index 0
@@ -304,5 +323,6 @@ function setupWorld() {
   WORLD.addRoom(cryoRoom);   // index 2
   WORLD.addRoom(lifeSupportRoom);   // index 3
   WORLD.addRoom(reactorRoom);   // index 4
+  WORLD.addRoom(botanicalRoom);   // index 5
   R.add(WORLD, 1000);
 }
