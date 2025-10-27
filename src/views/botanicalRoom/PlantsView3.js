@@ -1,8 +1,6 @@
-class PlantsView3 extends View {
-    constructor() {
-        super(0, 0, 0, '');
-        this.background = SM.get("MetalWall");
-        this.background.setSize(16, 9);
+class PlantsView3 extends SlidingDoorView {
+    constructor(slidingDoors = []) {
+        super(slidingDoors, SM.get("MetalWall"));
 
         this.textNotificationHandler = new TextNotificationHandler(0.5, 0.85);
 
@@ -27,13 +25,11 @@ class PlantsView3 extends View {
     }
 
     onEnter() {
-        R.add(this.background, 1);
         R.add(this.plant, 10);
         this.plant.onEnter();
     }
 
     onExit() {
-        R.remove(this.background, 1);
         R.remove(this.plant);
         this.plant.onExit();
     }

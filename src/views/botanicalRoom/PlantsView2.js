@@ -8,12 +8,12 @@ class PlantsView2 extends View {
 
         this.plant = new PlantObject(8, 6, 'placeholderPlant2', new InspectComponent('Chionodoxa siehei',
              'Chionodoxa siehei is composed of 0.5% C19H28O2 (Testosterone). Perhaps it can be used to make something useful...',
-              'placeholderMolecule2',
+              'placeholderMolecule',
              'Collect',
              () => {
-                IM.addItem(new InventoryItem('Chionodoxa siehei', 'placeholderMoleculeIcon2'))
+                IM.addItem(new InventoryItem('Chionodoxa siehei', 'placeholderMoleculeIcon'))
              },
-            {backgroundColor: [28, 197, 145, 100]}))
+            {backgroundColor: [28, 197, 145, 100]}));
     }
 
     update(dt){

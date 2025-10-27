@@ -29,7 +29,9 @@ class PlantObject{
     }
 
     mousePressed(p) {
+        console.log('yeah')
         if (this.isMouseInBounds(p?.x, p?.y)) {
+            console.log('yes')
             this.inspection.onEnter();
             R.add(this.inspection, 11);
         }
@@ -54,14 +56,16 @@ class PlantsView extends View {
 
         this.textNotificationHandler = new TextNotificationHandler(0.5, 0.85);
 
-        this.plant = new PlantObject(2.5, 6, 'placeholderPlant', new InspectComponent('GOAT Plant',
-             'The GOAT plant is composed of 0.3% KO2 (Potassium Superoxide). This molecule can react with CO2 (Carbon Dioxide) to produce O2 (Oxygen). Perhaps it can be used to make something useful...',
-              'placeholderMolecule',
-             'Collect',
-             () => {
-                IM.addItem(new InventoryItem('GOAT Plant', 'placeholderMoleculeIcon'))
-             },
-            {backgroundColor: [28, 197, 145, 100]}))
+        this.plant = new PlantObject(4, 6, 'placeholderPlant', new InspectComponent(
+            'Erythroxylum coca',
+            'Erythroxylum coca contains trace alkaloids including C17H21NO4 (Cocaine). Handle with care—its properties may be repurposed...',
+            'placeholderMolecule2',
+            'Collect',
+            () => {
+                IM.addItem(new InventoryItem('Erythroxylum coca', 'placeholderMoleculeIcon2'));
+            },
+            { backgroundColor: [200, 50, 50, 100] }
+        ));
     }
 
     update(dt){

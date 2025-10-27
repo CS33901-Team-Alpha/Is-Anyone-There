@@ -8,6 +8,7 @@ let AM = new AudioManager();
 let GS;  //ref
 let WORLD;  //ref
 let AI = new AiMessageHandler(1, 7.3);
+let IM = new InventoryManager()
 
 let endscreenShown = false; //ref | changing conditions might not need to be global because of GS
 let ended = false; //ref -----^
@@ -128,6 +129,7 @@ function draw() {
     bootupAI();
   }
   
+  IM.update(dt)
   R.update(dt);
   AI.update(dt);
   R.draw();
@@ -165,6 +167,7 @@ function mouseReleased() {
   const mouse = VM.mouse();
   if (!VM.insideUnits(mouse)) return;
   R.dispatch('mouseReleased', mouse);
+  IM.handleDrop(mouse);
 }
 
 function keyPressed() {
@@ -309,12 +312,17 @@ function setupWorld() {
   // --- Room F (Botanical Room) ---
   const plantsView = new PlantsView();
   const plantsView2 = new PlantsView2();
-  const plantsView3 = new PlantsView3();
+  const sdBotanicalToReactor = new SlidingDoorView([{ // to nuclear
+    x:12, y:2.5, scale:0.8,
+    targetRoom: 4,         // <-- nuclear index
+    targetViewIndex: 0, 
+    lockedCondition : () => true
+  }], SM.get("MetalWall"));
   const synthesisView = new SynthesisView();
 
   botanicalRoom.addView(plantsView);
   botanicalRoom.addView(plantsView2);
-  botanicalRoom.addView(plantsView3);
+  botanicalRoom.addView(sdBotanicalToReactor);
   botanicalRoom.addView(synthesisView);
 
   // register rooms (A=0, B=1, C=2) and let WORLD receive key events

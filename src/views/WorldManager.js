@@ -30,6 +30,10 @@ class WorldManager {
         return this.rooms[this.current];
     }
 
+    get activeRoomIndex(){
+        return this.current
+    }
+
     gotoRoom(indexOrVm, viewIndex = 0) {
         const nextIndex = (typeof indexOrVm === 'number')
             ? indexOrVm
@@ -51,6 +55,14 @@ class WorldManager {
         // land on a specific view within that room
         if (typeof viewIndex === 'number' && typeof nextVm.gotoIndex === 'function') {
             nextVm.gotoIndex(viewIndex);
+        }
+
+        // index of botanical room, to add inventory viewer to the screen ONLY when player is in botanical room
+        if(this.current == 5){
+            R.add(IM, 900)
+        }
+        else{
+            R.remove(IM)
         }
     }
 }
