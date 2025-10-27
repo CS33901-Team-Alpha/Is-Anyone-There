@@ -60,6 +60,11 @@ class ViewManager {
       const next = this.Views[this._currentView]; R.add(next); next.onEnter?.();
       return true; // Event handled
     }
+
+    if (current && typeof current.keyPressed === "function") {
+        current.keyPressed();
+        return true;
+    }
     
     return false; // Event not handled
   }

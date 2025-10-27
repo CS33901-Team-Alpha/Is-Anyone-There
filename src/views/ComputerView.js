@@ -119,6 +119,7 @@ class Terminal {
         GS.set("regulateOxygenPuzzleSolved");
         GS.set("regulateTempPuzzleSolved");
         GS.set("Root Access Granted");
+        GS.set('fixedElectricalComponent')
       }
     });
   }

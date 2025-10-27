@@ -42,9 +42,8 @@ function repairItemUsed(itemName, x, y, width, height, notifHandler){
                 
                 AI.addText('>_  SYSTEM CONDITION STABILIZING... \n>_  RETURNING TO NORMAL OPERATION... \n>_  --- THANK YOU USER ---');
                 
-                setTimeout(() => {
-                    GS.set("Game Complete");
-                }, 6000);
+                GS.set("fixedElectricalComponent");
+                
             }
             else if((itemName == 'voltimeter') && (targetId != BROKEN_COMPONENT_ID)){
                 notifHandler.addText('This component seems to be working fine.')
@@ -406,7 +405,9 @@ class RepairView extends View {
 
         this.componentHolder = new ComponentHolderObject(1.2, 5, 1.9, this.textNotificationHandler, ()=>{});
 
-        this.slidingDoor = new StandaloneSlidingDoor(12, 2.3, 1, () => {}, true, 2, null, 2, 0, () => false);
+        this.slidingDoor = new StandaloneSlidingDoor(12, 2.3, 1, () => {}, true, 2, null, 4, 0, () => {
+            return GS.is('fixedElectricalComponent')
+        });
 
         this.slidingDoor.setRoom(this);
     }

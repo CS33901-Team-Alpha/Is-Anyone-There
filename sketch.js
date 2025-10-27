@@ -200,6 +200,7 @@ function setupWorld() {
   const breakerRoom = new ViewManager();
   const cryoRoom = new ViewManager();
   const lifeSupportRoom = new ViewManager();
+  const reactorRoom = new ViewManager();
   
   // --- Room A (Start Room | start here) ---
   const computerView = new ComputerView(); // start view (index 0)
@@ -282,11 +283,19 @@ function setupWorld() {
   lifeSupportRoom.addView(lifeSupportView);
   lifeSupportRoom.addView(sdLifeToBreaker);
   sdLifeToBreaker.setRoom?.(lifeSupportRoom);
+  
+  // --- Room E (Reactor Room) ---
+  const operationReactorView = new OperationReactorPuzzleView();
+  const restartReactorView = new RestartReactorView();
+
+  reactorRoom.addView(operationReactorView);
+  reactorRoom.addView(restartReactorView);
 
   // register rooms (A=0, B=1, C=2) and let WORLD receive key events
   WORLD.addRoom(startRoom);   // index 0
   WORLD.addRoom(breakerRoom);   // index 1
   WORLD.addRoom(cryoRoom);   // index 2
   WORLD.addRoom(lifeSupportRoom);   // index 3
+  WORLD.addRoom(reactorRoom);   // index 4
   R.add(WORLD, 1000);
 }
