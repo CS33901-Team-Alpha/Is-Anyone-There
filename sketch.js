@@ -287,9 +287,16 @@ function setupWorld() {
   // --- Room E (Reactor Room) ---
   const operationReactorView = new OperationReactorPuzzleView();
   const restartReactorView = new RestartReactorView();
+  const sdReactorToBreaker = new SlidingDoorView([{ 
+    x:12, y:2.5, scale:0.8,
+    targetRoom: 1,         // <-- breaker room
+    targetViewIndex: 0, 
+    lockedCondition : () => true
+  }], SM.get("MetalWall"));
 
   reactorRoom.addView(operationReactorView);
   reactorRoom.addView(restartReactorView);
+  reactorRoom.addView(sdReactorToBreaker);
 
   // register rooms (A=0, B=1, C=2) and let WORLD receive key events
   WORLD.addRoom(startRoom);   // index 0
