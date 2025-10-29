@@ -22,7 +22,7 @@ jobs:
         with:
           key: ${{secrets.ID_RSA}}
           name: ID_RSA
-          known_hosts: {{secrets.KNOWN_HOSTS}}
+          known_hosts: ${{secrets.KNOWN_HOSTS}}
       - name: Check out the VM
         run: |
           echo $ ls -la
