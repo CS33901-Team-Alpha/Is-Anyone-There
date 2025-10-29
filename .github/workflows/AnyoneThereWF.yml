@@ -18,7 +18,7 @@ jobs:
 
 
       - name: Get the keys
-        uses: shimataro/ssh-keys-action@v2
+        uses: shimataro/ssh-key-action@v2
         with:
           key: ${{secrets.ID_RSA}}
           name: ID_RSA
