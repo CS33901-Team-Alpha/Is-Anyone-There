@@ -3,16 +3,16 @@ name: AnyoneThereWF
 on:
   workflow_dispatch:
 
-  jobs:
-    example_workflow:
-      runs_on: ubuntu-latest
-      steps:
-        - name: Get out files
-          uses: actions/checkout@v4
-        - name: Checkout out the VM
-          run: |
-            echo $ ls -la
-            ls -la
-            echo $ whoami
-            whoami
+jobs:
+  example_workflow:
+    runs_on: ubuntu-latest
+    steps:
+      - name: Get out files
+        uses: actions/checkout@v4
+      - name: Checkout out the VM
+        run: |
+          echo $ ls -la
+          ls -la
+          echo $ whoami
+          whoami
 
