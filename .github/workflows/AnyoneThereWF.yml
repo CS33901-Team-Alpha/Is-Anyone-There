@@ -20,8 +20,8 @@ jobs:
       - name: Get the keys
         uses: shimataro/ssh-key-action@v2
         with:
-          key: ${{secrets.ID_RSA}}
-          name: ID_RSA
+          key: ${{secrets.ID_ED25519}}
+          name: id_ed25519
           known_hosts: ${{secrets.KNOWN_HOSTS}}
       - name: Check out the VM
         run: |
@@ -33,16 +33,5 @@ jobs:
         run: |
           echo $RUN ls -la
           $RUN ls -la
-
-          echo $ ssh anyonethere@cassini.cs.kent.edu ls -la
-          ssh anyonethere@cassini.cs.kent.edu ls -la
-          echo $  ssh anyonethere@cassini.cs.kent.edu whoami
-          ssh anyonethere@cassini.cs.kent.edu whoami
-          echo $  ssh anyonethere@cassini.cs.kent.edu hostname
-          ssh anyonethere@cassini.cs.kent.edu hostname
-
-          echo $ ssh anyonethere@cassini.cs.kent.edu mkdir -p ./web
-          ssh anyonethere@cassini.cs.kent.edu mkdir -p ./web
-          echo scp index.html anyonethere@cassini.cs.kent.edu:./web
-          scp index.html anyonethere@cassini.cs.kent.edu:./web
-         
+          $RUN mkdir -p ./web
+          $RUN scp index.html anyonethere@cassini.cs.kent.edu:./web
