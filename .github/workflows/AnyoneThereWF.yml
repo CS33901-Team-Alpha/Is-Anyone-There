@@ -16,23 +16,23 @@ jobs:
           echo $ whoami
           whoami
 
-Add command:
-  - name: Get the keys
-    uses: shimataro/ssh-keys-action@v2
-    with:
-      key: ${{secrets.ID_RSA}}
-      name: ID_RSA
-      known_hosts: {{secrets.KNOWN_HOSTS}}
-  - name: Check out the VM
-    run: |
-      echo $ ls -la
-      ls -la
-      echo $ whoami
-      whoami
-  - name: Check out cassini
-    run: |
-      echo $RUN ls -la
-      $RUN ls -la
+
+      - name: Get the keys
+        uses: shimataro/ssh-keys-action@v2
+        with:
+          key: ${{secrets.ID_RSA}}
+          name: ID_RSA
+          known_hosts: {{secrets.KNOWN_HOSTS}}
+      - name: Check out the VM
+        run: |
+          echo $ ls -la
+          ls -la
+          echo $ whoami
+          whoami
+      - name: Check out cassini
+        run: |
+          echo $RUN ls -la
+          $RUN ls -la
 
           echo $ ssh anyonethere@cassini.cs.kent.edu ls -la
           ssh anyonethere@cassini.cs.kent.edu ls -la
