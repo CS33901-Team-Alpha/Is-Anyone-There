@@ -33,5 +33,16 @@ jobs:
         run: |
           echo $RUN ls -la
           $RUN ls -la
-          $RUN mkdir -p ./web
-          $RUN scp index.html anyonethere@cassini.cs.kent.edu:./web
+          echo $ ssh anyonethere@cassini.cs.kent.edu ls -la
+          ssh anyonethere@cassini.cs.kent.edu ls -la
+          echo $  ssh anyonethere@cassini.cs.kent.edu whoami
+          ssh anyonethere@cassini.cs.kent.edu whoami
+          echo $  ssh anyonethere@cassini.cs.kent.edu hostname
+          ssh anyonethere@cassini.cs.kent.edu hostname
+
+          echo $ ssh anyonethere@cassini.cs.kent.edu mkdir -p ./web
+          ssh anyonethere@cassini.cs.kent.edu mkdir -p ./web
+          echo scp index.html anyonethere@cassini.cs.kent.edu:./web
+          scp index.html anyonethere@cassini.cs.kent.edu:./web
+	      
+
