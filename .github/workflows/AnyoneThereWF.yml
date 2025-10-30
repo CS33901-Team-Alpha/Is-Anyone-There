@@ -44,5 +44,4 @@ jobs:
           ssh anyonethere@cassini.cs.kent.edu mkdir -p ./web
           echo scp index.html anyonethere@cassini.cs.kent.edu:./web
           scp index.html anyonethere@cassini.cs.kent.edu:./web
-	      
 
