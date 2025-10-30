@@ -1,50 +1,58 @@
 name: AnyoneThereWF
 
-on:
+on: 
   workflow_dispatch:
+
+env:
+  HOST: cassini.cs.kent.edu
+  USER: anyonethere
+  TARGET: anyonethere@cassini.cs.kent.edu
+  RUN: ssh -o LogLevel=ERROR -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no anyonethere@cassini.cs.kent.edu
+  COPY: scp -o LogLevel=ERROR -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no
 
 jobs:
   example_workflow:
     runs-on: ubuntu-latest
     steps:
-      - name: Get out files
+
+  
+      - name: Get our files
         uses: actions/checkout@v4
-      - name: Checkout out the VM
-        run: |
-          echo $ ls -la
-          ls -la
-          echo $ whoami
-          whoami
 
-
-      - name: Get the keys
+      - name: Install SSH key
         uses: shimataro/ssh-key-action@v2
         with:
-          key: ${{secrets.ID_ED25519}}
+          key: ${{ secrets.ID_ED25519 }}
           name: id_ed25519
-          known_hosts: ${{secrets.KNOWN_HOSTS}}
+          known_hosts: ${{ secrets.KNOWN_HOSTS }}
+
       - name: Check out the VM
         run: |
           echo $ ls -la
           ls -la
           echo $ whoami
-          whoami
+          whoami 
+
+     
       - name: Check out cassini
         run: |
+        
           echo $RUN ls -la
           $RUN ls -la
+
+  
           echo $ ssh anyonethere@cassini.cs.kent.edu ls -la
           ssh anyonethere@cassini.cs.kent.edu ls -la 
-          echo anyonethere@cassini.cs.kent.edu whoami
+          echo $ ssh anyonethere@cassini.cs.kent.edu whoami
           ssh anyonethere@cassini.cs.kent.edu whoami 
           echo $ ssh anyonethere@cassini.cs.kent.edu hostname
           ssh anyonethere@cassini.cs.kent.edu hostname
-          echo $ anyonethere@cassini.cs.kent.edu mkdir -p ./web
+          echo $ ssh anyonethere@cassini.cs.kent.edu mkdir -p ./web
           ssh anyonethere@cassini.cs.kent.edu mkdir -p ./web
 
+   
           echo $ scp index.html anyonethere@cassini.cs.kent.edu:./web
           scp index.html anyonethere@cassini.cs.kent.edu:./web
 
           echo $COPY index.html $TARGET:./web
           $COPY index.html $TARGET:./web
-
