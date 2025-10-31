@@ -57,6 +57,8 @@ class SynthesisView extends View {
 
             this.draggingItem = null;
             this.dragOffset = { x: 0, y: 0 };
+            
+            this.alarmOverlay = new AlarmOverlay(() => GS.is('BotanicalQuarantine'));
         }
 
         update(dt) {
@@ -178,8 +180,10 @@ class SynthesisView extends View {
     }
 
     onEnter() {
+        R.add(this.alarmOverlay, 100)
     }
 
     onExit() {
+        R.remove(this.alarmOverlay)
     }
 }

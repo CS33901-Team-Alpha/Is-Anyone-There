@@ -16,6 +16,7 @@ class PlantsView3 extends SlidingDoorView {
         ));
 
         this.setRoom(this)
+        this.alarmOverlay = new AlarmOverlay(() => GS.is('BotanicalQuarantine'));
     }
 
     update(dt) {
@@ -32,11 +33,15 @@ class PlantsView3 extends SlidingDoorView {
         super.onEnter();
         R.add(this.plant, 10);
         this.plant.onEnter();
+
+        R.add(this.alarmOverlay, 100)
     }
 
     onExit() {
         super.onExit();
         R.remove(this.plant);
         this.plant.onExit();
+
+        R.remove(this.alarmOverlay)
     }
 }
