@@ -2,7 +2,7 @@ class PlantsView3 extends SlidingDoorView {
     constructor(slidingDoors = []) {
         super(slidingDoors, SM.get("MetalWall"));
 
-        this.textNotificationHandler = new TextNotificationHandler(0.5, 0.85);
+        this.textNotificationHandler = new TextNotificationHandler(0.5, 0.85, {holdFadeoutFor: 3});
 
         this.plant = new PlantObject(8, 6, 'placeholderPlant2', new InspectComponent(
             'Erythroxylum coca',
@@ -14,22 +14,28 @@ class PlantsView3 extends SlidingDoorView {
             },
             { backgroundColor: [200, 50, 50, 100] }
         ));
+
+        this.setRoom(this)
     }
 
     update(dt) {
+        super.update(dt)
         this.textNotificationHandler.update(dt);
     }
 
     draw() {
+        super.draw()
         // Optional: add custom drawing logic here
     }
 
     onEnter() {
+        super.onEnter();
         R.add(this.plant, 10);
         this.plant.onEnter();
     }
 
     onExit() {
+        super.onExit();
         R.remove(this.plant);
         this.plant.onExit();
     }

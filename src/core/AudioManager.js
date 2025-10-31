@@ -18,7 +18,9 @@ function loadSounds(){
     AM.add("technoLoop", loadSound('assets/sounds/technoLoop.mp3'));
     AM.add("startGame", loadSound('assets/sounds/startGame.mp3'));
     AM.add("cryoLoop", loadSound('assets/sounds/cryoLoop.mp3'));
-
+    
+    // botanical room
+    AM.add("contagionAlarm", loadSound('assets/sounds/contagionAlarm.mp3'));
 }
 
 class AudioManager{

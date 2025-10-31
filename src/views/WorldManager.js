@@ -71,9 +71,26 @@ class WorldManager {
         if(currentIndex == 5){ // entering botanical
             R.add(IM, 900)
             
-            // stop all music
-            AM.fadeOut('startGame')
-            AM.fadeOut('technoLoop')
+            // cut off all music
+            AM.stop('startGame')
+            AM.stop('technoLoop')
+
+            if(!GS.is('BotanicalRoomVisited')){ // if never visited botanical
+                // start emergency alarm
+                AM.setVolume('contagionAlarm', 0.2)
+                AM.loop('contagionAlarm')
+                //setTimeout(()=>{AM.fadeOut('contagionAlarm', 3000)}, 5000)
+
+                // AI message
+                AI.addText('>_  AIRBORNE CONTAMINANTS DETECTED... \n>_  INITIALIZING EMERGENCY CONTAINMENT PROTOCOL \n>_  PROCEDURE: QUARANTINE BOTANICAL ROOM');
+
+                // set game state that we already visited botanical room once
+                GS.set('BotanicalRoomVisited')
+
+                // set game state that we are currently in botanical quarantine (for locking doors)
+                GS.set('BotanicalQuarantine')
+            }
+            
         }
         else if(currentIndex != 5){ // leaving botanical botanical
             R.remove(IM)

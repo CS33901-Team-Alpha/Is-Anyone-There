@@ -146,10 +146,10 @@ class SlidingDoor {
     }
 
     onEnter() {
-        if(!AM.isLooping("startGame")){
-            AM.stopAll()
-            AM.loop("startGame")
-        }
+        // if(!AM.isLooping("startGame")){
+        //     AM.stopAll()
+        //     AM.loop("startGame")
+        // }
         R.add(this);
         R.add(this.highlight);
     }
