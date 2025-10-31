@@ -46,6 +46,7 @@ class WorldManager {
         R.remove(currentVm);
         if (typeof currentVm.onExit === 'function') currentVm.onExit();
 
+        let oldIndex = this.current;
         this.current = nextIndex;
 
         const nextVm = this.rooms[this.current];
@@ -57,12 +58,31 @@ class WorldManager {
             nextVm.gotoIndex(viewIndex);
         }
 
-        // index of botanical room, to add inventory viewer to the screen ONLY when player is in botanical room
-        if(this.current == 5){
+        this.roomStartup(this.current, oldIndex);
+    }
+
+    /**
+     * This is a function that is run whenever we switch rooms. It can be useful for coordinate sound playing and events in rooms
+     * all in one place.
+     * @param {Number} currentIndex index of room player just traveled to
+     * @param {Number} oldIndex index of previous room
+     */
+    roomStartup(currentIndex, oldIndex){
+        if(currentIndex == 5){ // entering botanical
             R.add(IM, 900)
+            
+            // stop all music
+            AM.fadeOut('startGame')
+            AM.fadeOut('technoLoop')
         }
-        else{
+        else if(currentIndex != 5){ // leaving botanical botanical
             R.remove(IM)
+            
+            // start music back up
+            AM.fadeIn('startGame')
+        }
+        else if(currentIndex == 4){ // entering reactor reactor
+
         }
     }
 }
