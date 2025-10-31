@@ -447,6 +447,8 @@ class RepairView extends View {
         R.remove(this.background);
         R.remove(this.repairCabinet);
         R.remove(this.componentHolder);
+
+        this.textNotificationHandler.cleanup()
         
         // call on exits
         this.repairCabinet.onExit();
