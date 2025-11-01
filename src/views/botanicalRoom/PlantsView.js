@@ -4,13 +4,13 @@ class PlantObject{
     /**
      * @param {*} inpsectComponent - an instace of InspectComponent
      */
-    constructor(x, y, spriteName, inpsectComponent){
+    constructor(x, y, spriteName, inpsectComponent, scale=0.5){
         this.x = x;
         this.y = y;
         
         this.testPlant = SM.get(spriteName);     
         this.testPlant.setPos(x, y); 
-        this.testPlant.setScale(0.5);
+        this.testPlant.setScale(scale);
 
         [this.width, this.height] = this.testPlant.getWH()
 
@@ -29,9 +29,7 @@ class PlantObject{
     }
 
     mousePressed(p) {
-        console.log('yeah')
         if (this.isMouseInBounds(p?.x, p?.y)) {
-            console.log('yes')
             this.inspection.onEnter();
             R.add(this.inspection, 11);
         }
@@ -56,7 +54,7 @@ class PlantsView extends View {
 
         this.textNotificationHandler = new TextNotificationHandler(0.5, 0.85);
 
-        this.plant = new PlantObject(4, 6, 'placeholderPlant', new InspectComponent(
+        this.plants = [new PlantObject(4, 6, 'placeholderPlant', new InspectComponent(
             'Erythroxylum coca',
             'Erythroxylum coca contains trace alkaloids including C17H21NO4 (Cocaine). Handle with care—its properties may be repurposed...',
             'placeholderMolecule2',
@@ -65,7 +63,18 @@ class PlantsView extends View {
                 IM.addItem(new InventoryItem('Erythroxylum coca', 'placeholderMoleculeIcon2'));
             },
             { backgroundColor: [200, 50, 50, 100] }
-        ));
+        )),
+        new PlantObject(12, 3, 'placeholderPlant3', new InspectComponent(
+                'Inferon Alpha Protein',
+                'A recombinant soluble version of the host receptor that binds the contagion\'s surface attachment protein and prevents cell entry.',
+                'inferonAlphaProtein',
+                'Collect',
+                () => {
+                    IM.addItem(new InventoryItem('Inferon Alpha Protein', 'inferonAlphaProteinIcon'));
+                },
+                { backgroundColor: [200, 50, 50, 100] }
+            ), 1)
+        ]
 
         this.alarmOverlay = new AlarmOverlay(() => GS.is('BotanicalQuarantine'))
     }
@@ -82,8 +91,10 @@ class PlantsView extends View {
         // add objects to renderer
         R.add(this.background, 1);
         
-        R.add(this.plant, 10)
-        this.plant.onEnter()
+        for(let i = 0; i < this.plants.length; i++){
+            R.add(this.plants[i], 10)
+            this.plants[i].onEnter();
+        }
 
         R.add(this.alarmOverlay, 100)
     }
@@ -91,8 +102,10 @@ class PlantsView extends View {
     onExit() {
         R.remove(this.background, 1);
 
-        R.remove(this.plant)
-        this.plant.onExit()
+        for(let i = 0; i < this.plants.length; i++){
+            R.remove(this.plants[i])
+            this.plants[i].onExit()
+        }
 
         R.remove(this.alarmOverlay)
     }

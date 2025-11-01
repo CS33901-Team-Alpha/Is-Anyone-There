@@ -98,6 +98,14 @@ function loadSprites() {
     SM.add("placeholderMoleculeIcon", loadImage('assets/placeholders/botanical/potassiumSuperoxideIcon.png'))
     SM.add("placeholderMolecule2", loadImage('assets/placeholders/botanical/testosterone.png'))
     SM.add("placeholderMoleculeIcon2", loadImage('assets/placeholders/botanical/testosteroneIcon.png'))
+
+    SM.add("placeholderPlant3", loadImage('assets/placeholders/botanical/tallDummyPlant.png'))
+    SM.add("placeholderPlant4", loadImage('assets/placeholders/botanical/tallDummyPlant2.png'))
+    SM.add("placeholderPlant5", loadImage('assets/placeholders/botanical/tallDummyPlant3.png'))
+    SM.add("inferonAlphaProtein", loadImage('assets/placeholders/botanical/inferonAlphaProtein.png'))
+    SM.add("inferonAlphaProteinIcon", loadImage('assets/placeholders/botanical/inferonAlphaProteinIcon.png'))
+    SM.add("ascorbicAcidMolecule", loadImage('assets/placeholders/botanical/ascorbicAcid.png'))
+    SM.add("ascorbicAcidMoleculeIcon", loadImage('assets/placeholders/botanical/ascorbicAcidIcon.png'))
 }
 
 

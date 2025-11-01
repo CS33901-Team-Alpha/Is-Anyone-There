@@ -43,11 +43,11 @@ class InspectComponent{
         this.actionTriggered = false;
 
         // inspection image
-        this.imageSprite = SM.get(this.imageName)
+        this.slotSize = 3;
         this.imageSprite = SM.get(this.imageName);
         if (this.imageSprite) {
-            this.imageSprite.setPos(6.1, 1.95);
-            this.imageSprite.setScale(0.4);
+            this.imageSprite.setPos(6.5, 2.35);
+            this.imageSprite.setSize(this.slotSize, this.slotSize)
         } else {
             console.warn(`InspectComponent: image '${this.imageName}' not found in SM`);
         }
@@ -78,7 +78,7 @@ class InspectComponent{
         fill(color[0], color[1], color[2], color[3]);
         stroke(50);
         strokeWeight(4);
-        rect(6.5 * u, 2.35 * v, 3 * u, 3 * v);
+        rect(6.5 * u, 2.35 * v, this.slotSize * u, this.slotSize * v);
 
         // description text
         fill(220, 220, 220)

@@ -4,7 +4,7 @@ class PlantsView3 extends SlidingDoorView {
 
         this.textNotificationHandler = new TextNotificationHandler(0.5, 0.85, {holdFadeoutFor: 3});
 
-        this.plant = new PlantObject(8, 6, 'placeholderPlant2', new InspectComponent(
+        this.plants = [new PlantObject(8, 6, 'placeholderPlant2', new InspectComponent(
             'Erythroxylum coca',
             'Erythroxylum coca contains trace alkaloids including C17H21NO4 (Cocaine). Handle with care—its properties may be repurposed...',
             'placeholderMolecule2',
@@ -13,7 +13,18 @@ class PlantsView3 extends SlidingDoorView {
                 IM.addItem(new InventoryItem('Erythroxylum coca', 'placeholderMoleculeIcon2'));
             },
             { backgroundColor: [200, 50, 50, 100] }
-        ));
+            )),
+            new PlantObject(1, 6, 'placeholderPlant4', new InspectComponent(
+            'Ascorbic Acid',
+            'In the post-collapse biolabs of the Outer Belt, ascorbic acid became the cornerstone of emergency field medicine.',
+            'ascorbicAcidMolecule',
+            'Collect',
+            () => {
+                IM.addItem(new InventoryItem('Ascorbic Acid', 'ascorbicAcidMoleculeIcon'));
+            },
+            { backgroundColor: [200, 50, 50, 100] }))
+        ]
+
 
         this.setRoom(this)
         this.alarmOverlay = new AlarmOverlay(() => GS.is('BotanicalQuarantine'));
@@ -31,16 +42,20 @@ class PlantsView3 extends SlidingDoorView {
 
     onEnter() {
         super.onEnter();
-        R.add(this.plant, 10);
-        this.plant.onEnter();
+        for(let i = 0; i < this.plants.length; i++){
+            R.add(this.plants[i], 10)
+            this.plants[i].onEnter();
+        }
 
         R.add(this.alarmOverlay, 100)
     }
 
     onExit() {
         super.onExit();
-        R.remove(this.plant);
-        this.plant.onExit();
+        for(let i = 0; i < this.plants.length; i++){
+            R.remove(this.plants[i])
+            this.plants[i].onExit()
+        }
 
         R.remove(this.alarmOverlay)
     }
