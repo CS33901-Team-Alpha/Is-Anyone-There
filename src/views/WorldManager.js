@@ -72,8 +72,9 @@ class WorldManager {
             R.add(IM, 900)
             
             // cut off all music
-            AM.stop('startGame')
-            AM.stop('technoLoop')
+            AM.stop("technoLoop");
+            AM.stop("startGame");
+            AM.stop("goodArrow2");
 
             if(!GS.is('BotanicalRoomVisited')){ // if never visited botanical
                 // start emergency alarm
@@ -96,10 +97,11 @@ class WorldManager {
             R.remove(IM)
             
             // start music back up
-            AM.fadeIn('startGame')
+            //AM.fadeIn('startGame')
+            
         }
         else if(currentIndex == 4){ // entering reactor reactor
-
+            AM.stop("goodArrow2");
         }
     }
 }
