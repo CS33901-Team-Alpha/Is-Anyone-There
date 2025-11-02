@@ -90,6 +90,7 @@ class OperationReactorPuzzleView extends View {
             // trigger when the rod is close enough to a checkpoint
             if (dToCheck < maxDist * 0.7) {
                 this.currentCheck++;
+                AM.play("checkpoint");
                 this.textHandler.addText(`Checkpoint ${this.currentCheck}/${this.path.length}`, 1.2);
 
                 // if final checkpoint, complete the puzzle
@@ -102,7 +103,8 @@ class OperationReactorPuzzleView extends View {
 
         if (!touchingWire && this.canZap) {
             rod.mistakes++;
-            this.canZap = false; 
+            this.canZap = false;
+            AM.play("reactorZap");
             this.textHandler.addText("ZAP!", 0.8);
 
             if (rod.mistakes > this.meltdownThreshold) {
@@ -117,6 +119,7 @@ class OperationReactorPuzzleView extends View {
 
 
     triggerMeltdown(){
+        AM.play("reactorExplosion");
         this.textHandler.addText("REACTOR MELTDOWN!!", 2);
         GS.set("Player Died");
         this.finished = true; 
@@ -124,6 +127,7 @@ class OperationReactorPuzzleView extends View {
     }
 
     checkSolved(){
+        AM.play("reactorFix");
         this.textHandler.addText("Reactor stabilized!", 2);
         GS.set("operationRodPuzzleSolved");
         this.canZap = false; 
