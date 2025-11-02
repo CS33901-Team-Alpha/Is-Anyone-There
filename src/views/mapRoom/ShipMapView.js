@@ -46,7 +46,7 @@ class ShipMapView extends View {
     }
   }
 
-  drawRoom(x, y, name, u, v) {
+  drawRooms(x, y, name, u, v) {
     const w = 2 * u;
     const h = 1.4 * v;
 
@@ -64,65 +64,65 @@ class ShipMapView extends View {
     text(name, x, y, w * 0.9, h * 0.9);
   }
 
-drawConnections(u, v) {
-  stroke(0, 180, 255);
-  strokeWeight(2);
-  noFill();
+  drawConnections(u, v) {
+    stroke(0, 180, 255);
+    strokeWeight(2);
+    noFill();
 
-  for (const [name, data] of Object.entries(this.rooms)) {
-    const start = this.coordinates[name];
-    if (!start) continue;
+    for (const [name, data] of Object.entries(this.rooms)) {
+      const start = this.coordinates[name];
 
-    for (const conn of data.connections) {
-      // Prevent double drawing (A→B only once)
-      if (name >= conn) continue;
+      for (const conn of data.connections) {
+        // makes sure to only draw lines once by skipping entries that are not in alphabetical order
+        // example: "Breaker Box Room" >= "Life Support" == false -- gets drawn
+        //          "Life Support" >= "Breaker Box Room" == true  -- doesn't get drawn
+        if (name >= conn) continue;
 
-      const end = this.coordinates[conn];
-      if (!end) continue;
+        const end = this.coordinates[conn];
 
-      const xLength = end.x - start.x;
-      const yLength = end.y - start.y;
+        const xLength = end.x - start.x;
+        const yLength = end.y - start.y;
 
-      // used for special cases where the defualt doesn't work
-      let customMidX = null;
-      let customMidY = null;
+        // used for special cases where the defualt doesn't work
+        let customMidX = null;
+        let customMidY = null;
 
-      // sets coordinates for Breaker Box and Life Support special case
-      if ((name === "Breaker Box Room" && conn === "Life Support") || (name === "Life Support" && conn === "Breaker Box Room")) {
+        // sets coordinates for Breaker Box and Life Support special case
+        if (name === "Breaker Box Room" && conn === "Life Support") {
 
-        customMidY = (this.coordinates["Breaker Box Room"].y + this.coordinates["Monitor Room"].y) / 2;
-        customMidX = (this.coordinates["Nuclear Reactor"].x + this.coordinates["Life Support"].x) / 2;
-      }
-
-      // draws lines between connected rooms
-      beginShape();
-      vertex(start.x, start.y);
-
-      // special case for Breaker Box and Life Support connection
-      if (customMidX !== null && customMidY !== null) {
-        vertex(start.x, customMidY);
-        vertex(customMidX, customMidY);
-        vertex(customMidX, end.y);
-      } 
-      // defualt case for drawing lines
-      else {
-        if (Math.abs(xLength) > Math.abs(yLength)) {
-          const midX = start.x + xLength / 2;
-          vertex(midX, start.y);
-          vertex(midX, end.y);
-        } 
-        else {
-          const midY = start.y + yLength / 2;
-          vertex(start.x, midY);
-          vertex(end.x, midY);
+          customMidY = (this.coordinates["Breaker Box Room"].y + this.coordinates["Monitor Room"].y) / 2;
+          customMidX = (this.coordinates["Nuclear Reactor"].x + this.coordinates["Life Support"].x) / 2;
         }
-      }
 
-      vertex(end.x, end.y);
-      endShape();
+        // draws lines between connected rooms
+        beginShape();
+        vertex(start.x, start.y);
+
+        // special case for Breaker Box and Life Support connection
+        if (customMidX !== null && customMidY !== null) {
+          vertex(start.x, customMidY);
+          vertex(customMidX, customMidY);
+          vertex(customMidX, end.y);
+        } 
+        // defualt case for drawing lines
+        else {
+          if (Math.abs(xLength) > Math.abs(yLength)) {
+            const midX = start.x + xLength / 2;
+            vertex(midX, start.y);
+            vertex(midX, end.y);
+          } 
+          else {
+            const midY = start.y + yLength / 2;
+            vertex(start.x, midY);
+            vertex(end.x, midY);
+          }
+        }
+
+        vertex(end.x, end.y);
+        endShape();
+      }
     }
   }
-}
 
   draw() {
     this.background?.draw();
@@ -137,7 +137,7 @@ drawConnections(u, v) {
     this.drawConnections(u, v);
 
     for (const [name, pos] of Object.entries(this.coordinates)) {
-      this.drawRoom(pos.x, pos.y, name, u, v);
+      this.drawRooms(pos.x, pos.y, name, u, v);
     }
 
     pop();
