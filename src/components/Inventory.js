@@ -389,98 +389,95 @@ class InventoryManager {
   }
 
   mouseReleased(p) {
-    // Get current mouse position, or use provided one
-    const m = p ?? VM.mouse();
+        // Get current mouse position, or use provided one
+        const m = p ?? VM.mouse();
 
-    // Exit early if no item is being dragged
-    if (!this.draggingItem) return;
+        // Exit early if no item is being dragged
+        if (!this.draggingItem) return;
 
-    // Loop through all inventory slots
-    for (let i = 0; i < this.maxSlots; i++) {
-      // Calculate slot position
-      const x = this.startX + this.barPadding + i * (this.slotSize + this.margin);
-      const y = this.baseY + this.barPadding;
+        // Loop through all inventory slots
+        for (let i = 0; i < this.maxSlots; i++) {
+            // Calculate slot position
+            const x = this.startX + this.barPadding + i * (this.slotSize + this.margin);
+            const y = this.baseY + this.barPadding;
 
-      // Check if mouse is within this slot's bounds
-      const inBounds = (
-        m.x >= x &&
-        m.x <= x + this.slotSize &&
-        m.y >= y &&
-        m.y <= y + this.slotSize
-      );
+            // Check if mouse is within this slot's bounds
+            const inBounds = (
+                m.x >= x &&
+                m.x <= x + this.slotSize &&
+                m.y >= y &&
+                m.y <= y + this.slotSize
+            );
 
-      // If mouse is over this slot
-      if (inBounds) {
-        // Check if it's the last slot (action slot)
-        const isLastSlot = i === this.maxSlots - 1;
+            // If mouse is over this slot
+            if (inBounds) {
+                // Check if it's the last slot (action slot)
+                const isLastSlot = i === this.maxSlots - 1;
 
-        // Get item currently in this slot
-        const targetItem = this.items[i];
+                // Get item currently in this slot
+                const targetItem = this.items[i];
 
-        if (isLastSlot) {
-          // Action slot: never stores items, triggers prompt
-          this.promptActive = true; // Show prompt
-          this.promptItemA = this.draggingItem; // Store dragged item
-          this.promptItemB = null; // No target item
-          this.promptSlotIndex = i; // Track slot index
-          this.promptSelectedIndex = 0; // Default prompt selection
-          this.promptItemReinserted = true; // Mark item as reinserted
+                if (isLastSlot) {
+                    // Action slot: never stores items, triggers prompt
+                    this.promptActive = true; // Show prompt
+                    this.promptItemA = this.draggingItem; // Store dragged item
+                    this.promptItemB = null; // No target item
+                    this.promptSlotIndex = i; // Track slot index
+                    this.promptSelectedIndex = 0; // Default prompt selection
+                    this.promptItemReinserted = true; // Mark item as reinserted
 
-          // Mark that the prompt item came from a drag so we can reinsert on cancel/failure
-          this.promptItemWasDragged = true;
-          this.promptOriginalSlotForDragged = this.dragOriginIndex;
+                    // Mark that the prompt item came from a drag so we can reinsert on cancel/failure
+                    this.promptItemWasDragged = true;
+                    this.promptOriginalSlotForDragged = this.dragOriginIndex;
 
-          // Determine if item is usable (final product)
-          const isUsable = this.usableItems.includes(this.draggingItem.name);
+                    // Determine if item is usable (final product)
+                    const isUsable = this.usableItems.includes(this.draggingItem.name);
 
-          // Set prompt options based on item type (include Inspect)
-          this.promptOptions = isUsable
-            ? ["Use", "Inspect", "Drop", "Cancel"] // Final products can be used
-            : ["Inspect", "Drop", "Cancel"]; // Molecules can be inspected or dropped
+                    // Set prompt options based on item type (include Inspect)
+                    this.promptOptions = isUsable
+                        ? ["Use", "Inspect", "Drop", "Cancel"] // Final products can be used
+                        : ["Inspect", "Drop", "Cancel"]; // Molecules can be inspected or dropped
 
-          this.updatePromptBounds(); // Resize prompt box
-        } else if (targetItem) {
-          // Dropped onto another item: trigger combination prompt
-          this.promptActive = true; // Show prompt
-          this.promptItemA = this.draggingItem; // Store dragged item
-          this.promptItemB = targetItem; // Store target item
-          this.promptSlotIndex = i; // Track slot index
-          this.promptSelectedIndex = 0; // Default prompt selection
-          this.promptItemReinserted = true; // Mark item as reinserted
+                    this.updatePromptBounds(); // Resize prompt box
+                } else if (targetItem) {
+                    // Dropped onto another item: trigger combination prompt
+                    this.promptActive = true; // Show prompt
+                    this.promptItemA = this.draggingItem; // Store dragged item
+                    this.promptItemB = targetItem; // Store target item
+                    this.promptSlotIndex = i; // Track slot index
+                    this.promptSelectedIndex = 0; // Default prompt selection
+                    this.promptItemReinserted = true; // Mark item as reinserted
 
-          // dragged -> remember original slot for reinsertion if needed
-          this.promptItemWasDragged = true;
-          this.promptOriginalSlotForDragged = this.dragOriginIndex;
+                    // dragged -> remember original slot for reinsertion if needed
+                    this.promptItemWasDragged = true;
+                    this.promptOriginalSlotForDragged = this.dragOriginIndex;
 
-          this.promptOptions = ["Combine", "Cancel"]; // Only allow combination or cancel
-          this.updatePromptBounds(); // Resize prompt box
-        } else {
-          // Dropped into empty slot: store item
-          this.items[i] = this.draggingItem;
+                    this.promptOptions = ["Combine", "Cancel"]; // Only allow combination or cancel
+                    this.updatePromptBounds(); // Resize prompt box
+                } else {
+                    // Dropped into empty slot: store item
+                    this.items[i] = this.draggingItem;
+                }
+
+                // Clear drag state
+                this.draggingItem = null;
+                this.dragOriginIndex = -1;
+
+                // Exit after handling drop
+                return;
+            }
         }
 
-        // Clear drag state
+        // If not over a slot, return the item to inventory instead of losing it.
+        // Use original slot if available, otherwise first empty.
+        if (this.draggingItem) {
+            this.reinsertItem(this.draggingItem, this.dragOriginIndex);
+            this.showFeedback(`Returned ${this.draggingItem.name} to inventory.`);
+        }
+
         this.draggingItem = null;
         this.dragOriginIndex = -1;
-
-        // Exit after handling drop
-        return;
-      }
     }
-    // If not over a slot, drop into world (or cancel)
-    // If the dragged item had a source, mark source available again
-    if (this.draggingItem && this.draggingItem.source) {
-      // Always notify the source that the item was dropped; if the source is reusable, it should remain available.
-      if (typeof this.draggingItem.source.onDroppedToWorld === "function") {
-        this.draggingItem.source.onDroppedToWorld(this.draggingItem, p);
-      }
-      if (this.draggingItem.source.singleUse === true) {
-        this.draggingItem.source._inventoryClaimed = false;
-      }
-    }
-    this.draggingItem = null;
-    this.dragOriginIndex = -1;
-  }
 
   // Open the InspectComponent for an inventory item (used from prompt Inspect option)
   openInspectForItem(item, slotIndex = -1) {
@@ -856,37 +853,41 @@ class InventoryManager {
 }
 
 checkCombinationWinCondition(itemNames) {
-  // Sort and join item names to match rule format
-  const key = itemNames.sort().join('+');
+  // Defensive: normalize names and use this.COMBINATION_RULES
+  const key = (itemNames || []).slice().sort().join('+');
+  const resultName = (this.COMBINATION_RULES && this.COMBINATION_RULES[key]) ? this.COMBINATION_RULES[key] : null;
 
-  // Look up the result in the combination rules
-  const resultName = COMBINATION_RULES[key];
-
-  // If the result is the winning compound, trigger win
   if (resultName === "NeuroShield Complex") {
     this._onCureComplete(resultName);
     return true;
   }
 
-  return false;
+  return !!resultName;
 }
 
 _onCureComplete(compoundName) {
   // Prevent duplicate triggers
   if (this.cureTriggered) return;
-
   this.cureTriggered = true;
 
-  // Update game state to reflect cure
-  GS.set("Pathogen Neutralized");
+  // Update global game state if available (defensive)
+  if (typeof GS !== 'undefined' && GS && typeof GS.set === 'function') {
+    try { GS.set("Pathogen Neutralized"); } catch (e) { /* ignore */ }
+  }
 
-  // Show cure completion message
-  this.textNotificationHandler.addText(`${compoundName} synthesized. Super pathogen neutralized.`);
+  // Prefer textNotificationHandler if present, otherwise fallback to showFeedback
+  const message = `${compoundName} synthesized. Super pathogen neutralized.`;
+  if (this.textNotificationHandler && typeof this.textNotificationHandler.addText === 'function') {
+    try {
+      this.textNotificationHandler.addText(message);
+    } catch (e) {
+      this.showFeedback(message);
+    }
+  } else {
+    this.showFeedback(message);
+  }
 
-  // Exit interface mode if relevant
-  window.activeInterface = null;
-
-  // Optional: unlock next room or trigger scene transition
-  // GS.set(");
+  // Exit interface mode if relevant (defensive)
+  try { if (typeof window !== 'undefined') window.activeInterface = null; } catch (e) {}
 }
 }

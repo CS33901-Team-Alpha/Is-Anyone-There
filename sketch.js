@@ -330,7 +330,7 @@ function setupWorld() {
   botanicalRoom.addView(plantsView2);
   botanicalRoom.addView(sdBotanicalToReactor);
   botanicalRoom.addView(synthesisView);
-  sdBotanicalToReactor.setRoom(botanicalRoom)
+  sdBotanicalToReactor.setRoom(botanicalRoom);
 
   // register rooms (A=0, B=1, C=2) and let WORLD receive key events
   WORLD.addRoom(startRoom);   // index 0
