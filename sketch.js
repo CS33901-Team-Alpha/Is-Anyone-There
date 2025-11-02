@@ -205,6 +205,7 @@ function setupWorld() {
   const lifeSupportRoom = new ViewManager();
   const reactorRoom = new ViewManager();
   const botanicalRoom = new ViewManager();
+  const mapRoom = new ViewManager();
   
   // --- Room A (Start Room | start here) ---
   const computerView = new ComputerView(); // start view (index 0)
@@ -325,6 +326,13 @@ function setupWorld() {
   botanicalRoom.addView(sdBotanicalToReactor);
   botanicalRoom.addView(synthesisView);
 
+   // --- Room G (Map Room) ---
+   const shipMapView = new ShipMapView();
+   const puzzleClueView = new PuzzleClueView();
+
+   mapRoom.addView(shipMapView);
+   mapRoom.addView(puzzleClueView);
+
   // register rooms (A=0, B=1, C=2) and let WORLD receive key events
   WORLD.addRoom(startRoom);   // index 0
   WORLD.addRoom(breakerRoom);   // index 1
@@ -332,5 +340,11 @@ function setupWorld() {
   WORLD.addRoom(lifeSupportRoom);   // index 3
   WORLD.addRoom(reactorRoom);   // index 4
   WORLD.addRoom(botanicalRoom);   // index 5
+  WORLD.addRoom(mapRoom);   // index 6
   R.add(WORLD, 1000);
+
+  // for testing map room, 
+  WORLD.gotoRoom(6);      // go to Room G
+  WORLD.currentViewIndex = 0;   // map wall
+  R.add(WORLD, 1000); // 
 }

@@ -122,6 +122,10 @@ class Terminal {
         GS.set('fixedElectricalComponent')
       }
     });
+
+      this.registerCommand("compass", () => {
+      this.print("This is a test");
+    });
   }
 
   registerCommand(name, fn) {
