@@ -13,6 +13,7 @@ class RestartReactorView extends View {
     this.timer = 0;
     this.waitingForNext = false;
     this.puzzleComplete = false;
+    this.i = 0
 
     this.arrows = ['↑', '↓', '←', '→'];
     this.generateSequence();
@@ -46,6 +47,12 @@ class RestartReactorView extends View {
 
     // checks if the input was correct
     if (arrowInput === currentArrow) {
+      
+      if(!AM.isPlaying("goodArrow2") && !this.puzzleComplete){
+          AM.stopAll();
+          AM.play("goodArrow2");
+      }
+      
       this.sequenceColors[this.currentIndex] = 'green';
       this.currentIndex++;
       if (this.currentIndex >= this.sequence.length) {
@@ -54,6 +61,8 @@ class RestartReactorView extends View {
       }
     }
     else {
+      AM.stop("goodArrow2");
+      AM.play("badArrow");
       this.sequenceColors[this.currentIndex] = 'red';
       this.locked = true;
       this.timer = 0;
@@ -135,6 +144,12 @@ class RestartReactorView extends View {
 
     // completion message
     if (this.puzzleComplete) {
+      AM.stop("goodArrow2");
+      while(this.i < 1){
+        AM.play("reactorRestart");
+        ++this.i;
+      }
+      
       fill(0, 255, 0);
       textAlign(CENTER, CENTER);
       textSize(0.8 * v);
