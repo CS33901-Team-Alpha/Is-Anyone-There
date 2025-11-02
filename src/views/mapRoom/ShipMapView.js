@@ -74,8 +74,6 @@ class ShipMapView extends View {
 
       for (const conn of data.connections) {
         // makes sure to only draw lines once by skipping entries that are not in alphabetical order
-        // example: "Breaker Box Room" >= "Life Support" == false -- gets drawn
-        //          "Life Support" >= "Breaker Box Room" == true  -- doesn't get drawn
         if (name >= conn) continue;
 
         const end = this.coordinates[conn];
