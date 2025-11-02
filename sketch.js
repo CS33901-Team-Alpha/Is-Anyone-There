@@ -63,6 +63,7 @@ function preload() {
 function setup() { //ref ? only ran once ever?
   fit16x9();
   VM.updateUnits(); // compute VM.U / VM.V now that width/height exist
+  canvas.oncontextmenu = () => false; // Disable browser right-click menu
 
   const savedState = localStorage.getItem('currentGameState');
 
@@ -167,7 +168,6 @@ function mouseReleased() {
   const mouse = VM.mouse();
   if (!VM.insideUnits(mouse)) return;
   R.dispatch('mouseReleased', mouse);
-  IM.handleDrop(mouse);
 }
 
 function keyPressed() {
