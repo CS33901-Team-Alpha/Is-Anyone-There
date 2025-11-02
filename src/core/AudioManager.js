@@ -18,7 +18,26 @@ function loadSounds(){
     AM.add("technoLoop", loadSound('assets/sounds/technoLoop.mp3'));
     AM.add("startGame", loadSound('assets/sounds/startGame.mp3'));
     AM.add("cryoLoop", loadSound('assets/sounds/cryoLoop.mp3'));
+    //sounds added recently
+    AM.add("doorLock", loadSound('assets/sounds/doorLock.mp3'));
+    AM.add("lockBreak", loadSound('assets/sounds/lockBreak.mp3'));
+    AM.add("wireConnect", loadSound('assets/sounds/wireConnect.mp3'));
+    AM.add("allWires", loadSound('assets/sounds/allWires.mp3'));
+    AM.add("componentGood", loadSound('assets/sounds/componentGood.mp3'));
+    AM.add("componentBad", loadSound('assets/sounds/componentBad.mp3'));
+    AM.add("electricDeath", loadSound('assets/sounds/electricDeath.mp3'));
+    AM.add("fixElectronic", loadSound('assets/sounds/fixElectronic.mp3'));
+    AM.add("reactorZap", loadSound('assets/sounds/reactorZap.mp3'));
+    AM.add("reactorExplosion", loadSound('assets/sounds/reactorExplosion.mp3'));
+    AM.add("checkpoint", loadSound('assets/sounds/checkpoint.mp3'));
+    AM.add("reactorFix", loadSound('assets/sounds/reactorFix.mp3'));
+    AM.add("goodArrow", loadSound('assets/sounds/goodArrow.mp3'));
+    AM.add("goodArrow2", loadSound('assets/sounds/goodArrow2.mp3'));
+    AM.add("badArrow", loadSound('assets/sounds/badArrow.mp3'));
+    AM.add("reactorRestart", loadSound('assets/sounds/reactorRestart.mp3'));
     
+
+
     // botanical room
     AM.add("contagionAlarm", loadSound('assets/sounds/contagionAlarm.mp3'));
 }
