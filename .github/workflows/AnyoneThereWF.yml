@@ -54,7 +54,7 @@ jobs:
           zip -r anyonethere.zip . 
           ls -lh anyonethere.zip
 
-          
+
           echo "Clean up old zips"
           $RUN "rm -rf ~/web/Is-Anyone-There ~/web/anyonethere.zip"
           
@@ -64,5 +64,5 @@ jobs:
 
 
           echo " Unzipping on Cassini "
-          $RUN "rm -rf ~/web/Is-Anyone-There && mkdir -p ~/web/Is-Anyone-There && python3 -m zipfile -e ~/web/anyonethere.zip ~/web/Is-Anyone-There"
+          $RUN "cd ~/web && python3 -m zipfile -e anyonethere.zip ."
    
