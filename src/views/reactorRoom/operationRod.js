@@ -106,9 +106,11 @@ class OperationReactorPuzzleView extends View {
     checkSolved(){
 
         if(this.currentRound === this.rounds.length - 1){
+            
             this.textHandler.addText("Reactor stabilized!", 0.85)
         }
         this.rod.completed = true;
+        AM.play("reactorFix");
         GS.set('operationRodComplete')
         this.finished = true;
 
@@ -125,6 +127,7 @@ class OperationReactorPuzzleView extends View {
     }
 
     triggerMeltdown(){
+        AM.play("reactorExplosion");
         this.textHandler.addText("REACTOR MELTDOWN!!", 2);
         GS.set("Player Died");
 
@@ -175,8 +178,11 @@ class OperationReactorPuzzleView extends View {
             const dToCheck = dist(x,y,cp.x,cp.y);
             if(dToCheck < maxDist * 0.7){
                 this.currentCheck++;
-                this.textHandler.addText(`Checkpoint ${this.currentCheck}/${this.path.length}`,1.2);
-                if(this.currentCheck >= this.path.length){
+                AM.play("checkpoint");
+                this.textHandler.addText(`Checkpoint ${this.currentCheck}/${this.path.length}`, 1.2);
+
+                // if final checkpoint, complete the puzzle
+                if (this.currentCheck >= this.path.length) {
                     this.checkSolved();
                     return;
                 }
@@ -186,9 +192,10 @@ class OperationReactorPuzzleView extends View {
         if(!touchingWire && this.canZap){
             rod.mistakes++;
             this.canZap = false;
-            rod.zapped = true; 
-            this.textHandler.addText("ZAP!",0.8);
-            if(rod.mistakes === this.meltdownThreshold){
+            AM.play("reactorZap");
+            this.textHandler.addText("ZAP!", 0.8);
+
+            if (rod.mistakes > this.meltdownThreshold) {
                 this.triggerMeltdown();
             }
             setTimeout(() => { this.canZap = true; }, 500);

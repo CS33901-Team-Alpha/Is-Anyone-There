@@ -67,6 +67,7 @@ function preload() {
 function setup() { //ref ? only ran once ever?
   fit16x9();
   VM.updateUnits(); // compute VM.U / VM.V now that width/height exist
+  canvas.oncontextmenu = () => false; // Disable browser right-click menu
 
   const savedState = localStorage.getItem('currentGameState');
 
@@ -174,7 +175,6 @@ function mouseReleased() {
   const mouse = VM.mouse();
   if (!VM.insideUnits(mouse)) return;
   R.dispatch('mouseReleased', mouse);
-  IM.handleDrop(mouse);
 }
 
 function keyPressed() {
@@ -321,18 +321,25 @@ function setupWorld() {
   // --- Room F (Botanical Room) ---
   const plantsView = new PlantsView();
   const plantsView2 = new PlantsView2();
-  const sdBotanicalToReactor = new SlidingDoorView([{ // to nuclear
+  // const sdBotanicalToReactor = new SlidingDoorView([{ // to nuclear
+  //   x:12, y:2.5, scale:0.8,
+  //   targetRoom: 4,         // <-- nuclear index
+  //   targetViewIndex: 0, 
+  //   lockedCondition : () => {true}
+  // }], SM.get("MetalWall"));
+  const sdBotanicalToReactor = new PlantsView3([{ // has door to nuclear
     x:12, y:2.5, scale:0.8,
     targetRoom: 4,         // <-- nuclear index
     targetViewIndex: 0, 
-    lockedCondition : () => true
-  }], SM.get("MetalWall"));
+    lockedCondition : () => !GS.is('BotanicalQuarantine')
+  }]);
   const synthesisView = new SynthesisView();
 
   botanicalRoom.addView(plantsView);
   botanicalRoom.addView(plantsView2);
   botanicalRoom.addView(sdBotanicalToReactor);
   botanicalRoom.addView(synthesisView);
+  sdBotanicalToReactor.setRoom(botanicalRoom);
 
   // register rooms (A=0, B=1, C=2) and let WORLD receive key events
   WORLD.addRoom(startRoom);   // index 0

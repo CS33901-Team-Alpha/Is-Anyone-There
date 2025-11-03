@@ -72,8 +72,9 @@ class WorldManager {
             R.add(IM, 900)
             
             // cut off all music
-            AM.stop('startGame')
-            AM.stop('technoLoop')
+            AM.stop("technoLoop");
+            AM.stop("startGame");
+            AM.stop("goodArrow2");
 
             if(!GS.is('BotanicalRoomVisited')){ // if never visited botanical
                 // start emergency alarm
@@ -94,11 +95,9 @@ class WorldManager {
         }
         if(currentIndex != 5){ // leaving botanical botanical
             R.remove(IM)
-            
-            // start music back up
-            AM.fadeIn('startGame')
         }
         if(currentIndex == 4){ // entering reactor
+            AM.stop("goodArrow2");
             if(!GS.is('reactorStabilized')){
                 secondaryTimer = new ScreenTimer(() => { }, {time: 90000, timerName: 'reactor'})
                 R.add(secondaryTimer, 1000)
