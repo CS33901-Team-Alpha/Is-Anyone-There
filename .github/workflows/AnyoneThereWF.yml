@@ -61,5 +61,5 @@ jobs:
 
 
           echo " Unzipping on Cassini "
-          $RUN "mkdir -p ~/web/Is-Anyone-There && python3 -m zipfile -e ~/anyonethere.zip ~/web/Is-Anyone-There"
+          $RUN "python3 -m zipfile -e ~/web/anyonethere.zip ~/web/Is-Anyone-There"
    
