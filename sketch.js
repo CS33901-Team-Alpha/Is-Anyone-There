@@ -307,17 +307,11 @@ function setupWorld() {
   const restartReactorView = new RestartReactorView();
   const reactorStartup = new ReactorStartupView();  
   const sdReactorToBreaker = new SlidingDoorView([{ // back to breaker
-    x:12, y:2.5, scale:0.8,
+    x:12, y:2.2, scale:0.8,
     targetRoom: 1,         // <-- breaker room
     targetViewIndex: 0, 
     lockedCondition : () => true
-  }], SM.get("MetalWall"));
-  const sdReactorToBotanical = new SlidingDoorView([{ // to botanical
-    x:12, y:2.5, scale:0.8,
-    targetRoom: 5,         // <-- botanical index
-    targetViewIndex: 0, 
-    lockedCondition : () => true
-  }], SM.get("MetalWall"));
+  }], SM.get("southWallReactor"));
 
   reactorRoom.addView(reactorStartup);
   reactorRoom.addView(operationReactorView);

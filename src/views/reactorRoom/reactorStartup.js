@@ -2,16 +2,16 @@ class ReactorStartupView extends View {
     constructor() { 
         super(); 
 
-        this.background = SM.get("MetalWall"); 
+        this.background = SM.get("westWallReactor"); 
         this.background.setSize(16, 9); 
         this.textHandler = new TextNotificationHandler(0.5, 1); 
 
         // reactor simon-says color zones
         this.colors = [
-            { name: 'red', x: 8,  y: 2.5, col: color(255, 0, 0) },
-            { name: 'blue', x: 11, y: 4.5, col: color(0, 128, 255) },
-            { name: 'green', x: 8,  y: 6.5, col: color(0, 255, 100) },
-            { name: 'yellow', x: 5, y: 4.5, col: color(255, 255, 0) },
+            { name: 'red', x: 8,  y: 3.25, col: color(255, 0, 0) },
+            { name: 'blue', x: 10.75, y: 5, col: color(0, 128, 255) },
+            { name: 'green', x: 8,  y: 6.75, col: color(0, 255, 100) },
+            { name: 'yellow', x: 5.25, y: 5, col: color(255, 255, 0) },
         ];
 
         // game logic
@@ -33,11 +33,34 @@ class ReactorStartupView extends View {
         // for starting text 
         this.showStartText = false;
 
+         this.closeBtn = new Button(14, 1.1, 0.8, (self) => {
+            this.activeInterface = "ScreenView";
+            R.add(this.highlight);
+            R.remove(this.closeBtn);
+        });
+
+        // clickable highlight
+            this.highlight = new HighlightEvent(8.25, 3.7, 2.9, 2.7, 255,255,255,() =>{
+            R.remove(this.highlight);
+            R.add(this.closeBtn);
+            this.activeInterface = "PuzzleView";
+        });
+
+        this.locked = false;
+
+        this.activeInterface = "ScreenView";
     }
 
     // cleans up leftover text notifications 
     onEnter() {
-        this.textHandler.cleanup();
+        this.textHandler.cleanup()
+        R.add(this.highlight);
+    }
+
+    onExit() {
+        this.activeInterface = "ScreenView";
+        this.textHandler.cleanup()
+        R.remove(this.highlight);
     }
 
     resetState() {
@@ -52,7 +75,7 @@ class ReactorStartupView extends View {
     }
 
     startSequence(length = 4) {
-        this.onEnter(); 
+        this.textHandler.cleanup();
         this.resetState();
         this.sequenceLength = length; 
 
@@ -67,14 +90,14 @@ class ReactorStartupView extends View {
         console.log(`Flash Duration: ${this.flashDuration.toFixed(2)}s`);
 
         this.timerRunning = true;
-        this.textHandler.addText(`Round ${this.round} initializing...`, 0.85);
+        //this.textHandler.addText(`Round ${this.round} initializing...`, 0.85);
 
         this.locked = true;
         this.activeColor = null;
         this.step = 0;
 
         // start flashing the color 
-        this.flashNext();
+        setTimeout(() => { this.flashNext() }, 750);
     }
 
     flashNext() {
@@ -157,27 +180,29 @@ class ReactorStartupView extends View {
     mousePressed(p) {
         if (this.meltdown) return;
 
-        if (!this.started) {
-            this.started = true;
-            if(!GS.is('reactorStabilized')) {
-                GS.set("reactorStartupInitialized");
-                secondaryTimer = new ScreenTimer(() => { }, {time: 120000, timerName: 'reactor'})
-                R.add(secondaryTimer, 1)
-            }
-            this.timerRunning = false;
-            this.startSequence();
-            AI.addText('>_  NUCLEAR REACTOR STARTUP INITIATED \n>_  COMPLETE STARTUP PROCEDURE TO PREVENT MELTDOWN \n>_  STANDING BY...');
-            return; // don't register this first click as input
-        }
+        if(this.activeInterface == "PuzzleView") {
+            if (this.locked || this.completed) return;
 
-        if (this.locked || this.completed) return;
-
-        const u = width / 16, v = height / 9;
-        for (const zone of this.colors) {
-            const d = dist(mouseX / u, mouseY / v, zone.x, zone.y);
-            if (d < 1.2) {
-                this.handleInput(zone.name);
-                break;
+            const u = VM.u();
+            const v = VM.v();
+            for (const zone of this.colors) {
+                const d = dist(mouseX / u, mouseY / v, zone.x, zone.y);
+                if (d < 1.2) {
+                    if (!this.started) {
+                    this.started = true;
+                        if(!GS.is('reactorStabilized')) {
+                            GS.set("reactorStartupInitialized");
+                            secondaryTimer = new ScreenTimer(() => { }, {time: 120000, timerName: 'reactor'})
+                            R.add(secondaryTimer, 1)
+                        }
+                        this.timerRunning = false;
+                        this.startSequence();
+                        AI.addText('>_  NUCLEAR REACTOR STARTUP INITIATED \n>_  COMPLETE STARTUP PROCEDURE TO PREVENT MELTDOWN \n>_  STANDING BY...');
+                        return; // don't register this first click as input
+                    }
+                    this.handleInput(zone.name);
+                    break;
+                }
             }
         }
     }
@@ -185,52 +210,40 @@ class ReactorStartupView extends View {
     draw() {
         if (this.background) this.background.draw();
         else background(10); // fallback bg 
+        const u = VM.u();
+        const v = VM.v();
 
-        // make the room darker 
-        fill(0, 150);
-        rect(0, 0, width, height);
+        if(this.activeInterface == "PuzzleView") {
 
+            // make the room darker 
+            fill(0, 0, 0, 180); // Red, Green, Blue
+            rect(1*u, 1*v, 14*u, 7*v);
 
-        const u = width / 16, v = height / 9;
+            push();
+            fill(40);
+            rect(1*u,1*v,14*u,1*v,10,10,0,0);
+            fill('#ffbe5cff');
+            textAlign(LEFT,CENTER);
+            textSize(20);
+            text('REACTOR STARTUP CONTROLS', 5 * u, 1.5 * v);
+            pop();
 
-        // the color circles 
-        push();
-        noStroke();
-        textAlign(CENTER, CENTER);
-        textSize(14);
-        for (const zone of this.colors) {
-            const active = this.activeColor === zone.name;
-            const pulse = active ? 1.2 : 1.0;
-            fill(active ? lerpColor(zone.col, color(255), 0.4) : zone.col);
-            ellipse(zone.x * u, zone.y * v, 1.8 * u * pulse, 1.8 * v * pulse);
-            fill(0);
-            text(zone.name.toUpperCase(), zone.x * u, zone.y * v);
+            // the color circles 
+            push();
+            noStroke();
+            textAlign(CENTER, CENTER);
+            textSize(14);
+            for (const zone of this.colors) {
+                const active = this.activeColor === zone.name;
+                const pulse = active ? 1.2 : 1.0;
+                fill(active ? lerpColor(zone.col, color(255), 0.4) : zone.col);
+                ellipse(zone.x * u, zone.y * v, 1.8 * u * pulse, 1.8 * v * pulse);
+                fill(0);
+                text(zone.name.toUpperCase(), zone.x * u, zone.y * v);
+            }
+
+            pop();
         }
-
-        pop();
-
-        // // for the timer bar
-        // push();
-        // const barW = 10 * u, barH = 0.4 * v, barX = 3 * u, barY = 8 * v;
-        // fill(60);
-        // rect(barX, barY, barW, barH, 5);
-        // const ratio = constrain(this.screenTimer / 30, 0, 1);
-        // fill(lerpColor(color('#00FF00'), color('#FF0000'), 1 - ratio));
-        // rect(barX, barY, barW * ratio, barH, 5);
-
-        // textAlign(CENTER, CENTER);
-        // textSize(16);
-        // fill(255);
-        // text(`Time Remaining: ${this.screenTimer}s`, barX + barW / 2, barY + barH / 2);
-        // pop();
-
-        // // flashes red when the timer is <= 5 seconds
-        // if (!this.completed && this.screenTimer <= 5 && frameCount % 30 < 15) { 
-        //     // flashes every half second
-        //     push();
-        //     fill(255, 0, 0, 80); // semi-transparent red
-        //     rect(0, 0, width, height);
-        //     pop();
-        // }
+        
     }
 }

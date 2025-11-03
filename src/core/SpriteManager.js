@@ -91,6 +91,16 @@ function loadSprites() {
     SM.add("eastWallSupport", loadImage('assets/background/TemperatureView.png'))
     SM.add("westWallSupport", loadImage('assets/background/StatusView.png'))
 
+    //Reactor Assets
+    SM.add("ReactorControlBox", loadImage('assets/object/ControlBox.png'))
+    SM.add("ReactorRodsScreen", loadImage('assets/object/RodScreen.png'))
+    SM.add("ReactorSequenceScreen", loadImage('assets/object/SequenceScreen.png'))
+
+    SM.add("northWallReactor", loadImage('assets/background/ReactorWall.png'))
+    SM.add("southWallReactor", loadImage('assets/background/ReactorEntranceWall.png'))
+    SM.add("eastWallReactor", loadImage('assets/background/SequenceWall.png'))
+    SM.add("westWallReactor", loadImage('assets/background/StartupWall.png'))
+    
     // botanical assets
     SM.add("placeholderPlant", loadImage('assets/placeholders/botanical/dummyPlant.png'))
     SM.add("placeholderPlant2", loadImage('assets/placeholders/botanical/dummyPlant2.png'))

@@ -41,7 +41,8 @@ class NuclearRod {
 class OperationReactorPuzzleView extends View {
     constructor(){ 
         super(0, 0, 0, 'Reactor Rod Operation');
-        this.background = SM.get("MetalWall");
+        this.background = SM.get("northWallReactor");
+        this.background.setSize(16, 9); 
 
         // Define 3 rounds with their start, target, and path
         this.rounds = [
@@ -76,14 +77,43 @@ class OperationReactorPuzzleView extends View {
 
         this.showStartText = true; 
         this.initRound(); 
+
+        this.closeBtn = new Button(14.5, 0.7, 0.8, (self) => {
+            this.activeInterface = "ScreenView";
+            R.add(this.highlight);
+            R.remove(this.closeBtn);
+        });
+
+        // clickable highlight
+        this.highlight = new HighlightEvent(6.7, 6.4, 2.7, 1.9, 255,255,255,() =>{
+            if(GS.is("reactorStartupComplete")) {
+                R.remove(this.highlight);
+                R.add(this.closeBtn);
+                this.activeInterface = "PuzzleView";
+            }
+            else {
+                this.textHandler.addText("It seems as though you need to do something before opening this panel...")
+            }
+        });
+
+        this.locked = false;
+
+        this.activeInterface = "ScreenView";
     }
 
     onEnter() {
         this.showStartText = true; 
+        R.add(this.highlight);
+    }
+
+    onExit() {
+        this.activeInterface = "ScreenView";
+        this.textHandler.cleanup();
+        R.remove(this.highlight);
     }
 
     initRound() {
-        this.onEnter(); 
+        this.showStartText = true;  
 
         const round = this.rounds[this.currentRound];
 
@@ -205,14 +235,16 @@ class OperationReactorPuzzleView extends View {
     mousePressed(){
         const u = width/16, v = height/9;
 
-        if(this.showStartText){
-            //this.textHandler.addText(`Round ${this.currentRound + 1} Start!`, 1);
-            this.initRound(); 
-            this.showStartText = false;
-            return; 
-        }
-        if(this.rod.contains(mouseX, mouseY,u,v)){
-            this.rod.dragging = true;
+        if(this.activeInterface == "PuzzleView") {
+            if(this.showStartText){
+                //this.textHandler.addText(`Round ${this.currentRound + 1} Start!`, 1);
+                this.initRound(); 
+                this.showStartText = false;
+                return; 
+            }
+            if(this.rod.contains(mouseX, mouseY,u,v)){
+                this.rod.dragging = true;
+            }
         }
     }
 
@@ -239,79 +271,86 @@ class OperationReactorPuzzleView extends View {
     draw(){
         if(this.background) this.background.draw();
         else background(20);
+        const u = VM.u();
+        const v = VM.v();
 
-        const u = width/16, v = height/9;
+        if(this.activeInterface == "PuzzleView") {
 
-        // panel
-        push();
-        fill(25);
-        stroke(120);
-        strokeWeight(3);
-        rect(2*u,1*v,12*u,7*v,5);
-        pop();
+            // make the screen darker 
+            fill(0, 0, 0, 180); // Red, Green, Blue
+            rect(0.5*u, 0.5*v, 15*u, 8*v);
 
-        // header
-        push();
-        fill(40);
-        rect(2*u,1*v,12*u,0.8*v,10,10,0,0);
-        fill('#ffbe5cff');
-        textAlign(LEFT,CENTER);
-        textSize(14);
-        text('REACTOR ROD OPERATION PANEL', 4.5 * u, 1.4 * v);
-        pop();
-
-        // path lines
-        push();
-        stroke('#00FFFF');
-        strokeWeight(4);
-        noFill();
-        beginShape();
-        for(const p of this.path) vertex(p.x*u, p.y*v);
-        endShape();
-        pop();
-
-        // checkpoints
-        for(let i=0;i<this.path.length;i++){
-            const cp = this.path[i];
-            const isCurrent = i===this.currentCheck;
+            // panel
             push();
-            fill(isCurrent ? '#FFCC00' : '#555');
-            noStroke();
-            ellipse(cp.x*u, cp.y*v, 0.4*u*1.2);
+            fill(25);
+            stroke(120);
+            strokeWeight(3);
+            rect(2*u,1*v,12*u,7*v,5);
             pop();
-        }
 
-        // rod
-        this.rod.draw(u,v);
-
-        // draw zap sparks if triggered
-        if(this.rod.zapped){
+            // header
             push();
-            stroke('#FFFF00');
-            strokeWeight(2);
-            for(let i=0; i<8; i++){
-                line(
-                    this.rod.x*u, 
-                    this.rod.y*v, 
-                    this.rod.x*u + random(-20,20), 
-                    this.rod.y*v + random(-20,20)
-                );
+            fill(40);
+            rect(2*u,1*v,12*u,0.8*v,10,10,0,0);
+            fill('#ffbe5cff');
+            textAlign(LEFT,CENTER);
+            textSize(14);
+            text('REACTOR ROD OPERATION PANEL', 4.5 * u, 1.4 * v);
+            pop();
+
+            // path lines
+            push();
+            stroke('#00FFFF');
+            strokeWeight(4);
+            noFill();
+            beginShape();
+            for(const p of this.path) vertex(p.x*u, p.y*v);
+            endShape();
+            pop();
+
+            // checkpoints
+            for(let i=0;i<this.path.length;i++){
+                const cp = this.path[i];
+                const isCurrent = i===this.currentCheck;
+                push();
+                fill(isCurrent ? '#FFCC00' : '#555');
+                noStroke();
+                ellipse(cp.x*u, cp.y*v, 0.4*u*1.2);
+                pop();
             }
+
+            // rod
+            this.rod.draw(u,v);
+
+            // draw zap sparks if triggered
+            if(this.rod.zapped){
+                push();
+                stroke('#FFFF00');
+                strokeWeight(2);
+                for(let i=0; i<8; i++){
+                    line(
+                        this.rod.x*u, 
+                        this.rod.y*v, 
+                        this.rod.x*u + random(-20,20), 
+                        this.rod.y*v + random(-20,20)
+                    );
+                }
+                pop();
+
+                // reset the flag so it only shows for one frame
+                this.rod.zapped = false;
+            }
+
+
+            // meltdown bar
+            const barX = 2.75*u, barY = 7.8*v, barW = 10*u, barH = 0.4*v;
+            push();
+            fill(60);
+            rect(barX,barY,barW,barH,3);
+            const dangerRatio = this.rod.mistakes/this.meltdownThreshold;
+            fill(lerpColor(color('#00FF00'),color('#FF0000'),dangerRatio));
+            rect(barX,barY,barW*dangerRatio,barH,3);
             pop();
-
-            // reset the flag so it only shows for one frame
-            this.rod.zapped = false;
         }
-
-
-        // meltdown bar
-        const barX = 2.75*u, barY = 7.8*v, barW = 10*u, barH = 0.4*v;
-        push();
-        fill(60);
-        rect(barX,barY,barW,barH,3);
-        const dangerRatio = this.rod.mistakes/this.meltdownThreshold;
-        fill(lerpColor(color('#00FF00'),color('#FF0000'),dangerRatio));
-        rect(barX,barY,barW*dangerRatio,barH,3);
-        pop();
     }
 }

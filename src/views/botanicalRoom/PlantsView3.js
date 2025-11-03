@@ -58,5 +58,7 @@ class PlantsView3 extends SlidingDoorView {
         }
 
         R.remove(this.alarmOverlay)
+
+        this.textNotificationHandler.cleanup();
     }
 }

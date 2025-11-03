@@ -92,6 +92,8 @@ class CryoDoorView extends View{
 
         // call onexits
         this.door.onExit()
+
+        this.textNotificationHandler.cleanup();
     }
         
 }
