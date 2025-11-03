@@ -2,7 +2,7 @@
 let cnv;
 let R;
 let SM = new SpriteManager(); // Sprite Manager
-let AM = new AudioManager(); 
+let AM; 
 let GS;  //ref
 let WORLD;  //ref
 let AI = new AiMessageHandler(1, 7.3);
@@ -49,7 +49,47 @@ function fit16x9() {
 function preload() {
   loadSprites(); // in SpriteManager.js and loads all images, 
   // may be able to load partially? if lag is an issue?
-  loadSounds();
+  AM = new AudioManager();
+  AM.add("titleScreen", loadSound('assets/Is_Anybody_There.mp3'));
+
+    // cryo chamber
+  AM.add("creepyBackground", loadSound('assets/sounds/creepy-background.mp3'));
+
+    // first room
+  AM.add("buttonBeep", loadSound('assets/sounds/buttonPressBeep.mp3'));
+  AM.add("successPinpad", loadSound('assets/sounds/successPinpad.mp3'));
+  AM.add("failurePinpad", loadSound('assets/sounds/pinpadFailure.mp3'));
+
+  AM.add("drawerOpen", loadSound('assets/sounds/drawerOpen.mp3'));
+  AM.add("drawerClose", loadSound('assets/sounds/drawerClose.mp3'));
+  AM.add("drawerLocked", loadSound('assets/sounds/drawerLocked.mp3'));
+  AM.add("door-lock", loadSound('assets/sounds/door-lock.mp3'));
+  AM.add("doorOpen", loadSound('assets/sounds/doorOpen.mp3'));
+  AM.add("technoLoop", loadSound('assets/sounds/technoLoop.mp3'));
+  AM.add("startGame", loadSound('assets/sounds/startGame.mp3'));
+  AM.add("cryoLoop", loadSound('assets/sounds/cryoLoop.mp3'));
+    //sounds added recently
+  AM.add("doorLock", loadSound('assets/sounds/doorLock.mp3'));
+  AM.add("lockBreak", loadSound('assets/sounds/lockBreak.mp3'));
+  AM.add("wireConnect", loadSound('assets/sounds/wireConnect.mp3'));
+  AM.add("allWires", loadSound('assets/sounds/allWires.mp3'));
+  AM.add("componentGood", loadSound('assets/sounds/componentGood.mp3'));
+  AM.add("componentBad", loadSound('assets/sounds/componentBad.mp3'));
+  AM.add("electricDeath", loadSound('assets/sounds/electricDeath.mp3'));
+  AM.add("fixElectronic", loadSound('assets/sounds/fixElectronic.mp3'));
+  AM.add("reactorZap", loadSound('assets/sounds/reactorZap.mp3'));
+  AM.add("reactorExplosion", loadSound('assets/sounds/reactorExplosion.mp3'));
+  AM.add("checkpoint", loadSound('assets/sounds/checkpoint.mp3'));
+  AM.add("reactorFix", loadSound('assets/sounds/reactorFix.mp3'));
+  AM.add("goodArrow", loadSound('assets/sounds/goodArrow.mp3'));
+  AM.add("goodArrow2", loadSound('assets/sounds/goodArrow2.mp3'));
+  AM.add("badArrow", loadSound('assets/sounds/badArrow.mp3'));
+  AM.add("reactorRestart", loadSound('assets/sounds/reactorRestart.mp3'));
+    
+
+
+  // botanical room
+  AM.add("contagionAlarm", loadSound('assets/sounds/contagionAlarm.mp3'));
 
   gameFont     = loadFont('assets/font/PressStart2P-Regular.ttf');
   terminusFont = loadFont('assets/font/terminus.ttf');
