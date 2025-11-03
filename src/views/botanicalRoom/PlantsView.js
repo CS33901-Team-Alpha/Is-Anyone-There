@@ -206,5 +206,7 @@ class PlantsView extends View {
         }
 
         if (this.alarmOverlay) R.remove(this.alarmOverlay);
+
+        this.textNotificationHandler.cleanup();
     }
 }

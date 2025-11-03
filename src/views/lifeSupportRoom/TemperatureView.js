@@ -289,5 +289,7 @@ class TemperaturePuzzleView extends View {
         this.activeInterface = "ScreenView";
         R.remove(this.highlight);
         R.remove(this.screenSprite);
+
+        this.textHandler.cleanup();
     }
 }

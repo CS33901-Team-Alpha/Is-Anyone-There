@@ -44,5 +44,6 @@ class PlantsView2 extends View {
         this.plant.onExit()
 
         R.remove(this.alarmOverlay)
+        this.textNotificationHandler.cleanup();
     }
 }

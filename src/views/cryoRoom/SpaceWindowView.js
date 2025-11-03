@@ -156,5 +156,7 @@ class SpaceWindowView extends View{
 
         // reset first time message so sound plays on first message
         this.firstMessageSent = false;
+
+        this.textNotif.cleanup();
     }
 }
