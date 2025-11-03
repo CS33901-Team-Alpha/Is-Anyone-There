@@ -55,11 +55,14 @@ jobs:
           ls -lh anyonethere.zip
 
           
+          echo "Clean up old zips"
+          $RUN "rm -rf ~/web/Is-Anyone-There ~/web/anyonethere.zip"
+          
           echo " Copying zip to Cassini "
           echo $COPY anyonethere.zip anyonethere@cassini.cs.kent.edu:./web
           $COPY anyonethere.zip anyonethere@cassini.cs.kent.edu:./web
 
 
           echo " Unzipping on Cassini "
-          $RUN "python3 -m zipfile -e ~/web/anyonethere.zip ~/web/Is-Anyone-There"
+          $RUN "rm -rf ~/web/Is-Anyone-There && mkdir -p ~/web/Is-Anyone-There && python3 -m zipfile -e ~/web/anyonethere.zip ~/web/Is-Anyone-There"
    
