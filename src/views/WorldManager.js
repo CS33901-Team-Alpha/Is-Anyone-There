@@ -46,6 +46,7 @@ class WorldManager {
         R.remove(currentVm);
         if (typeof currentVm.onExit === 'function') currentVm.onExit();
 
+        let oldIndex = this.current;
         this.current = nextIndex;
 
         const nextVm = this.rooms[this.current];
@@ -57,12 +58,46 @@ class WorldManager {
             nextVm.gotoIndex(viewIndex);
         }
 
-        // index of botanical room, to add inventory viewer to the screen ONLY when player is in botanical room
-        if(this.current == 5){
+        this.roomStartup(this.current, oldIndex);
+    }
+
+    /**
+     * This is a function that is run whenever we switch rooms. It can be useful for coordinate sound playing and events in rooms
+     * all in one place.
+     * @param {Number} currentIndex index of room player just traveled to
+     * @param {Number} oldIndex index of previous room
+     */
+    roomStartup(currentIndex, oldIndex){
+        if(currentIndex == 5){ // entering botanical
             R.add(IM, 900)
+            
+            // cut off all music
+            AM.stop("technoLoop");
+            AM.stop("startGame");
+            AM.stop("goodArrow2");
+
+            if(!GS.is('BotanicalRoomVisited')){ // if never visited botanical
+                // start emergency alarm
+                AM.setVolume('contagionAlarm', 0.2)
+                AM.loop('contagionAlarm')
+                //setTimeout(()=>{AM.fadeOut('contagionAlarm', 3000)}, 5000)
+
+                // AI message
+                AI.addText('>_  AIRBORNE CONTAMINANTS DETECTED... \n>_  INITIALIZING EMERGENCY CONTAINMENT PROTOCOL \n>_  PROCEDURE: QUARANTINE BOTANICAL ROOM');
+
+                // set game state that we already visited botanical room once
+                GS.set('BotanicalRoomVisited')
+
+                // set game state that we are currently in botanical quarantine (for locking doors)
+                GS.set('BotanicalQuarantine')
+            }
+            
         }
-        else{
+        if(currentIndex != 5){ // leaving botanical botanical
             R.remove(IM)
+        }
+        if(currentIndex == 4){ // entering reactor
+            AM.stop("goodArrow2");
         }
     }
 }

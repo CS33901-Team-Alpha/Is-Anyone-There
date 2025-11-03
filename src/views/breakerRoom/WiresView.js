@@ -301,6 +301,7 @@ mouseReleased() {
       this.paths[this.draggingColor] = [];
     } else {
         // If valid, mark this color as solved
+        AM.play("wireConnect");
       this.solvedColors.add(this.draggingColor);
     }
   }
@@ -310,6 +311,7 @@ mouseReleased() {
 
   // Check if the puzzle is fully solved
   if (this._checkWinCondition()) {
+    AM.play("allWires");
     this._onPuzzleComplete();
   } else {
     // If all wires are valid but grid isn't fully covered, trigger flashing

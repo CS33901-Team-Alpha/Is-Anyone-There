@@ -14,6 +14,9 @@ class PlantsView2 extends View {
                 IM.addItem(new InventoryItem('Chionodoxa siehei', 'placeholderMoleculeIcon'))
              },
             {backgroundColor: [28, 197, 145, 100]}));
+
+        
+        this.alarmOverlay = new AlarmOverlay(() => GS.is('BotanicalQuarantine'))
     }
 
     update(dt){
@@ -30,6 +33,8 @@ class PlantsView2 extends View {
         
         R.add(this.plant, 10)
         this.plant.onEnter()
+
+        R.add(this.alarmOverlay, 100)
     }
     
     onExit() {
@@ -37,5 +42,7 @@ class PlantsView2 extends View {
 
         R.remove(this.plant)
         this.plant.onExit()
+
+        R.remove(this.alarmOverlay)
     }
 }

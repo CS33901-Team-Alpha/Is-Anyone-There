@@ -33,11 +33,13 @@ function repairItemUsed(itemName, x, y, width, height, notifHandler){
 
             // You die if you use electrical tape on working component
             if((itemName == 'electricalTape') && (targetId != BROKEN_COMPONENT_ID)){
+                AM.play("electricDeath")
                 console.log('Used electrical tape on working component (player died)')
                 GS.set("Player Died")
             }
             // you fix the component if you use electrical tape on broken component
             else if((itemName == 'electricalTape') && (targetId == BROKEN_COMPONENT_ID)){
+                AM.play("fixElectronic")
                 notifHandler.addText('You have fixed a broken component!')
                 
                 AI.addText('>_  ACTION RECOGNIZED... \n>_  ELECTRICAL SYSTEM STABILIZING... \n>_  SYSTEM REMAINS CRITICAL - MANUAL ACTIONS REQUIRED');
@@ -45,9 +47,11 @@ function repairItemUsed(itemName, x, y, width, height, notifHandler){
                 GS.set("fixedElectricalComponent");
             }
             else if((itemName == 'voltimeter') && (targetId != BROKEN_COMPONENT_ID)){
+                AM.play("componentGood");
                 notifHandler.addText('This component seems to be working fine.')
             }
             else if((itemName == 'voltimeter') && (targetId == BROKEN_COMPONENT_ID)){
+                AM.play("componentBad");
                 notifHandler.addText('This component is not functional.')
             }
             else{
@@ -290,6 +294,10 @@ class RepairToolCabinet {
 
     mousePressed(p) {
         if (this.isMouseInBounds(p?.x, p?.y)) {
+            if(!this.lockBroken){
+                AM.play("doorLock");
+            }
+            
             this.onClick(this.clicks);
 
             // play quick animation to show lock moving
@@ -297,6 +305,10 @@ class RepairToolCabinet {
             this.clicks += 1;
 
             if (this.clicks > this.clicksToBreak) {
+                if(!this.lockBroken){
+                    AM.play("lockBreak");
+                }
+                
                 this.lockBroken = true;
 
                 R.remove(this.closedSprite);
@@ -447,6 +459,8 @@ class RepairView extends View {
         R.remove(this.background);
         R.remove(this.repairCabinet);
         R.remove(this.componentHolder);
+
+        this.textNotificationHandler.cleanup()
         
         // call on exits
         this.repairCabinet.onExit();
