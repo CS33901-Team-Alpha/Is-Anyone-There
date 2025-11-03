@@ -21,6 +21,7 @@ Game State Variables Currently in Use:
 - "regulateTempPuzzleSolved" - denotes when the temperature puzzle has been solved in Life Support
 - "Ended" - checkfor value thatis set when an end condition for the game is met
             right now that is "Game Complete", "Timer Up", and "Player Died"
+- "reactorStartupInitialized" - Reactor Sequence has begun; start timer
 - "reactorStartupComplete" - completed reactor startup puzzle
 - "restartReactorComplete" - complted restart reactor puzzle
 - "operationRodComplete" - completed reactor rod puzzle

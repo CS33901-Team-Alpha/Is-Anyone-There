@@ -13,9 +13,11 @@ class RestartReactorView extends View {
     this.timer = 0;
     this.waitingForNext = false;
     this.puzzleComplete = false;
+    this.stabilizedMessageSent = false;
     this.i = 0
 
     this.arrows = ['↑', '↓', '←', '→'];
+    //this.arrows = ['W', 'S', 'A', 'D'];
     this.generateSequence();
   }
 
@@ -66,6 +68,11 @@ class RestartReactorView extends View {
       this.sequenceColors[this.currentIndex] = 'red';
       this.locked = true;
       this.timer = 0;
+      AI.addText('>_  MALFUNCTION DETECTED \n>_  Severity: CRITICAL \n>_  REACTOR MELTDOWN BEGUN!!');
+        setTimeout(() => {
+            this.meltdown = true;
+            GS.set("Player Died");
+        }, 3500); 
     }
   }
 
@@ -150,11 +157,16 @@ class RestartReactorView extends View {
     text("REACTOR CONTROL", termX + 0.5 * u, termY + 0.4 * v);
 
     // completion message
-    if (this.puzzleComplete) {
+    if (GS.is('restartReactorComplete')) {
       AM.stop("goodArrow2");
       while(this.i < 1){
         AM.play("reactorRestart");
         ++this.i;
+      }
+
+      if(!this.stabilizedMessageSent) {
+        AI.addText('>_  NUCLEAR REACTOR RESTART SEQUENCE COMPLETED \n>_  PROCEDURE FINALIZING... \n>_  REACTOR RESUMING NORMAL OPERATION');
+        this.stabilizedMessageSent = true;
       }
       
       fill(0, 255, 0);

@@ -83,7 +83,7 @@ class ReactorStartupView extends View {
             this.locked = false;
             this.activeColor = null;
             this.step = 0;
-            this.textHandler.addText("Your turn!", 1);
+            //this.textHandler.addText("Your turn!", 1);
             return;
         }
 
@@ -125,18 +125,20 @@ class ReactorStartupView extends View {
     }
 
     triggerMeltdown() {
-        this.textHandler.addText("REACTOR MELTDOWN ⚠", 2);
-        this.meltdown = true;
-        GS.set("Player Died");
+        AI.addText('>_  MALFUNCTION DETECTED \n>_  Severity: CRITICAL \n>_  REACTOR MELTDOWN BEGUN!!');
+        setTimeout(() => {
+            this.meltdown = true;
+            GS.set("Player Died");
+        }, 5000);  
     }
 
     checkSolved() {
-        this.textHandler.addText(`Round ${this.round} complete!`, 0.5);
+        //this.textHandler.addText(`Round ${this.round} complete!`, 0.5);
         this.round++;
 
         // all rounds complete 
         if (this.round > this.maxRounds) {
-            this.textHandler.addText("Reactor has been started!", 2);
+            AI.addText('>_  NUCLEAR REACTOR STARTUP COMPLETE \n>_  CONTINUE PROCEDURE TO PREVENT MELTDOWN \n>_  STANDING BY...');
             GS.set("reactorStartupComplete");
             this.completed = true;
             this.locked = true;
@@ -150,19 +152,6 @@ class ReactorStartupView extends View {
 
     update(dt) {
         this.textHandler.update(dt);
-
-        // // local meltdown countdown
-        // if (this.timerRunning && !this.completed && !this.meltdown) {
-        //     const now = millis();
-        //     if (now - this.lastTime > 1000) {
-        //         this.screenTimer--;
-        //         this.lastTime = now;
-        //         if (this.screenTimer <= 0) {
-        //             this.triggerMeltdown();
-        //             this.timerRunning = false;
-        //         }
-        //     }
-        // }
     }
 
     mousePressed(p) {
@@ -170,8 +159,14 @@ class ReactorStartupView extends View {
 
         if (!this.started) {
             this.started = true;
+            if(!GS.is('reactorStabilized')) {
+                GS.set("reactorStartupInitialized");
+                secondaryTimer = new ScreenTimer(() => { }, {time: 120000, timerName: 'reactor'})
+                R.add(secondaryTimer, 1)
+            }
             this.timerRunning = false;
             this.startSequence();
+            AI.addText('>_  NUCLEAR REACTOR STARTUP INITIATED \n>_  COMPLETE STARTUP PROCEDURE TO PREVENT MELTDOWN \n>_  STANDING BY...');
             return; // don't register this first click as input
         }
 

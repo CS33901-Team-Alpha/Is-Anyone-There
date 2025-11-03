@@ -98,10 +98,6 @@ class WorldManager {
         }
         if(currentIndex == 4){ // entering reactor
             AM.stop("goodArrow2");
-            if(!GS.is('reactorStabilized')){
-                secondaryTimer = new ScreenTimer(() => { }, {time: 90000, timerName: 'reactor'})
-                R.add(secondaryTimer, 1000)
-            }
         }
     }
 }

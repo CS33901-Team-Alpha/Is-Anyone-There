@@ -106,8 +106,8 @@ class OperationReactorPuzzleView extends View {
     checkSolved(){
 
         if(this.currentRound === this.rounds.length - 1){
-            
-            this.textHandler.addText("Reactor stabilized!", 0.85)
+            AI.addText('>_  NUCLEAR REACTOR CONTROL RODS INSERTED \n>_  FINISH PROCEDURE TO PREVENT MELTDOWN \n>_  STANDING BY...');
+            //this.textHandler.addText("Reactor stabilized!", 0.85)
         }
         this.rod.completed = true;
         AM.play("reactorFix");
@@ -120,16 +120,15 @@ class OperationReactorPuzzleView extends View {
             if(this.currentRound < this.rounds.length){
                 this.initRound();
             } else {
-                this.textHandler.addText("All 3 rounds completed!", 2);
-                GS.set("operationRodPuzzleAllSolved");
+                //this.textHandler.addText("All 3 rounds completed!", 2);
+                GS.set("operationRodComplete");
             }
         }, 1200);
     }
 
     triggerMeltdown(){
+        AI.addText('>_  MALFUNCTION DETECTED \n>_  Severity: CRITICAL \n>_  REACTOR MELTDOWN BEGUN!!');
         AM.play("reactorExplosion");
-        this.textHandler.addText("REACTOR MELTDOWN!!", 2);
-        GS.set("Player Died");
 
         // reset rod for retry
         setTimeout(() => {
@@ -139,7 +138,8 @@ class OperationReactorPuzzleView extends View {
             this.rod.mistakes = 0;
             this.canZap = true;
             this.finished = false;
-        }, 1200);
+            GS.set("Player Died");
+        }, 5000);
     }
 
     checkCollision() {
@@ -179,7 +179,7 @@ class OperationReactorPuzzleView extends View {
             if(dToCheck < maxDist * 0.7){
                 this.currentCheck++;
                 AM.play("checkpoint");
-                this.textHandler.addText(`Checkpoint ${this.currentCheck}/${this.path.length}`, 1.2);
+                //this.textHandler.addText(`Checkpoint ${this.currentCheck}/${this.path.length}`, 1.2);
 
                 // if final checkpoint, complete the puzzle
                 if (this.currentCheck >= this.path.length) {
@@ -193,7 +193,7 @@ class OperationReactorPuzzleView extends View {
             rod.mistakes++;
             this.canZap = false;
             AM.play("reactorZap");
-            this.textHandler.addText("ZAP!", 0.8);
+            //this.textHandler.addText("ZAP!", 0.8);
 
             if (rod.mistakes > this.meltdownThreshold) {
                 this.triggerMeltdown();
@@ -206,7 +206,7 @@ class OperationReactorPuzzleView extends View {
         const u = width/16, v = height/9;
 
         if(this.showStartText){
-            this.textHandler.addText(`Round ${this.currentRound + 1} Start!`, 1);
+            //this.textHandler.addText(`Round ${this.currentRound + 1} Start!`, 1);
             this.initRound(); 
             this.showStartText = false;
             return; 
