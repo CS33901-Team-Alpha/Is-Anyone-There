@@ -10,6 +10,10 @@ let WORLD;  //ref
 let AI = new AiMessageHandler(1, 7.3);
 let IM = new InventoryManager()
 
+// secondary timer storage variable, so we can delete it later from anywhere
+// right now is created in WorldManager, when you first go into reactor
+let secondaryTimer;
+
 let endscreenShown = false; //ref | changing conditions might not need to be global because of GS
 let ended = false; //ref -----^
 
@@ -119,6 +123,9 @@ function draw() {
     //}
 
     if(!endscreenShown) {
+      R.remove(screenTimer)
+      R.remove(secondaryTimer)
+
       R.add(endScreen, 999);
       endscreenShown = true;
       AI.cleanup();
@@ -291,6 +298,7 @@ function setupWorld() {
   // --- Room E (Reactor Room) ---
   const operationReactorView = new OperationReactorPuzzleView();
   const restartReactorView = new RestartReactorView();
+  const reactorStartup = new ReactorStartupView();  
   const sdReactorToBreaker = new SlidingDoorView([{ // back to breaker
     x:12, y:2.5, scale:0.8,
     targetRoom: 1,         // <-- breaker room
@@ -304,6 +312,7 @@ function setupWorld() {
     lockedCondition : () => true
   }], SM.get("MetalWall"));
 
+  reactorRoom.addView(reactorStartup);
   reactorRoom.addView(operationReactorView);
   reactorRoom.addView(restartReactorView);
   reactorRoom.addView(sdReactorToBreaker);

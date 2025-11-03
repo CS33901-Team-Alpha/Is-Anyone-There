@@ -23,10 +23,23 @@ class Timer {
 }
 
 class ScreenTimer {
-    constructor(onEnd = () => {}) {
-        this.timer = new Timer(240000);   
+    /**
+     * For options object: 
+     *  - options.time sets initial timer time
+     *  - options.timerName name of timer (NOTE: 'overall' is reserved for the timer that ends game)
+     *          - Also NOTE: any timer that is not called overall will be placed below the overall
+     */
+    constructor(onEnd = () => {}, options = {}) {
+        this.timer = new Timer(!options.time ? 240000 : options.time);   
         this.label = '';
         this.onEnd = onEnd;
+
+        this.yOffset = options.yOffset;
+
+        this.timerName = options.timerName;
+        if(!this.timerName){
+            this.timerName = 'overall';
+        }
     }
 
     update(dt){
@@ -39,7 +52,12 @@ class ScreenTimer {
         } else {
             setTimeout(() => {
                 this.label = '0:00';
-                GS.set("Timer Up");
+                if(this.timerName == 'overall'){
+                    GS.set("Timer Up");
+                }
+                else{
+                    GS.set("Timer Up") // change to custom timeout ending?
+                }
                 this.onEnd();
             }, 500);
         }
@@ -56,7 +74,7 @@ class ScreenTimer {
         let th = textAscent() + textDescent() + pad * 2;
 
         let x = 10;
-        let y = 10;
+        let y = this.timerName == 'overall' ? 10 : 10+th+10;
 
         rectMode(CORNER);
         fill(0);
@@ -66,9 +84,15 @@ class ScreenTimer {
 
         noStroke();
         drawingContext.shadowBlur = 20;
-        drawingContext.shadowColor = color(255, 0, 0);
-        fill(255, 0, 0);
-        //text(this.label, width / 2, 60);
+        
+        if(this.timerName == 'overall'){
+            drawingContext.shadowColor = color(255, 0, 0);
+            fill(255, 0, 0);
+        }
+        else{
+            drawingContext.shadowColor = color(0, 255, 0);
+            fill(0, 255, 0)
+        }
 
         text(this.label, x + tw / 2, y + th / 2);
         drawingContext.shadowBlur = 0;

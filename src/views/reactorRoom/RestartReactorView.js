@@ -95,6 +95,13 @@ class RestartReactorView extends View {
           this.waitingForNext = false;
           this.puzzleComplete = true;
           this.locked = true;
+          GS.set('restartReactorComplete')
+
+          // CHECK IF ALL 3 PUZZLES HAVE BEEN BEATEN
+          if(GS.is('restartReactorComplete') && GS.is('reactorStartupComplete') && GS.is('operationRodComplete')){
+            R.remove(secondaryTimer)
+            GS.set('reactorStabilized')
+          }
         } 
         
         else {
