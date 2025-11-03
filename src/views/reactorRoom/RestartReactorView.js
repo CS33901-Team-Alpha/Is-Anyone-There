@@ -2,7 +2,7 @@ class RestartReactorView extends View {
   constructor() {
     super();
 
-    this.background = SM.get("MetalWall");
+    this.background = SM.get("eastWallReactor");
     this.background.setSize(16, 9);
 
     this.sequenceLength = 3;
@@ -16,9 +16,39 @@ class RestartReactorView extends View {
     this.stabilizedMessageSent = false;
     this.i = 0
 
+    this.textNotificationHandler = new TextNotificationHandler(0.5, 1);
+
     this.arrows = ['↑', '↓', '←', '→'];
     //this.arrows = ['W', 'S', 'A', 'D'];
-    this.generateSequence();
+
+    this.closeBtn = new Button(14, 1.2, 0.8, (self) => {
+      this.activeInterface = "ScreenView";
+        R.add(this.highlight);
+      R.remove(this.closeBtn);
+    });
+
+    // clickable highlight
+    this.highlight = new HighlightEvent(4.4, 2.35, 4.4, 2.8, 255,255,255,() =>{
+      if(GS.is("reactorStartupComplete") && GS.is("operationRodComplete")) {
+        R.remove(this.highlight);
+        R.add(this.closeBtn);
+        this.generateSequence();
+        this.activeInterface = "PuzzleView";
+      }
+      else {
+        this.textNotificationHandler.addText("It seems as though you need to do something before opening this panel...")
+      }
+    });
+
+    this.locked = false;
+
+    this.activeInterface = "ScreenView";
+
+    this.slidingDoor = new StandaloneSlidingDoor(10, 2.7, 1, () => {}, true, 2, null, 4, 3, () => {
+      return false;
+    });
+
+    this.slidingDoor.setRoom(this);
   }
 
   // generate a random sequence of arrows
@@ -88,6 +118,10 @@ class RestartReactorView extends View {
   }
 
   update(dt) {
+    this.textNotificationHandler.update(dt);
+
+    this.slidingDoor.update(dt);
+
     // lock player inputs if sequence was messed up
     if (this.locked) {
       this.timer += dt;
@@ -127,81 +161,106 @@ class RestartReactorView extends View {
     }
   }
 
+  onEnter() {
+    R.add(this.highlight);
+    this.slidingDoor.onEnter();
+  }
+
+  onExit() {
+      this.activeInterface = "ScreenView";
+      this.textNotificationHandler.cleanup();
+      R.remove(this.highlight);
+      this.slidingDoor.onExit();
+  }
+
+  mousePressed(m) {
+    if (this.slidingDoor.mousePressed(m)) {return true;} // stop propagation
+  }
+
   draw() {
     this.background?.draw();
+
+    this.slidingDoor.draw();
 
     const u = VM.u();
     const v = VM.v();
 
-    push();
+    if(this.activeInterface == "PuzzleView") {
 
-    const termX = 3.5 * u;
-    const termY = 1.5 * v;
-    const termW = 9 * u;
-    const termH = 6 * v;
+      push();
 
-    // draw terminal
-    fill(10, 10, 10, 230);
-    stroke(0, 255, 0);
-    strokeWeight(3);
-    rect(termX, termY, termW, termH, 8);
+      // make the screen darker 
+      fill(0, 0, 0, 180); // Red, Green, Blue
+      rect(0.5*u, 0.5*v, 15*u, 8*v);
 
-    // terminal header
-    noStroke();
-    fill(0, 255, 0, 30);
-    rect(termX, termY, termW, 0.8 * v, 8);
-    fill(0, 255, 0);
-    textAlign(LEFT, CENTER);
-    textFont(terminusFont);
-    textSize(0.45 * v);
-    text("REACTOR CONTROL", termX + 0.5 * u, termY + 0.4 * v);
+      const termX = 3.5 * u;
+      const termY = 1.5 * v;
+      const termW = 9 * u;
+      const termH = 6 * v;
 
-    // completion message
-    if (GS.is('restartReactorComplete')) {
-      AM.stop("goodArrow2");
-      while(this.i < 1){
-        AM.play("reactorRestart");
-        ++this.i;
-      }
+      // draw terminal
+      fill(10, 10, 10, 230);
+      stroke(0, 255, 0);
+      strokeWeight(3);
+      rect(termX, termY, termW, termH, 8);
 
-      if(!this.stabilizedMessageSent) {
-        AI.addText('>_  NUCLEAR REACTOR RESTART SEQUENCE COMPLETED \n>_  PROCEDURE FINALIZING... \n>_  REACTOR RESUMING NORMAL OPERATION');
-        this.stabilizedMessageSent = true;
-      }
-      
+      // terminal header
+      noStroke();
+      fill(0, 255, 0, 30);
+      rect(termX, termY, termW, 0.8 * v, 8);
       fill(0, 255, 0);
+      textAlign(LEFT, CENTER);
+      textFont(terminusFont);
+      textSize(0.45 * v);
+      text("REACTOR CONTROL", termX + 0.5 * u, termY + 0.4 * v);
+
+      // completion message
+      if (GS.is('restartReactorComplete')) {
+        AM.stop("goodArrow2");
+        while(this.i < 1){
+          AM.play("reactorRestart");
+          ++this.i;
+        }
+
+        if(!this.stabilizedMessageSent) {
+          AI.addText('>_  NUCLEAR REACTOR RESTART SEQUENCE COMPLETED \n>_  PROCEDURE FINALIZING... \n>_  REACTOR RESUMING NORMAL OPERATION');
+          this.stabilizedMessageSent = true;
+        }
+        
+        fill(0, 255, 0);
+        textAlign(CENTER, CENTER);
+        textSize(0.8 * v);
+        text("REACTOR RESTARTED", termX + termW / 2, termY + termH / 2);
+        pop();
+        return;
+      }
+
+      const totalArrows = this.sequence.length;
+      const centerX = termX + termW / 2;
+      const centerY = termY + termH / 2;
+      const arrowSize = constrain(1.2 * v - totalArrows * 0.05 * v, 0.5 * v, 1.2 * v);
+      const totalWidth = totalArrows * arrowSize + (totalArrows - 1);
+
       textAlign(CENTER, CENTER);
-      textSize(0.8 * v);
-      text("REACTOR RESTARTED", termX + termW / 2, termY + termH / 2);
+      textSize(arrowSize);
+      textFont(terminusFont);
+
+      // draw arrows
+      for (let i = 0; i < totalArrows; i++) {
+        const x = centerX - totalWidth / 2 + i * (arrowSize);
+        const y = centerY;
+        const arrow = this.sequence[i];
+
+        // arrow colors
+        let color = this.sequenceColors[i];
+        if (color === 'green') fill(0, 255, 0);
+        else if (color === 'red') fill(255, 0, 0);
+        else fill(255);
+
+        text(arrow, x, y);
+      }
+
       pop();
-      return;
     }
-
-    const totalArrows = this.sequence.length;
-    const centerX = termX + termW / 2;
-    const centerY = termY + termH / 2;
-    const arrowSize = constrain(1.2 * v - totalArrows * 0.05 * v, 0.5 * v, 1.2 * v);
-    const totalWidth = totalArrows * arrowSize + (totalArrows - 1);
-
-    textAlign(CENTER, CENTER);
-    textSize(arrowSize);
-    textFont(terminusFont);
-
-    // draw arrows
-    for (let i = 0; i < totalArrows; i++) {
-      const x = centerX - totalWidth / 2 + i * (arrowSize);
-      const y = centerY;
-      const arrow = this.sequence[i];
-
-      // arrow colors
-      let color = this.sequenceColors[i];
-      if (color === 'green') fill(0, 255, 0);
-      else if (color === 'red') fill(255, 0, 0);
-      else fill(255);
-
-      text(arrow, x, y);
-    }
-
-    pop();
   }
 }
