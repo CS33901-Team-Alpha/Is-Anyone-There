@@ -212,17 +212,24 @@ function setupWorld() {
   const lifeSupportRoom = new ViewManager();
   const reactorRoom = new ViewManager();
   const botanicalRoom = new ViewManager();
+  const mapRoom = new ViewManager();
   
   // --- Room A (Start Room | start here) ---
   const computerView = new ComputerView(); // start view (index 0)
-  const boxesView    = new BoxesView();
+  const boxesView    = new BoxesView([ // is a sliderdoorview derived class takes you to map room (6)
+    {x:12, y:2.5, scale:0.8,
+    targetRoom: 6,         // <-- map room
+    targetViewIndex: 0,    // 
+    lockedCondition : () => GS.is("Pin Solved")
+    }
+  ]);
   const fcView       = new FileCabinetView();
 
   // Door in start room -> breaker room (index 1), land on view 0
   const sdStartToBreaker = new SlidingDoorView([{
     x:12, y:2.5, scale:0.8,
     targetRoom: 1,         // <-- breaker room
-    targetViewIndex: 0,    // land on first plain color view
+    targetViewIndex: 0,    //
     lockedCondition : () => GS.is("Pin Solved")
   }]);
 
@@ -341,6 +348,23 @@ function setupWorld() {
   botanicalRoom.addView(synthesisView);
   sdBotanicalToReactor.setRoom(botanicalRoom);
 
+  // --- Room G (Map Room) ---
+  const shipMapView = new ShipMapView();
+  const mapFiller = new PuzzleClueView();
+  const mapFiller2 = new PuzzleClueView();
+
+  const sdMapToStart = new SlidingDoorView([{
+    x:12, y:2.5, scale:0.8,
+    targetRoom: 0,         // <-- start room
+    targetViewIndex: 0,    //
+    lockedCondition : () => true
+  }], SM.get("MetalWall"));
+
+  mapRoom.addView(shipMapView);
+  mapRoom.addView(mapFiller);
+  mapRoom.addView(sdMapToStart);
+  mapRoom.addView(mapFiller2);
+
   // register rooms (A=0, B=1, C=2) and let WORLD receive key events
   WORLD.addRoom(startRoom);   // index 0
   WORLD.addRoom(breakerRoom);   // index 1
@@ -348,5 +372,6 @@ function setupWorld() {
   WORLD.addRoom(lifeSupportRoom);   // index 3
   WORLD.addRoom(reactorRoom);   // index 4
   WORLD.addRoom(botanicalRoom);   // index 5
+  WORLD.addRoom(mapRoom);   // index 6
   R.add(WORLD, 1000);
 }
