@@ -59,6 +59,8 @@ jobs:
           echo $COPY anyonethere.zip anyonethere@cassini.cs.kent.edu:./web
           $COPY anyonethere.zip anyonethere@cassini.cs.kent.edu:./web
 
+          echo " Ensuring unzip exists on Cassini "
+          $RUN "if ! command -v unzip >/dev/null 2>&1; then echo 'Installing unzip locally...'; sudo apt-get update && sudo apt-get install -y unzip; fi"
           
           echo " Unzipping on Cassini "
           echo $RUN "mkdir -p ~/web/Is-Anyone-There && unzip -o ~/anyonethere.zip -d ~/web/Is-Anyone-There"
