@@ -323,7 +323,7 @@ function setupWorld() {
   reactorRoom.addView(operationReactorView);
   reactorRoom.addView(restartReactorView);
   reactorRoom.addView(sdReactorToBreaker);
-  reactorRoom.addView(sdReactorToBotanical);
+  //reactorRoom.addView(sdReactorToBotanical); -> removed door to botanical temporarily
   
   // --- Room F (Botanical Room) ---
   const plantsView = new PlantsView();
