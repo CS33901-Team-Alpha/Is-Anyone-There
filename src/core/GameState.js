@@ -33,6 +33,8 @@ class GameState {
         this.states = new Set(); // simple states, string set
         this.checks = new Map(); // array for functions
         this.deaths = 0          // count for deaths 
+
+        this.endString = "";
     }
     /**
      * Adds to the state list. this will check for exact values.
@@ -92,6 +94,14 @@ class GameState {
     }
     getDeaths() {
         return this.deaths;
+    }
+
+    setString(string) {
+        this.endString = string;
+    }
+
+    getString(string) {
+        return this.endString;
     }
 
     // Object?

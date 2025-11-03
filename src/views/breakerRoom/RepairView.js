@@ -35,6 +35,7 @@ function repairItemUsed(itemName, x, y, width, height, notifHandler){
             if((itemName == 'electricalTape') && (targetId != BROKEN_COMPONENT_ID)){
                 AM.play("electricDeath")
                 console.log('Used electrical tape on working component (player died)')
+                GS.setString("Well, that was a shocking end, wasn't it?")
                 GS.set("Player Died")
             }
             // you fix the component if you use electrical tape on broken component

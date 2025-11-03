@@ -80,6 +80,11 @@ class Terminal {
       this.forceEndGame();
     });
 
+    this.registerCommand("lose", () => {
+      this.print("FORCING MISSION FAILURE...");
+      GS.set("Player Died");
+    });
+
     this.registerCommand("*henry", () => {
       this.print("CONNECTION: HENRY CHANNEL OPEN");
 

@@ -149,6 +149,7 @@ class ReactorStartupView extends View {
 
     triggerMeltdown() {
         AI.addText('>_  MALFUNCTION DETECTED \n>_  Severity: CRITICAL \n>_  REACTOR MELTDOWN BEGUN!!');
+        GS.setString("Nuclear Reactors are very dangerous,\nbe careful around them from now on");
         setTimeout(() => {
             this.meltdown = true;
             GS.set("Player Died");

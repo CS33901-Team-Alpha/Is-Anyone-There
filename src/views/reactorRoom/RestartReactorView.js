@@ -99,10 +99,11 @@ class RestartReactorView extends View {
       this.locked = true;
       this.timer = 0;
       AI.addText('>_  MALFUNCTION DETECTED \n>_  Severity: CRITICAL \n>_  REACTOR MELTDOWN BEGUN!!');
-        setTimeout(() => {
-            this.meltdown = true;
-            GS.set("Player Died");
-        }, 3500); 
+      GS.setString("Nuclear Reactors are very dangerous,\nbe careful around them from now on");
+      setTimeout(() => {
+        this.meltdown = true;
+        GS.set("Player Died");
+      }, 3500); 
     }
   }
 

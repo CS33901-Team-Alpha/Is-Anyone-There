@@ -286,6 +286,9 @@ class EndScreenView extends View {
     textSize(0.3 * v);
     text(this.instruction, 8 * u, 4.6 * v);
 
+    textSize(0.2 * v);
+    text(GS.getString(), 8 * u, 5.35 * v);
+
     this.drawButton();
 
   }

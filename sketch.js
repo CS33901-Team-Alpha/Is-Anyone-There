@@ -1,6 +1,4 @@
 //ref  |  search for pending refactoring
-
-
 let cnv;
 let R;
 let SM = new SpriteManager(); // Sprite Manager
@@ -84,6 +82,8 @@ function setup() { //ref ? only ran once ever?
 
   // insert checkers here
   GS.checkFor("Ended", () => { return GS.is("Game Complete") || GS.is("Timer Up") || GS.is("Player Died"); })
+
+  GS.setString("You Have Survived, the Spaceship is saved! Thank you for Playing!")
 
   R = new Renderer(); //ref
 

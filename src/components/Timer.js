@@ -53,9 +53,11 @@ class ScreenTimer {
             setTimeout(() => {
                 this.label = '0:00';
                 if(this.timerName == 'overall'){
+                    GS.setString("Looks like you have to speed up a little...")
                     GS.set("Timer Up");
                 }
                 else{
+                    GS.setString("Looks like you have to speed up a little...")
                     GS.set("Timer Up") // change to custom timeout ending?
                 }
                 this.onEnd();

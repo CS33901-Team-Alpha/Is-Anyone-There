@@ -35,8 +35,6 @@ function loadSounds(){
     AM.add("goodArrow2", loadSound('assets/sounds/goodArrow2.mp3'));
     AM.add("badArrow", loadSound('assets/sounds/badArrow.mp3'));
     AM.add("reactorRestart", loadSound('assets/sounds/reactorRestart.mp3'));
-    
-
 
     // botanical room
     AM.add("contagionAlarm", loadSound('assets/sounds/contagionAlarm.mp3'));

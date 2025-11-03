@@ -268,6 +268,7 @@ class TemperaturePuzzleView extends View {
 
         if (this.checkOverflow()) {
             console.log("OVERLOAD! You died!");
+            GS.setString("Tip: Humans can only survive in certain temperatues,\nkeep that in mind next time");
             GS.set("Player Died");
         } else if (this.checkSolved() && !this.solved) {
             console.log("Puzzle solved!");
