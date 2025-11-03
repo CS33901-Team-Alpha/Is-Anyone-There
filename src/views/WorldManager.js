@@ -100,7 +100,7 @@ class WorldManager {
         }
         if(currentIndex == 4){ // entering reactor
             if(!GS.is('reactorStabilized')){
-                secondaryTimer = new ScreenTimer(() => { }, {time: 600000, timerName: 'reactor'})
+                secondaryTimer = new ScreenTimer(() => { }, {time: 90000, timerName: 'reactor'})
                 R.add(secondaryTimer, 1000)
             }
         }
