@@ -12,10 +12,10 @@ class ShipMapView extends View {
       "Life Support":     {col: 1, row: 2, connections:   ["Breaker Box Room", "Monitor Room"]},
       "Cryochamber":      {col: 2, row: 0, connections:   ["Botanical Room", "Breaker Box Room"]},
       "Breaker Box Room": {col: 2, row: 1, connections:   ["Nuclear Reactor", "Cryochamber", "Terminal Room", "Life Support"]},
-      "Monitor Room":     {col: 2, row: 2, connections:   ["Life Support", "Map Room"]},
+      "Monitor Room":     {col: 2, row: 2, connections:   ["Life Support", "Navigation"]},
       "Terminal Room":    {col: 3, row: 0.5, connections: ["Breaker Box Room", "Navigation"]},
-      "Map Room":         {col: 3, row: 1.5, connections: ["Monitor Room", "Navigation"]},
-      "Navigation":       {col: 4, row: 1, connections:   ["Terminal Room", "Map Room"]}
+      //"Map Room":         {col: 3, row: 1.5, connections: ["Monitor Room", "Navigation"]},
+      "Navigation":       {col: 3, row: 1.5, connections:   ["Terminal Room", "Monitor Room"]}
     };
 
     this.coordinates = {};
