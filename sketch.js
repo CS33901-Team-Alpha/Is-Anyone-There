@@ -48,13 +48,13 @@ function fit16x9() {
 
 function preload() {
   loadSprites(); // in SpriteManager.js and loads all images, 
-  // may be able to load partially? if lag is an issue?
   AM = new AudioManager();
+  // may be able to load partially? if lag is an issue?
+  startScreenMusic = loadSound('assets/Is_Anybody_There.mp3');  
+  
   AM.add("titleScreen", loadSound('assets/Is_Anybody_There.mp3'));
-
     // cryo chamber
   AM.add("creepyBackground", loadSound('assets/sounds/creepy-background.mp3'));
-
     // first room
   AM.add("buttonBeep", loadSound('assets/sounds/buttonPressBeep.mp3'));
   AM.add("successPinpad", loadSound('assets/sounds/successPinpad.mp3'));
@@ -95,7 +95,7 @@ function preload() {
   terminusFont = loadFont('assets/font/terminus.ttf');
 
   // Load start screen music
-  startScreenMusic = loadSound('assets/Is_Anybody_There.mp3');  //ref | switch to audio manager
+//ref | switch to audio manager
   
   // Load henry password sequence assets
   henryAudio = loadSound('assets/secrets/henry/connectionTerminated.mp3');
@@ -104,6 +104,7 @@ function preload() {
 
 function setup() { //ref ? only ran once ever?
   fit16x9();
+  userStartAudio(); 
   VM.updateUnits(); // compute VM.U / VM.V now that width/height exist
   canvas.oncontextmenu = () => false; // Disable browser right-click menu
 
