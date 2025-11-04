@@ -6,7 +6,7 @@ let AM;
 let GS;  //ref
 let WORLD;  //ref
 let AI = new AiMessageHandler(1, 7.3);
-let IM = new InventoryManager()
+let IM = new InventoryManager();
 
 // secondary timer storage variable, so we can delete it later from anywhere
 // right now is created in WorldManager, when you first go into reactor
