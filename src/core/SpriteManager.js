@@ -119,7 +119,6 @@ function loadSprites() {
 }
 
 
-
 class SpriteManager {
     constructor() {
         this.sprites = new Map();
