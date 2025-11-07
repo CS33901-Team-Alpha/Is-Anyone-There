@@ -1,7 +1,17 @@
 //ref  |  search for pending refactoring
 import { VM } from './VM.js';
 import { StartScreenView } from './src/views/StartScreenView.js';
-
+import { SpriteManager } from './SpriteManager.js';
+import { AudioManager } from './AudioManager.js';
+import { GameState } from './GameState.js';
+import { Renderer } from './Renderer.js';
+import { View } from './ViewManager.js'; // Assuming View.js exists
+import { ViewManager } from './ViewManager.js';
+import { WorldManager } from './WorldManager.js';
+import { StartScreenView } from './StartScreenView.js';
+import { EndScreenView } from './EndScreenView.js';
+import { ScreenTimer } from './Timer.js';
+import { WiresView } from './WiresView.js';
 
 let cnv;
 let R;
