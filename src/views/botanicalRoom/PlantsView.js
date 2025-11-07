@@ -60,12 +60,12 @@ class PlantsView extends View {
             },
             { backgroundColor: [200, 50, 50, 100] })),
             new PlantObject(8, 6, 'placeholderPlant3', new InspectComponent(
-            'Ascorbic Acid',
-            'In the post-collapse biolabs of the Outer Belt, ascorbic acid became the cornerstone of emergency field medicine.',
-            'ascorbicAcidMolecule',
+            'Inferon Alpha Protein',
+            'The protein is secreted by the beautiful vines of the Lumafera plant, a rare organism found deep within the oxygen-saturated jungles of Epsilon IV.',
+            'inferonAlphaProtein',
             'Collect',
             () => {
-                IM.addItem(new InventoryItem('Ascorbic Acid', 'ascorbicAcidMoleculeIcon'));
+                IM.addItem(new InventoryItem('Inferon Alpha', 'inferonAlphaProteinIcon'));
             },
             { backgroundColor: [200, 50, 50, 100] })),
         ];

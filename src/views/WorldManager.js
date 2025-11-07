@@ -69,7 +69,8 @@ class WorldManager {
      */
     roomStartup(currentIndex, oldIndex){
         if(currentIndex == 5){ // entering botanical
-            R.add(IM, 900)
+            //R.add(IM, 900)
+            IM.renderAllItems()
             
             // cut off all music
             AM.stop("technoLoop");
@@ -94,7 +95,8 @@ class WorldManager {
             
         }
         if(currentIndex != 5){ // leaving botanical botanical
-            R.remove(IM)
+            IM.cleanup()
+            //R.remove(IM)
         }
         if(currentIndex == 4){ // entering reactor
             AM.stop("goodArrow2");

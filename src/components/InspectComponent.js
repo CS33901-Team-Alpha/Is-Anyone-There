@@ -1,6 +1,5 @@
 /**
  * General class that we can use to make a pop up UI that dispalys some kind of information and offers an action.
- * 
  */
 
 class InspectComponent{
