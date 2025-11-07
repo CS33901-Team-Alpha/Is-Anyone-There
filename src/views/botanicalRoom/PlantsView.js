@@ -72,6 +72,7 @@ class PlantsView extends View {
 
     }
 
+    
     onEnter() {
         R.add(this.background);
 

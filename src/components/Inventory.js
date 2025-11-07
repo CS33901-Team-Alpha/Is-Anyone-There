@@ -5,6 +5,10 @@ class InventoryItem {
         this.sprite = SM.get(spriteName);
     }
 
+    getName(){
+        return this.name
+    }
+
     getSprite() {
         return this.sprite;
     }
@@ -35,6 +39,10 @@ class InventoryManager {
         this.items.at(-1).setSpriteSize(this.iconSize, this.iconSize);
         
         this.renderAllItems()
+    }
+
+    getAllItems(){
+        return this.items
     }
 
     update(dt){

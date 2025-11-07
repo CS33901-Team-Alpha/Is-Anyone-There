@@ -114,6 +114,10 @@ class InspectComponent{
 
     onEnter(){
         R.add(this.imageSprite, this.baseZIndex+1)
+
+        // reset positioning on load because I plan on reusing the sprites
+        this.imageSprite.setPos(6.5, 2.35);
+        this.imageSprite.setSize(this.slotSize, this.slotSize)
     }
 
     onExit(){
