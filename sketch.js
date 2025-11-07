@@ -1,4 +1,7 @@
 //ref  |  search for pending refactoring
+import { StartScreenView } from './src/views/StartScreenView.js';
+
+
 let cnv;
 let R;
 let SM = new SpriteManager(); // Sprite Manager
@@ -17,9 +20,6 @@ let ended = false; //ref -----^
 
 // Interface state tracking
 let activeInterface = null; // tracks if Terminal, Pinpad, or other interface is active
-
-// Views and game elements
-let startScreen;   //ref | global start screen, look into changing.
 
 // Assets
 let gameFont;
@@ -46,51 +46,13 @@ function fit16x9() {
   cnv.position(x, y);
 }
 
-function preload() {
+window.preload = function() {
   loadSprites(); // in SpriteManager.js and loads all images, 
   AM = new AudioManager();
+  loadSounds();
   // may be able to load partially? if lag is an issue?
   startScreenMusic = loadSound('assets/Is_Anybody_There.mp3');  
   
-  AM.add("titleScreen", loadSound('assets/Is_Anybody_There.mp3'));
-    // cryo chamber
-  AM.add("creepyBackground", loadSound('assets/sounds/creepy-background.mp3'));
-    // first room
-  AM.add("buttonBeep", loadSound('assets/sounds/buttonPressBeep.mp3'));
-  AM.add("successPinpad", loadSound('assets/sounds/successPinpad.mp3'));
-  AM.add("failurePinpad", loadSound('assets/sounds/pinpadFailure.mp3'));
-
-  AM.add("drawerOpen", loadSound('assets/sounds/drawerOpen.mp3'));
-  AM.add("drawerClose", loadSound('assets/sounds/drawerClose.mp3'));
-  AM.add("drawerLocked", loadSound('assets/sounds/drawerLocked.mp3'));
-  AM.add("door-lock", loadSound('assets/sounds/door-lock.mp3'));
-  AM.add("doorOpen", loadSound('assets/sounds/doorOpen.mp3'));
-  AM.add("technoLoop", loadSound('assets/sounds/technoLoop.mp3'));
-  AM.add("startGame", loadSound('assets/sounds/startGame.mp3'));
-  AM.add("cryoLoop", loadSound('assets/sounds/cryoLoop.mp3'));
-    //sounds added recently
-  AM.add("doorLock", loadSound('assets/sounds/doorLock.mp3'));
-  AM.add("lockBreak", loadSound('assets/sounds/lockBreak.mp3'));
-  AM.add("wireConnect", loadSound('assets/sounds/wireConnect.mp3'));
-  AM.add("allWires", loadSound('assets/sounds/allWires.mp3'));
-  AM.add("componentGood", loadSound('assets/sounds/componentGood.mp3'));
-  AM.add("componentBad", loadSound('assets/sounds/componentBad.mp3'));
-  AM.add("electricDeath", loadSound('assets/sounds/electricDeath.mp3'));
-  AM.add("fixElectronic", loadSound('assets/sounds/fixElectronic.mp3'));
-  AM.add("reactorZap", loadSound('assets/sounds/reactorZap.mp3'));
-  AM.add("reactorExplosion", loadSound('assets/sounds/reactorExplosion.mp3'));
-  AM.add("checkpoint", loadSound('assets/sounds/checkpoint.mp3'));
-  AM.add("reactorFix", loadSound('assets/sounds/reactorFix.mp3'));
-  AM.add("goodArrow", loadSound('assets/sounds/goodArrow.mp3'));
-  AM.add("goodArrow2", loadSound('assets/sounds/goodArrow2.mp3'));
-  AM.add("badArrow", loadSound('assets/sounds/badArrow.mp3'));
-  AM.add("reactorRestart", loadSound('assets/sounds/reactorRestart.mp3'));
-    
-
-
-  // botanical room
-  AM.add("contagionAlarm", loadSound('assets/sounds/contagionAlarm.mp3'));
-
   gameFont     = loadFont('assets/font/PressStart2P-Regular.ttf');
   terminusFont = loadFont('assets/font/terminus.ttf');
 
@@ -102,7 +64,7 @@ function preload() {
   henryImage = loadImage('assets/secrets/henry/connectionTerminated.jpg');
 }
 
-function setup() { //ref ? only ran once ever?
+window.setup = function() { //ref ? only ran once ever?
   fit16x9();
   userStartAudio(); 
   VM.updateUnits(); // compute VM.U / VM.V now that width/height exist
@@ -128,7 +90,7 @@ function setup() { //ref ? only ran once ever?
 
   R = new Renderer(); //ref
 
-  startScreen = new StartScreenView(() => {
+  const startScreen = new StartScreenView(() => {
     if (startScreenMusic && startScreenMusic.isPlaying()) startScreenMusic.stop(); //ref | change to audio manager?
     R.selfRemove(startScreen);
 
@@ -145,7 +107,7 @@ function setup() { //ref ? only ran once ever?
   R.add(startScreen, 999);
 }
 
-function draw() {
+window.draw = function() {
   // Keep VM in sync each frame (handles window resizes, etc.)
   VM.updateUnits();
   VM.updateMouseFromP5();
@@ -153,9 +115,9 @@ function draw() {
   background(20);
 
   const dt = deltaTime / 1000;
-  if(!ended) {
-    endScreen = new EndScreenView(GS.is("Game Complete")); //update endscreen state
-  }
+ // if(!ended) {
+   // endScreen = new EndScreenView(GS.is("Game Complete")); //update endscreen state
+  //}
 
   if(GS.is("Ended")) {
     ended = true;
@@ -185,7 +147,7 @@ function draw() {
 }
 
 //block to handle initial AI startup Text
-function bootupAI() {
+window.bootupAI = function() {
   let string  = '>_  H.A.L. - Heuristically Programmed Algorithmic Computer v 3.2.1 \n>_  INITIATING SECURE BOOT PROTOCOL... \n>_  NETWORK CONNECTION: SECURE';
   AI.addText(string);
   string  = '>_  LOADING VESSEL CONDITION... \n>_  MULTIPLE SYSTEMS CRITICAL \n>_  FAILURE IMMINENT - FIX IMMEDIATELY';
@@ -193,12 +155,12 @@ function bootupAI() {
   GS.unset("Show AI Startup");
 } //ref | place somewhere else?
 
-function windowResized() {
+window.windowResized = function() {
   fit16x9();
   VM.updateUnits();
 }
 
-function mousePressed() {
+window.mousePressed = function() {
   // Dispatch mouse in 16:9 unit space
   const mouse = VM.mouse();
   if (!VM.insideUnits(mouse)) return;
@@ -206,24 +168,24 @@ function mousePressed() {
   if (R) R.dispatch('mousePressed', mouse);
 }
 
-function mouseDragged() {
+window.mouseDragged = function() {
   const mouse = VM.mouse();
   if (!VM.insideUnits(mouse)) return;
   R.dispatch('mouseDragged', mouse);
 }
 
-function mouseReleased() {
+window.mouseReleased = function() {
   const mouse = VM.mouse();
   if (!VM.insideUnits(mouse)) return;
   R.dispatch('mouseReleased', mouse);
 }
 
-function keyPressed() {
+window.keyPressed = function() {
   if (R) R.dispatch('keyPressed');
 }
 
 // Debug function to check and reset interface state
-function debugInterface() {
+window.debugInterface = function() {
   console.log("=== Interface Debug Info ===");
   console.log("window.activeInterface:", window.activeInterface);
   console.log("global activeInterface:", activeInterface);
@@ -236,7 +198,7 @@ function debugInterface() {
 }
 
 // Function to force reset interface state
-function resetInterface() {
+window.resetInterface = function() {
   console.log("Forcing interface reset");
   window.activeInterface = null;
   activeInterface = null;
@@ -244,7 +206,7 @@ function resetInterface() {
 }
 
 
-function setupWorld() {
+window.setupWorld = function() {
   WORLD = new WorldManager();
 
   const startRoom = new ViewManager();
