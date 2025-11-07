@@ -21,9 +21,28 @@ class BioLabUI {
         
         // names of items player has collected
         this.heldItemNames = [];
+
+        this.textNotificationHandler = new TextNotificationHandler(0.5, 0.85);
+    }
+
+    // check if we have all 3 ingredients that are in target items
+    validateIngredients(){
+        for(const key of Object.keys(this.targetItems)){
+            let haveIngredient = false;
+            for(let i = 0; i < this.heldItemNames.length; i++){
+                if(key == this.heldItemNames[i]){
+                    haveIngredient = true;
+                }
+            }
+            if(!haveIngredient) {return false}
+        }
+
+        return true;
     }
 
     update(dt) {
+        this.textNotificationHandler.update(dt);
+
         const m = VM.mouse();
 
         // check if mouse is inside the button
@@ -59,7 +78,7 @@ class BioLabUI {
         textAlign(CENTER, CENTER);
         textFont(terminusFont);
         textSize(0.3 * v);
-        text("Biochemical synthesis initialized. Reagents not present.", 8 * u, 2.5 * v);
+        text("Biochemical synthesis initialized. System prepared to receive reagents.", 8 * u, 2.5 * v);
 
         // slot 1
         fill(140, 140, 140);
@@ -142,16 +161,28 @@ class BioLabUI {
         for(let i = 0; i < items.length; i++){
             this.heldItemNames.push(items[i].getName())
         }
-
-        console.log(this.heldItemNames)
     }
     onExit() {
         this.heldItemNames = []
+        this.textNotificationHandler.cleanup()
     }
 
     mousePressed(p) {
         if (this.isMouseInBounds(p?.x, p?.y, this.craftX, this.craftY, this.craftW, this.craftH)) {
             console.log('click synthesize')
+
+            if(this.validateIngredients()){ // if we have all ingredients in the slcts
+                GS.unset('BotanicalQuarantine')
+                this.textNotificationHandler.addText("You have synthesized and applied the cure.")
+                AI.addText('>_  AIRBORNE CONTAMINANTS NO LONGER PRESENT... \n>_  NO TRACE OF CONTAMINANTS ON SHIP... \n>_  PROCEDURE: DISABLE QUARANTINE PROTOCOL');
+
+                AM.fadeOut('contagionAlarm', 3000)
+
+                R.remove(secondaryTimer)
+            }
+            else{
+                this.textNotificationHandler.addText("The biolab could not be turned on.")
+            }
         }
     }
 
