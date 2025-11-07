@@ -1,5 +1,6 @@
 //importing the classes that this file depends on
-import { View, VM } from './ViewManager.js';
+import { View } from './ViewManager.js';
+import { VM } from './VM.js';
 import { StartScreenModel } from './StartScreenModel.js';
 
 export class StartScreenView extends View{

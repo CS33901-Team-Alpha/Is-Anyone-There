@@ -6,8 +6,8 @@
  * - Do NOT import anything; this attaches VM to window.
  */
 
-(function attachVM(global) {
-  const VM = {
+export const VM = {
+
     // pixels-per-unit (updated after canvas size changes)
     U: 0,
     V: 0,
@@ -50,5 +50,4 @@
     }
   };
 
-  global.VM = VM;
-})(window);
+

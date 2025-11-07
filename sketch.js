@@ -1,4 +1,5 @@
 //ref  |  search for pending refactoring
+import { VM } from './VM.js';
 import { StartScreenView } from './src/views/StartScreenView.js';
 
 
