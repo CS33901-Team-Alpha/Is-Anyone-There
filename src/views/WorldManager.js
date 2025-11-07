@@ -69,7 +69,6 @@ class WorldManager {
      */
     roomStartup(currentIndex, oldIndex){
         if(currentIndex == 5){ // entering botanical
-            //R.add(IM, 900)
             IM.renderAllItems()
             
             // cut off all music
@@ -91,15 +90,25 @@ class WorldManager {
 
                 // set game state that we are currently in botanical quarantine (for locking doors)
                 GS.set('BotanicalQuarantine')
+
+                // start contagion timer
+                secondaryTimer = new ScreenTimer(() => { }, {time: 30000, timerName: 'contagion'})
+                R.add(secondaryTimer, 1000)
+
+                R.add(new AlarmOverlay(() => GS.is('BotanicalQuarantine')), 100);
             }
             
         }
         if(currentIndex != 5){ // leaving botanical botanical
             IM.cleanup()
-            //R.remove(IM)
         }
         if(currentIndex == 4){ // entering reactor
             AM.stop("goodArrow2");
+
+            if(!GS.is('reactorStabilized')){
+                secondaryTimer = new ScreenTimer(() => { }, {time: 90000, timerName: 'reactor'})
+                R.add(secondaryTimer, 1000)
+            }
         }
     }
 }

@@ -23,11 +23,11 @@ class InventoryManager {
         this.items = []
         this.baseZIndex = baseZIndex
 
-        this.baseX = 4;
+        this.baseX = 14.5;
         this.baseY = 0;
 
         this.iconSize = 1; // w and h of the icon
-        this.marginSize = 0.4;
+        this.marginSize = 0.25;
     }
 
     addItem(item){
@@ -64,7 +64,7 @@ class InventoryManager {
     renderAllItems(){
         for(let i = 0; i < this.items.length; i++){
             let sprt = this.items[i].getSprite()
-            sprt.setPos(this.baseX+this.iconSize*(i), this.baseY)
+            sprt.setPos(this.baseX-this.iconSize*i-(this.marginSize)*i, this.baseY)
 
             R.add(sprt, this.baseZIndex)
         }

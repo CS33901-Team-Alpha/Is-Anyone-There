@@ -70,7 +70,6 @@ class PlantsView extends View {
             { backgroundColor: [200, 50, 50, 100] })),
         ];
 
-        this.alarmOverlay = new AlarmOverlay(() => GS.is('BotanicalQuarantine'));
     }
 
     onEnter() {
@@ -81,7 +80,6 @@ class PlantsView extends View {
             R.add(this.plants[i], 10);
         }
 
-        R.add(this.alarmOverlay, 100)
     }
 
     mousePressed(m) {
@@ -100,6 +98,5 @@ class PlantsView extends View {
         }
 
         this.textNotificationHandler.cleanup();
-        R.remove(this.alarmOverlay)
     }
 }

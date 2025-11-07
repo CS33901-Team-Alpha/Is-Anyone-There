@@ -373,7 +373,7 @@ function setupWorld() {
     x:12, y:2.5, scale:0.8,
     targetRoom: 4,         // <-- nuclear index
     targetViewIndex: 0, 
-    lockedCondition : () => true//!GS.is('BotanicalQuarantine')
+    lockedCondition : () => !GS.is('BotanicalQuarantine')
   }]);
   const synthesisView = new SynthesisView();
 
