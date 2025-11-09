@@ -321,11 +321,11 @@ class PinButton extends Button {
 }
 
 class Pinpad {
-    constructor( onExit = () => {}) {
+    constructor( pass, onExit = () => {}) {
         this.code = [];
         this.onExit = onExit;
         this.label = "";
-        this.pass = '749'; // based on RGB pattern of clues
+        this.pass = pass; // based on RGB pattern of clues
         this.isProcessing = false;
         this.feedbackColor = null; // null, 'green', or 'red'
         
@@ -485,6 +485,8 @@ class ComputerView extends View {
         this.pinpad.setScale(0.5);
         this.pinpad.setPos(12.5, 6);
 
+        this.pass = this.generatePassword();
+
         this.terminalHighlight = new HighlightEvent(
             2.33, 0.25, 10.1, 6.6, 255, 255, 0,
             (self) => {
@@ -522,7 +524,7 @@ class ComputerView extends View {
             R.selfRemove(self);
             R.remove(this.terminalHighlight);
 
-            R.add(new Pinpad(() => {
+            R.add(new Pinpad(this.pass, () => {
                 // Add a small delay before re-enabling highlights to prevent immediate re-triggering
                 setTimeout(() => {
                     R.add(this.terminalHighlight);
@@ -531,6 +533,16 @@ class ComputerView extends View {
             }));
             
         });
+    }
+
+    generatePassword(){
+      let password = "";
+      for (let i = 0; i < 3; ++i) {
+        const num = str(floor(random(1, 9)));
+        password += num;
+      }
+      console.log(password);
+      return password;
     }
 
     onEnter() {
