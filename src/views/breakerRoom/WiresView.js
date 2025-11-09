@@ -187,8 +187,6 @@ _placeEndpoints() {
 // }
   this.endpoints = this.layouts[int(random(0,5))];
 
-  console.log(this.endpoints);
-
   // Assign endpoint colors to grid cells and reset paths
   for (const ep of this.endpoints) {
     this.grid[ep.y][ep.x].img = ep.color;
