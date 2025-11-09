@@ -163,12 +163,14 @@ class TemperaturePuzzleView extends View {
         for (const node of Object.values(this.nodes)) {
             // cold warning
             if (node.temp <= 10 && node.temp > node.min && !node.warnedCold) {
+                AM.play("tempWarning");
                 this.textHandler.addText(`Warning: ${node.label} getting too cold!`, color('#00BFFF'));
                 node.warnedCold = true;
             } else if (node.temp > 10) node.warnedCold = false;
 
             // hot warning
             if (node.temp >= 90 && node.temp < node.max && !node.warnedHot) {
+                AM.play("tempWarning");
                 this.textHandler.addText(`Warning: ${node.label} overheating!`, color('#FF4500'));
                 node.warnedHot = true;
             } else if (node.temp < 90) node.warnedHot = false;
@@ -176,6 +178,7 @@ class TemperaturePuzzleView extends View {
             // reveal correct temperature 
             const targetTemp = this.target[node.label];
             if (Math.round(node.temp) === targetTemp && !node.revealed) {
+                AM.play("tempGood");
                 this.textHandler.addText(`${node.label} is at the correct temperature: ${targetTemp}°!`, color('#00FF00'));
                 node.revealed = true;
             } else if (Math.round(node.temp) !== targetTemp) node.revealed = false;
@@ -244,6 +247,7 @@ class TemperaturePuzzleView extends View {
         if(this.activeInterface == "PuzzleView") {
             for (const node of Object.values(this.nodes)) {
                 if (node.contains(mouseX, mouseY, u, v)) {
+                    AM.play("reactorBeep");
                     node.dragging = true;
                     node.offsetX = node.x - mouseX / u;
                     node.offsetY = node.y - mouseY / v;
@@ -275,6 +279,7 @@ class TemperaturePuzzleView extends View {
             GS.setString("Tip: Humans can only survive in certain temperatues,\nkeep that in mind next time");
             GS.set("Player Died");
         } else if (this.checkSolved() && !this.solved) {
+            AM.play("tempFixed")
             console.log("Puzzle solved!");
             AI.addText('>_  ACTION RECOGNIZED... \n>_  TEMPERATURE REGULATION SYSTEM STABILIZING... \n>_  SYSTEM REMAINS CRITICAL - MANUAL ACTIONS REQUIRED');            GS.set("regulateTempPuzzleSolved");
             GS.set("regulateTempPuzzleSolved");
