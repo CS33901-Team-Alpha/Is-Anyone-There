@@ -216,8 +216,6 @@ class OxygenPressureView extends View {
     R.add(this.highlight);
     R.add(this.screenSprite);
     console.log("seed: " + this.seed);
-    console.log("matrix: " + this.influenceMatrix);
-    console.log("starting pressures: " + this.startingPressures)
   }
 
   onExit() {
