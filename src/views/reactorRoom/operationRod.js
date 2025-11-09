@@ -47,16 +47,15 @@ class OperationReactorPuzzleView extends View {
 
         this.currentRound = 0;
         this.allowedError = 0.2;
-        this.meltdownThreshold = 3;
+        this.meltdownThreshold = 3; // player can mess up 3 times before they die
         this.canZap = true;
         this.textHandler = new TextNotificationHandler(0.5, 1);
 
         this.showStartText = true; 
-
         this.rounds = []; 
         for(let i = 0; i < 3; i++){
             const start = {x : 2, y: random(5, 8)};
-            const target = {x : random(12, 14), y: random(2.5, 5.5)};
+            const target = {x : 14, y: random(2.5, 5.5)};
             const path = this.generatePath(start, target, 4 + i);
             this.rounds.push({start, target, path});
 
@@ -105,8 +104,14 @@ class OperationReactorPuzzleView extends View {
 
         for(let i = 1; i < checkpoints; i++){
             const prev = path[i - 1];
-            const nextX = start.x + dx * i + random(-0.5, 0.5);
-            const nextY = start.y + dy * i + random(-0.5, 0.5);
+            let nextX = start.x + dx * i;
+            let nextY = start.y + dy * i;
+
+            // makes it so that the path isn't just straight 
+            const wiggle = Math.sin(i * random(0.6, 1.5)) * random(1, 1.8);
+            const jitterX = random(-0.7, 0.7);
+            nextY += wiggle; 
+            nextX += jitterX; 
             path.push({x : constrain(nextX, 2, 14), y : constrain(nextY, 2, 6.5)});
         }
 
@@ -115,25 +120,28 @@ class OperationReactorPuzzleView extends View {
     }
     
     initRound() {
-        this.showStartText = true;  
+        this.showStartText = false;  
 
         const round = this.rounds[this.currentRound];
 
         if(!this.rod){
-        this.rod = new NuclearRod(round.start.x, round.start.y);
+            this.rod = new NuclearRod(round.start.x, round.start.y);
         } else { 
             this.rod.x = round.start.x; 
             this.rod.y = round.start.y;
             this.rod.completed = false;
             this.rod.trail = []; 
             this.rod.zapped = false; 
+            this.rod.dragging = false; 
         }
+
         this.target = round.target;
         this.path = round.path;
         this.currentCheck = 0;
         this.finished = false;
 
-    }
+        this.checkCollision();
+}
 
 
     checkSolved(){

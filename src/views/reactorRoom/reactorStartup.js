@@ -166,7 +166,6 @@ class ReactorStartupView extends View {
             GS.set("reactorStartupComplete");
             this.completed = true;
             this.locked = true;
-            this.activeColor = 'green';
             setTimeout(() => (this.activeColor = null), 1000);
         } else {
             setTimeout(() => this.startSequence(), 1000); // start next round

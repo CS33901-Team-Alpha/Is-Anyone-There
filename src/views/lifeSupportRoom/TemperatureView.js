@@ -109,8 +109,12 @@ class TemperaturePuzzleView extends View {
         
         this.background = SM.get("eastWallSupport");
         
-        // target temperatures 
-        this.target = { A: 13, B: 81, C: 66 };
+        // target temperatures, now randomized 
+        this.target = { A: Math.round(random(1, 99)), B: Math.round(random(1, 99)), C: Math.round(random(1, 99))};
+        console.log("temperatures:");
+        for (const [label, value] of Object.entries(this.target)) {
+            console.log(`${label}: ${value}`);
+        }
 
         // slider's vertical limits 
         this.minY = 4;

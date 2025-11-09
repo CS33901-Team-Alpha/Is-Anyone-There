@@ -2,7 +2,7 @@
  * if we do more rooms like this (where you have to drag items to use them), we 
  * probably wanna figure out a better way.
  */
-const BROKEN_COMPONENT_ID = 1; // id of the broken cpu component 
+let BROKEN_COMPONENT_ID = null; // changed to null for randomization 
 const repairTargetRegistry = {};
 function repairItemUsed(itemName, x, y, width, height, notifHandler){
     // takes as input which item was used, with it's position and size
@@ -418,6 +418,12 @@ class RepairView extends View {
         });
 
         this.componentHolder = new ComponentHolderObject(1.2, 5, 1.9, this.textNotificationHandler, ()=>{});
+
+        const TOTAL_COMPONENTS = this.componentHolder.ecs.length; 
+        const RANDOM_COMPONENT = Math.trunc(Math.random() * TOTAL_COMPONENTS );
+        BROKEN_COMPONENT_ID = RANDOM_COMPONENT;
+        console.log(`Broken component ID set to ${BROKEN_COMPONENT_ID}`);
+
 
         this.slidingDoor = new StandaloneSlidingDoor(12, 2.3, 1, () => {}, true, 2, null, 4, 3, () => {
             return GS.is('fixedElectricalComponent')
