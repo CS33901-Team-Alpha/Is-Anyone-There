@@ -32,6 +32,62 @@ class WiresView extends View
   // Currently dragged wire color
   this.draggingColor = null;
 
+
+  this.layouts = [
+    [
+      { x: 0, y: 0, color: 'red' },
+      { x: 1, y: 4, color: 'red' },
+      { x: 2, y: 2, color: 'blue' },
+      { x: 4, y: 0, color: 'blue' },
+      { x: 1, y: 0, color: 'green' },
+      { x: 1, y: 3, color: 'green' },
+      { x: 4, y: 1, color: 'yellow' },
+      { x: 4, y: 4, color: 'yellow' }
+    ],
+    [
+      { x: 0, y: 0, color: 'red' },
+      { x: 4, y: 2, color: 'red' },
+      { x: 3, y: 1, color: 'blue' },
+      { x: 0, y: 2, color: 'blue' },
+      { x: 1, y: 2, color: 'green' },
+      { x: 3, y: 3, color: 'green' },
+      { x: 0, y: 3, color: 'yellow' },
+      { x: 4, y: 3, color: 'yellow' }
+    ],
+    [
+      { x: 3, y: 1, color: 'red' },
+      { x: 2, y: 3, color: 'red' },
+      { x: 2, y: 4, color: 'blue' },
+      { x: 0, y: 0, color: 'blue' },
+      { x: 2, y: 2, color: 'green' },
+      { x: 1, y: 4, color: 'green' },
+      { x: 2, y: 1, color: 'yellow' },
+      { x: 0, y: 4, color: 'yellow' }
+    ],
+    [
+      { x: 2, y: 1, color: 'red' },
+      { x: 4, y: 1, color: 'red' },
+      { x: 3, y: 3, color: 'blue' },
+      { x: 4, y: 0, color: 'blue' },
+      { x: 2, y: 0, color: 'green' },
+      { x: 0, y: 4, color: 'green' },
+      { x: 1, y: 1, color: 'yellow' },
+      { x: 1, y: 4, color: 'yellow' }
+    ],
+    [
+      { x: 1, y: 1, color: 'red' },
+      { x: 2, y: 4, color: 'red' },
+      { x: 1, y: 2, color: 'blue' },
+      { x: 3, y: 4, color: 'blue' },
+      { x: 0, y: 0, color: 'green' },
+      { x: 4, y: 1, color: 'green' },
+      { x: 2, y: 2, color: 'yellow' },
+      { x: 4, y: 4, color: 'yellow' }
+    ]
+  ];
+
+
+
   // Endpoint definitions: where wires start and end
   this.endpoints = [];
 
@@ -100,34 +156,36 @@ _placeEndpoints() {
   //   { x: 4, y: 1, color: 'yellow' },
   //   { x: 4, y: 4, color: 'yellow' }
   // ];
-for (let i = 0; i < this.colors.length; i++) {
-  for (let j = 0; j < 2; j++) {
-    let setX, setY;
-    let validPoint = false;
 
-    while (!validPoint) {
-      setX = int(random(0, 5));
-      setY = int(random(0, 5));
+// for (let i = 0; i < this.colors.length; i++) {
+//   for (let j = 0; j < 2; j++) {
+//     let setX, setY;
+//     let validPoint = false;
 
-      if (this.endpoints.length === 0) {
-        this.endpoints.push({ x: setX, y: setY, color: this.colors[i] });
-        break;
-      }
+//     while (!validPoint) {
+//       setX = int(random(0, 5));
+//       setY = int(random(0, 5));
 
-      validPoint = true;
-      for (const ep of this.endpoints) {
-        if (setX === ep.x && setY === ep.y) {
-          validPoint = false;
-          break;
-        }
-      }
+//       if (this.endpoints.length === 0) {
+//         this.endpoints.push({ x: setX, y: setY, color: this.colors[i] });
+//         break;
+//       }
 
-      if (validPoint) {
-        this.endpoints.push({ x: setX, y: setY, color: this.colors[i] });
-      }
-    }
-  }
-}
+//       validPoint = true;
+//       for (const ep of this.endpoints) {
+//         if (setX === ep.x && setY === ep.y) {
+//           validPoint = false;
+//           break;
+//         }
+//       }
+
+//       if (validPoint) {
+//         this.endpoints.push({ x: setX, y: setY, color: this.colors[i] });
+//       }
+//     }
+//   }
+// }
+  this.endpoints = this.layouts[int(random(0,5))];
 
   console.log(this.endpoints);
 
