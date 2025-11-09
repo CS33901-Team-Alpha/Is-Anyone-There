@@ -74,6 +74,7 @@ class OxygenPressureView extends View {
   }
 
   changePressure(index) {
+    AM.play("reactorBeep");
     if (this.turnTimer < this.turnCooldown || this.solved) return;
 
     const influence = this.influenceMatrix[index];
@@ -103,6 +104,7 @@ class OxygenPressureView extends View {
   }
 
   onSolved() {
+    AM.play("airPressure");
     console.log("Oxygen puzzle solved");
     AI.addText('>_  ACTION RECOGNIZED... \n>_  OXYGEN SUPPORT SYSTEM STABILIZING... \n>_  SYSTEM REMAINS CRITICAL - MANUAL ACTIONS REQUIRED');
     GS.set("regulateOxygenPuzzleSolved");
