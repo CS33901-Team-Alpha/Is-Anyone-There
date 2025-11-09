@@ -118,7 +118,7 @@ class ReactorStartupView extends View {
         const interFlashDelay = max(100, 200 - (this.round - 1) * 20);
         console.log(`Flashing color: ${colorName} (step ${this.step + 1}/${this.sequence.length})`);
         console.log(`Inter-Flash Delay: ${interFlashDelay}ms`);
-
+        AM.play("reactorBeep");
         setTimeout(() => {
             this.activeColor = null;
             this.step++;
@@ -138,6 +138,7 @@ class ReactorStartupView extends View {
         }
 
         // flash player’s input briefly
+        AM.play("reactorBeep");
         this.activeColor = colorName;
         setTimeout(() => (this.activeColor = null), 200);
 
@@ -148,6 +149,7 @@ class ReactorStartupView extends View {
     }
 
     triggerMeltdown() {
+        AM.play("reactorExplosion");
         AI.addText('>_  MALFUNCTION DETECTED \n>_  Severity: CRITICAL \n>_  REACTOR MELTDOWN BEGUN!!');
         GS.setString("Nuclear Reactors are very dangerous,\nbe careful around them from now on");
         setTimeout(() => {
@@ -164,6 +166,7 @@ class ReactorStartupView extends View {
         if (this.round > this.maxRounds) {
             AI.addText('>_  NUCLEAR REACTOR STARTUP COMPLETE \n>_  CONTINUE PROCEDURE TO PREVENT MELTDOWN \n>_  STANDING BY...');
             GS.set("reactorStartupComplete");
+            AM.play("reactorFix");
             this.completed = true;
             this.locked = true;
             setTimeout(() => (this.activeColor = null), 1000);
