@@ -80,9 +80,9 @@ class RestartReactorView extends View {
     // checks if the input was correct
     if (arrowInput === currentArrow) {
       
-      if(!AM.isPlaying("goodArrow2") && !this.puzzleComplete){
+      if(!AM.isPlaying("goodArrow") && !this.puzzleComplete){
           AM.stopAll();
-          AM.play("goodArrow2");
+          AM.play("goodArrow");
       }
       
       this.sequenceColors[this.currentIndex] = 'green';
@@ -93,7 +93,7 @@ class RestartReactorView extends View {
       }
     }
     else {
-      AM.stop("goodArrow2");
+      AM.stop("goodArrow");
       AM.play("badArrow");
       this.sequenceColors[this.currentIndex] = 'red';
       this.locked = true;
@@ -217,7 +217,7 @@ class RestartReactorView extends View {
 
       // completion message
       if (GS.is('restartReactorComplete')) {
-        AM.stop("goodArrow2");
+        AM.stop("goodArrow");
         while(this.i < 1){
           AM.play("reactorRestart");
           ++this.i;
