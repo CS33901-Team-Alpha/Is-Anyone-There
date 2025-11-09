@@ -85,6 +85,17 @@ function preload() {
   AM.add("goodArrow2", loadSound('assets/sounds/goodArrow2.mp3'));
   AM.add("badArrow", loadSound('assets/sounds/badArrow.mp3'));
   AM.add("reactorRestart", loadSound('assets/sounds/reactorRestart.mp3'));
+  AM.add("reactorBeep", loadSound('assets/sounds/reactorBeep.mp3'));
+  AM.add("airPressure", loadSound('assets/sounds/airPressure.mp3'));
+  AM.add("tempWarning", loadSound('assets/sounds/tempWarning.mp3'));
+  AM.add("tempGood", loadSound('assets/sounds/tempGood.mp3'));
+  AM.add("tempFixed", loadSound('assets/sounds/tempFixed.mp3'));
+  //background sounds
+  AM.add("reactorLoop", loadSound('assets/sounds/reactorLoop.mp3'));
+  AM.add("mapLoop", loadSound('assets/sounds/mapLoop.mp3'));
+  AM.add("lifeSupportLoop", loadSound('assets/sounds/lifeSupportLoop.mp3'));
+  AM.add("ambientSpace", loadSound('assets/sounds/ambientSpace.mp3'));
+    
     
 
 
