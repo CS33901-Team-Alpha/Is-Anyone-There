@@ -48,6 +48,8 @@ class SpaceWindow{
     }
 
     onEnter() {
+        AM.stopAll();
+        AM.play("ambientSapce")
         R.add(this.background, 15)
         // R.add(this.highlight)
     }
