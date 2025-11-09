@@ -96,7 +96,34 @@ class WorldManager {
         if(currentIndex != 5){ // leaving botanical botanical
             R.remove(IM)
         }
-        if(currentIndex == 4){ // entering reactor
+        if(currentIndex == 6){ // entering map room
+            AM.stopAll();
+            AM.play("mapLoop");
+            AM.stop("goodArrow2");
+        }
+        if(currentIndex == 4){ // entering reactors
+            AM.stopAll();
+            AM.play("reactorLoop");
+            AM.stop("goodArrow2");
+        }
+        if(currentIndex == 3){ // entering life support
+            AM.stopAll();
+            AM.play("lifeSupportLoop");
+            AM.stop("goodArrow2");
+        }
+        if(currentIndex == 2){ // entering cryo rooms
+            AM.stopAll();
+            AM.play("cryoLoop");
+            AM.stop("goodArrow2");
+        }
+        if(currentIndex == 1){ // entering breaker rooms
+            AM.stopAll();
+            AM.play("technoLoop");
+            AM.stop("goodArrow2");
+        }
+        if(currentIndex == 0){ // entering beginning room
+            AM.stopAll();
+            AM.play("startGame");
             AM.stop("goodArrow2");
         }
     }
