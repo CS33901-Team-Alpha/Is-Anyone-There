@@ -90,16 +90,46 @@ _initGrid() {
 
 _placeEndpoints() {
   // Manually define endpoint positions and colors
-  this.endpoints = [
-    { x: 0, y: 0, color: 'red' },
-    { x: 1, y: 4, color: 'red' },
-    { x: 2, y: 2, color: 'blue' },
-    { x: 4, y: 0, color: 'blue' },
-    { x: 1, y: 0, color: 'green' },
-    { x: 1, y: 3, color: 'green' },
-    { x: 4, y: 1, color: 'yellow' },
-    { x: 4, y: 4, color: 'yellow' }
-  ];
+  // this.endpoints = [
+  //   { x: 0, y: 0, color: 'red' },
+  //   { x: 1, y: 4, color: 'red' },
+  //   { x: 2, y: 2, color: 'blue' },
+  //   { x: 4, y: 0, color: 'blue' },
+  //   { x: 1, y: 0, color: 'green' },
+  //   { x: 1, y: 3, color: 'green' },
+  //   { x: 4, y: 1, color: 'yellow' },
+  //   { x: 4, y: 4, color: 'yellow' }
+  // ];
+for (let i = 0; i < this.colors.length; i++) {
+  for (let j = 0; j < 2; j++) {
+    let setX, setY;
+    let validPoint = false;
+
+    while (!validPoint) {
+      setX = int(random(0, 5));
+      setY = int(random(0, 5));
+
+      if (this.endpoints.length === 0) {
+        this.endpoints.push({ x: setX, y: setY, color: this.colors[i] });
+        break;
+      }
+
+      validPoint = true;
+      for (const ep of this.endpoints) {
+        if (setX === ep.x && setY === ep.y) {
+          validPoint = false;
+          break;
+        }
+      }
+
+      if (validPoint) {
+        this.endpoints.push({ x: setX, y: setY, color: this.colors[i] });
+      }
+    }
+  }
+}
+
+  console.log(this.endpoints);
 
   // Assign endpoint colors to grid cells and reset paths
   for (const ep of this.endpoints) {

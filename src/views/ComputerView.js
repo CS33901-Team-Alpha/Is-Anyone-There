@@ -538,7 +538,7 @@ class ComputerView extends View {
     generatePassword(){
       let password = "";
       for (let i = 0; i < 3; ++i) {
-        const num = str(floor(random(1, 9)));
+        const num = str(int(random(1, 10)));
         password += num;
       }
       console.log(password);
