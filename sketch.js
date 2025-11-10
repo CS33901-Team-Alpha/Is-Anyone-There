@@ -411,9 +411,6 @@ function setupWorld() {
   mapRoom.addView(sdMapToStart);
   mapRoom.addView(mapFiller2);
 
-  GS.set("reactorStartupComplete")
-  GS.set("operationRodComplete")
-
   // register rooms (A=0, B=1, C=2) and let WORLD receive key events
   WORLD.addRoom(startRoom);   // index 0
   WORLD.addRoom(breakerRoom);   // index 1
