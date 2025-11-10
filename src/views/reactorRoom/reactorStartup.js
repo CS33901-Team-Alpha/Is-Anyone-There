@@ -61,6 +61,7 @@ class ReactorStartupView extends View {
         this.activeInterface = "ScreenView";
         this.textHandler.cleanup()
         R.remove(this.highlight);
+        R.remove(this.closeBtn)
     }
 
     resetState() {
