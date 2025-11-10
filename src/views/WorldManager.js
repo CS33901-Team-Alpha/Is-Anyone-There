@@ -75,6 +75,7 @@ class WorldManager {
             AM.stop("technoLoop");
             AM.stop("startGame");
             AM.stop("goodArrow2");
+            AM.stop("reactorLoop");
 
             if(!GS.is('BotanicalRoomVisited')){ // if never visited botanical
                 // start emergency alarm

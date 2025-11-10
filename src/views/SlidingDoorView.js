@@ -303,8 +303,6 @@ class StandaloneSlidingDoor {
     onEnter() {
         R.add(this);
         R.add(this.highlight);
-
-
     }
 
     onExit() {

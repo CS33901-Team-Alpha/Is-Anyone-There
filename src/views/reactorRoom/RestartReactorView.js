@@ -25,6 +25,7 @@ class RestartReactorView extends View {
       this.activeInterface = "ScreenView";
         R.add(this.highlight);
       R.remove(this.closeBtn);
+      R.add(this.slidingDoor)
     });
 
     // clickable highlight
@@ -34,6 +35,7 @@ class RestartReactorView extends View {
         R.add(this.closeBtn);
         this.generateSequence();
         this.activeInterface = "PuzzleView";
+        R.remove(this.slidingDoor)
       }
       else {
         this.textNotificationHandler.addText("It seems as though you need to do something before opening this panel...")
@@ -180,8 +182,6 @@ class RestartReactorView extends View {
 
   draw() {
     this.background?.draw();
-
-    this.slidingDoor.draw();
 
     const u = VM.u();
     const v = VM.v();
