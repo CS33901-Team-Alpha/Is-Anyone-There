@@ -112,6 +112,11 @@ class WorldManager {
             AM.stopAll();
             AM.play("reactorLoop");
             AM.stop("goodArrow2");
+
+            // if(!GS.is('reactorStabilized')){
+            //     secondaryTimer = new ScreenTimer(() => { }, {time: 90000, timerName: 'reactor'})
+            //     R.add(secondaryTimer, 1000)
+            // }
         }
         if(currentIndex == 3){ // entering life support
             AM.stopAll();
@@ -132,11 +137,6 @@ class WorldManager {
             AM.stopAll();
             AM.play("startGame");
             AM.stop("goodArrow2");
-
-            if(!GS.is('reactorStabilized')){
-                secondaryTimer = new ScreenTimer(() => { }, {time: 90000, timerName: 'reactor'})
-                R.add(secondaryTimer, 1000)
-            }
         }
     }
 }
