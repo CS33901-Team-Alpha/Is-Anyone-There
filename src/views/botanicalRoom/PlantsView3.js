@@ -5,29 +5,28 @@ class PlantsView3 extends SlidingDoorView {
         this.textNotificationHandler = new TextNotificationHandler(0.5, 0.85, {holdFadeoutFor: 3});
 
         this.plants = [new PlantObject(8, 6, 'placeholderPlant2', new InspectComponent(
-            'Erythroxylum coca',
-            'Erythroxylum coca contains trace alkaloids including C17H21NO4 (Cocaine). Handle with care—its properties may be repurposed...',
-            'placeholderMolecule2',
+            'Testosterone',
+            'The Testosthra Vine is a feral bioengineered creeper that secretes andro-sap, a resinous fluid chemically similar to human testosterone.',
+            'testosteroneMolecule',
             'Collect',
             () => {
-                IM.addItem(new InventoryItem('Erythroxylum coca', 'placeholderMoleculeIcon2'));
+                IM.addItem(new InventoryItem('Testosterone', 'testosteroneMoleculeIcon'));
             },
             { backgroundColor: [200, 50, 50, 100] }
             )),
             new PlantObject(1, 6, 'placeholderPlant4', new InspectComponent(
-            'Ascorbic Acid',
-            'In the post-collapse biolabs of the Outer Belt, ascorbic acid became the cornerstone of emergency field medicine.',
-            'ascorbicAcidMolecule',
+            'Potassium Superoxide',
+            'This unnamed plant has traces of Potassium Superoxide. Perhaps this molecule\'s property to react with CO2 to produce oxygen could be useful.',
+            'potassiumSuperoxideMolecule',
             'Collect',
             () => {
-                IM.addItem(new InventoryItem('Ascorbic Acid', 'ascorbicAcidMoleculeIcon'));
+                IM.addItem(new InventoryItem('Potassium Superoxide', 'potassiumSuperoxideMoleculeIcon'));
             },
             { backgroundColor: [200, 50, 50, 100] }))
         ]
 
 
         this.setRoom(this)
-        this.alarmOverlay = new AlarmOverlay(() => GS.is('BotanicalQuarantine'));
     }
 
     update(dt) {
@@ -47,7 +46,6 @@ class PlantsView3 extends SlidingDoorView {
             this.plants[i].onEnter();
         }
 
-        R.add(this.alarmOverlay, 100)
     }
 
     onExit() {
@@ -56,8 +54,6 @@ class PlantsView3 extends SlidingDoorView {
             R.remove(this.plants[i])
             this.plants[i].onExit()
         }
-
-        R.remove(this.alarmOverlay)
 
         this.textNotificationHandler.cleanup();
     }

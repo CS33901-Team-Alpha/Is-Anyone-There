@@ -104,20 +104,33 @@ function loadSprites() {
     // botanical assets
     SM.add("placeholderPlant", loadImage('assets/placeholders/botanical/dummyPlant.png'))
     SM.add("placeholderPlant2", loadImage('assets/placeholders/botanical/dummyPlant2.png'))
-    SM.add("placeholderMolecule", loadImage('assets/placeholders/botanical/potassiumSuperoxide.png'))
-    SM.add("placeholderMoleculeIcon", loadImage('assets/placeholders/botanical/potassiumSuperoxideIcon.png'))
-    SM.add("placeholderMolecule2", loadImage('assets/placeholders/botanical/testosterone.png'))
-    SM.add("placeholderMoleculeIcon2", loadImage('assets/placeholders/botanical/testosteroneIcon.png'))
-
     SM.add("placeholderPlant3", loadImage('assets/placeholders/botanical/tallDummyPlant.png'))
     SM.add("placeholderPlant4", loadImage('assets/placeholders/botanical/tallDummyPlant2.png'))
     SM.add("placeholderPlant5", loadImage('assets/placeholders/botanical/tallDummyPlant3.png'))
+    SM.add("placeholderPlant6", loadImage('assets/placeholders/botanical/dummyPlant.png'))
+    SM.add("placeholderPlant7", loadImage('assets/placeholders/botanical/dummyPlant.png'))
+
+    SM.add("potassiumSuperoxideMolecule", loadImage('assets/placeholders/botanical/potassiumSuperoxide.png'))
+    SM.add("potassiumSuperoxideMoleculeIcon", loadImage('assets/placeholders/botanical/potassiumSuperoxideIcon.png'))
+
+    SM.add("testosteroneMolecule", loadImage('assets/placeholders/botanical/testosterone.png'))
+    SM.add("testosteroneMoleculeIcon", loadImage('assets/placeholders/botanical/testosteroneIcon.png'))
+
     SM.add("inferonAlphaProtein", loadImage('assets/placeholders/botanical/inferonAlphaProtein.png'))
     SM.add("inferonAlphaProteinIcon", loadImage('assets/placeholders/botanical/inferonAlphaProteinIcon.png'))
+    
     SM.add("ascorbicAcidMolecule", loadImage('assets/placeholders/botanical/ascorbicAcid.png'))
     SM.add("ascorbicAcidMoleculeIcon", loadImage('assets/placeholders/botanical/ascorbicAcidIcon.png'))
+    
+    SM.add("acidReceptorProtein", loadImage('assets/placeholders/botanical/acidReceptor.png'))
+    SM.add("acidReceptorProteinIcon", loadImage('assets/placeholders/botanical/acidReceptorIcon.png'))
+    
+    SM.add("sorbitolMolecule", loadImage('assets/placeholders/botanical/sorbitol.png'))
+    SM.add("sorbitolMoleculeIcon", loadImage('assets/placeholders/botanical/sorbitolIcon.png'))
+    
+    SM.add("ammoniaMolecule", loadImage('assets/placeholders/botanical/ammonia.png'))
+    SM.add("ammoniaMoleculeIcon", loadImage('assets/placeholders/botanical/ammoniaIcon.png'))
 }
-
 
 
 class SpriteManager {

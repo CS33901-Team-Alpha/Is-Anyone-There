@@ -17,7 +17,10 @@ class AlarmOverlay{
     }
 
     update(dt){
-        if(!this.alarmCondition()) return;
+        if(!this.alarmCondition()){
+            R.selfRemove(this)
+            return;
+        }
 
         this.timer += dt;
 

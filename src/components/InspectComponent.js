@@ -1,6 +1,5 @@
 /**
  * General class that we can use to make a pop up UI that dispalys some kind of information and offers an action.
- * 
  */
 
 class InspectComponent{
@@ -34,7 +33,7 @@ class InspectComponent{
         this.holderColor = options.holderColor ?? [40, 80, 60, 220] // rgba
         this.actionButtonColor = options.actionButtonColor ?? [40, 80, 145, 240] // rgba
         this.actionButtonHoverColor = options.actionButtonColor ?? [15, 50, 100, 240] // rgba
-        this.baseZIndex = options.baseZIndex ?? 100; // so it can be displayed on top of other things in room
+        this.baseZIndex = options.baseZIndex ?? 9999; // so it can be displayed on top of other things in room
         
         // we also need to set the action button x, y, w and h for bounds checking
         [this.xA, this.yA, this.widthA, this.heightA] = [6.3, 6.8, 3.4, 0.8]
@@ -45,12 +44,8 @@ class InspectComponent{
         // inspection image
         this.slotSize = 3;
         this.imageSprite = SM.get(this.imageName);
-        if (this.imageSprite) {
-            this.imageSprite.setPos(6.5, 2.35);
-            this.imageSprite.setSize(this.slotSize, this.slotSize)
-        } else {
-            console.warn(`InspectComponent: image '${this.imageName}' not found in SM`);
-        }
+        this.imageSprite.setPos(6.5, 2.35);
+        this.imageSprite.setSize(this.slotSize, this.slotSize)
     }
 
     draw(){
@@ -119,7 +114,12 @@ class InspectComponent{
 
     onEnter(){
         R.add(this.imageSprite, this.baseZIndex+1)
+
+        // reset positioning on load because I plan on reusing the sprites
+        this.imageSprite.setPos(6.5, 2.35);
+        this.imageSprite.setSize(this.slotSize, this.slotSize)
     }
+
     onExit(){
         R.selfRemove(this)
         R.remove(this.imageSprite)

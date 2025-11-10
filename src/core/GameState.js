@@ -26,6 +26,8 @@ Game State Variables Currently in Use:
 - "restartReactorComplete" - complted restart reactor puzzle
 - "operationRodComplete" - completed reactor rod puzzle
 - "reactorStabilized" - stabilized reactor (aka all puzzles done in order) - used to preven timer from popping up again when you enter reactor
+- "BotanicalRoomVisited" - whether we have been to botanical room before (prevent contagion event from starting if we have)
+- "BotanicalQuarantine" - whether the quarantine is currently active. Can be used to play alarms and other things during the event. 
 */
 
 class GameState {

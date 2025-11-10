@@ -44,8 +44,8 @@ class RestartReactorView extends View {
 
     this.activeInterface = "ScreenView";
 
-    this.slidingDoor = new StandaloneSlidingDoor(10, 2.7, 1, () => {}, true, 2, null, 4, 3, () => {
-      return false;
+    this.slidingDoor = new StandaloneSlidingDoor(10, 2.7, 1, () => {}, true, 2, null, 5, 0, () => {
+      return GS.is('reactorStabilized');
     });
 
     this.slidingDoor.setRoom(this);
