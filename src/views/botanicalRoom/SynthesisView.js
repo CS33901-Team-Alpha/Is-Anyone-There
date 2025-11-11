@@ -201,7 +201,7 @@ class BioLabUI {
 class SynthesisView extends View {
     constructor() {
         super();
-        this.background = SM.get("MetalWall");
+        this.background = SM.get("westWallBotanical");
         this.background.setSize(16, 9);
 
         this.textNotificationHandler = new TextNotificationHandler(0.5, 0.85);

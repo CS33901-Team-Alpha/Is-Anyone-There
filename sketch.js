@@ -381,7 +381,7 @@ function setupWorld() {
   //   lockedCondition : () => {true}
   // }], SM.get("MetalWall"));
   const sdBotanicalToReactor = new PlantsView3([{ // has door to nuclear
-    x:12, y:2.5, scale:0.8,
+    x:12, y:2.8, scale:0.8,
     targetRoom: 4,         // <-- nuclear index
     targetViewIndex: 0, 
     lockedCondition : () => !GS.is('BotanicalQuarantine')

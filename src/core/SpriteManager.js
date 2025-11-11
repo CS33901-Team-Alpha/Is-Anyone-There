@@ -102,13 +102,19 @@ function loadSprites() {
     SM.add("westWallReactor", loadImage('assets/background/StartupWall.png'))
     
     // botanical assets
-    SM.add("placeholderPlant", loadImage('assets/placeholders/botanical/dummyPlant.png'))
-    SM.add("placeholderPlant2", loadImage('assets/placeholders/botanical/dummyPlant2.png'))
-    SM.add("placeholderPlant3", loadImage('assets/placeholders/botanical/tallDummyPlant.png'))
-    SM.add("placeholderPlant4", loadImage('assets/placeholders/botanical/tallDummyPlant2.png'))
-    SM.add("placeholderPlant5", loadImage('assets/placeholders/botanical/tallDummyPlant3.png'))
-    SM.add("placeholderPlant6", loadImage('assets/placeholders/botanical/dummyPlant.png'))
-    SM.add("placeholderPlant7", loadImage('assets/placeholders/botanical/dummyPlant.png'))
+    SM.add("placeholderPlant", loadImage('assets/object/anthurium.png'))
+    SM.add("placeholderPlant2", loadImage('assets/object/monstera.png'))
+    SM.add("placeholderPlant3", loadImage('assets/object/mushroom.png'))
+    SM.add("placeholderPlant4", loadImage('assets/object/Orchid.png'))
+    SM.add("placeholderPlant5", loadImage('assets/object/outdoor.png'))
+    SM.add("placeholderPlant6", loadImage('assets/object/pink.png'))
+    SM.add("placeholderPlant7", loadImage('assets/object/tiger.png'))
+
+    SM.add("northWallBotanical", loadImage('assets/background/botanical3.png'))
+    SM.add("southWallBotanical", loadImage('assets/background/botanical2.png'))
+    SM.add("eastWallBotanical", loadImage('assets/background/botanical1.png'))
+    SM.add("westWallBotanical", loadImage('assets/background/botanical4.png'))
+    
 
     SM.add("potassiumSuperoxideMolecule", loadImage('assets/placeholders/botanical/potassiumSuperoxide.png'))
     SM.add("potassiumSuperoxideMoleculeIcon", loadImage('assets/placeholders/botanical/potassiumSuperoxideIcon.png'))
