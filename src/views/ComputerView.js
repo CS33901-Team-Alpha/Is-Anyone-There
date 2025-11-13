@@ -125,7 +125,6 @@ class Terminal {
         GS.set("regulateTempPuzzleSolved");
         GS.set("Root Access Granted");
         GS.set('fixedElectricalComponent')
-        GS.set('reactorStabilized')
       }
     });
 
