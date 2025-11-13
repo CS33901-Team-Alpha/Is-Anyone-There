@@ -3,11 +3,17 @@ class StartScreenView extends View {
     super(0, 0, 0, '');
     this.onStart = onStart;
 
-    // Button in 16:9 units (centered horizontally)
+    // Start Button in 16:9 units (centered horizontally)
     this.btnW = 2.8;
     this.btnH = 0.9;
     this.btnX = 8 - this.btnW / 2;
     this.btnY = 5.8;
+
+    // How-To Button in 16:9 units (centered horizontally)
+    this.HTbtnW = 4;
+    this.HTbtnH = 0.9;
+    this.HTbtnX = 8 - this.HTbtnW / 2;
+    this.HTbtnY = 7;
 
     this.title = 'Is Anyone There?';
     this.instruction = 'Click anywhere to start music!';
@@ -27,6 +33,8 @@ class StartScreenView extends View {
     this.toX = 0;
     this.toY = 0;
     this.step = 3;
+
+    this.clickedHowTo = false;
   }
 
   drawStarField() {
@@ -76,6 +84,38 @@ class StartScreenView extends View {
     }
   }
 
+  drawHowTo() {
+    const u = VM.u();
+    const v = VM.v();
+
+    const m = VM.mouse();
+    const hover =
+      m.x >= this.HTbtnX &&
+      m.x <= this.HTbtnX + this.HTbtnW &&
+      m.y >= this.HTbtnY &&
+      m.y <= this.HTbtnY + this.HTbtnH;
+
+    if (hover && !this.clickedHowTo) {
+      fill(100, 150, 255, 200);
+      stroke(150, 200, 255, 150);
+      strokeWeight(0.08 * u);
+    } else {
+      fill(50, 100, 200, 200);
+      noStroke();
+    }
+
+    rect(this.HTbtnX * u, this.HTbtnY * v, this.HTbtnW * u, this.HTbtnH * v, 0.5 * u);
+
+    fill(255);
+    noStroke();
+    textAlign(CENTER, CENTER);
+    textFont(gameFont);
+    textSize(0.25 * v);
+    const cx = (this.HTbtnX + this.HTbtnW / 2) * u;
+    const cy = (this.HTbtnY + this.HTbtnH / 2) * v;
+    text('How To Play', Math.round(cx), Math.round(cy));
+  }
+
   drawButton() {
     const u = VM.u();
     const v = VM.v();
@@ -87,7 +127,7 @@ class StartScreenView extends View {
       m.y >= this.btnY &&
       m.y <= this.btnY + this.btnH;
 
-    if (hover) {
+    if (hover && !this.clickedHowTo) {
       fill(100, 150, 255, 200);
       stroke(150, 200, 255, 150);
       strokeWeight(0.08 * u);
@@ -128,18 +168,61 @@ class StartScreenView extends View {
     text(this.instruction, 8 * u, 4.6 * v);
 
     this.drawButton();
+    this.drawHowTo();
+
+    if(this.clickedHowTo) {
+      // monitor background / frame
+      const screenSprite = SM.get("screen");
+      if (screenSprite && screenSprite.src) {
+        image(screenSprite.src, 1.5 * u, 0.75 * v, 13 * u, 7.5 * v);
+        noFill();
+        stroke(100, 150, 255, 200);
+        strokeWeight(5);
+        rect(1.5*u, 0.75*v, 13*u, 7.5*v);
+      } else {
+        fill(0);
+        stroke(128);
+        strokeWeight(2);
+        rect(1.5 * u, 1 * v, 13 * u, 7 * v, 10);
+      }
+
+      // header bar
+      //noStroke();
+      //fill(60);
+      //rect(2 * u, 1 * v, 12 * u, 0.8 * v, 10);
+
+      // header text w/ glow
+      textAlign(LEFT, CENTER);
+      textFont(terminusFont);
+      textSize(0.7 * v);
+
+      fill(180, 250, 335, 200);
+      text("How To Play", 6 * u + 1, 1.25 * v + 1);
+
+      fill(100, 150, 255, 200);
+      text("How To Play", 6 * u, 1.25 * v);
+    }
   }
 
   mousePressed(p) {
-    const hit =
+    const starthit =
       p.x >= this.btnX &&
       p.x <= this.btnX + this.btnW &&
       p.y >= this.btnY &&
       p.y <= this.btnY + this.btnH;
 
-    if (hit && this.onStart) {
+    const howtohit =
+      p.x >= this.HTbtnX &&
+      p.x <= this.HTbtnX + this.HTbtnW &&
+      p.y >= this.HTbtnY &&
+      p.y <= this.HTbtnY + this.HTbtnH;
+
+    if (starthit && this.onStart && !this.clickedHowTo) {
       this.onStart();
-    } else if (!hit && !this.musicStarted) {
+    }
+    else if (howtohit && this.onStart && !this.clickedHowTo) {
+      this.clickedHowTo = true;
+    } else if (!starthit && !howtohit && !this.clickedHowTo && !this.musicStarted) {
       // Start music on any click on the start screen (not just the button)
       if (startScreenMusic && !startScreenMusic.isPlaying()) {
         startScreenMusic.setLoop(true);
@@ -147,6 +230,12 @@ class StartScreenView extends View {
         this.musicStarted = true;
         this.instruction = 'Click Start to Begin!';
       }
+    }
+  }
+
+  keyPressed() {
+    if (keyCode === ESCAPE && this.clickedHowTo) {
+      this.clickedHowTo = false;
     }
   }
 }
@@ -294,13 +383,13 @@ class EndScreenView extends View {
   }
 
   mousePressed(p) {
-    const hit =
+    const starthit =
       p.x >= this.btnX &&
       p.x <= this.btnX + this.btnW &&
       p.y >= this.btnY &&
       p.y <= this.btnY + this.btnH;
 
-    if (hit) {
+    if (starthit) {
       this.restartGame();
     }
   }

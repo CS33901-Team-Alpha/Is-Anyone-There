@@ -492,7 +492,7 @@ class ComputerView extends View {
         this.pass = this.generatePassword();
 
         this.terminalHighlight = new HighlightEvent(
-            2.33, 0.25, 10.1, 6.6, 255, 255, 0,
+            2.33, 0.25, 10.1, 6.6, 255, 255, 255,
             (self) => {
                 // Don't open terminal if another interface is active
                 if (window.activeInterface) {
@@ -518,7 +518,7 @@ class ComputerView extends View {
         );
 
 
-        this.pinpadHighlight = new HighlightEvent(12.5, 6, 1.3, 1.85, 255, 255, 0, (self) => {
+        this.pinpadHighlight = new HighlightEvent(12.5, 6, 1.3, 1.85, 255, 255, 255, (self) => {
             // Don't open pinpad if another interface is active
             if (window.activeInterface) {
                 return;
