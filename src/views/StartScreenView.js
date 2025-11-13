@@ -171,11 +171,11 @@ class StartScreenView extends View {
     this.drawHowTo();
 
     if(this.clickedHowTo) {
-      // monitor background / frame
+      // background / frame
       const screenSprite = SM.get("screen");
       if (screenSprite && screenSprite.src) {
         image(screenSprite.src, 1.5 * u, 0.75 * v, 13 * u, 7.5 * v);
-        noFill();
+        fill(0,0,0,200);
         stroke(100, 150, 255, 200);
         strokeWeight(5);
         rect(1.5*u, 0.75*v, 13*u, 7.5*v);
@@ -186,21 +186,27 @@ class StartScreenView extends View {
         rect(1.5 * u, 1 * v, 13 * u, 7 * v, 10);
       }
 
-      // header bar
-      //noStroke();
-      //fill(60);
-      //rect(2 * u, 1 * v, 12 * u, 0.8 * v, 10);
-
-      // header text w/ glow
+      // text w/ glow
+      strokeWeight(1);
+      stroke(255,255,255);
       textAlign(LEFT, CENTER);
-      textFont(terminusFont);
-      textSize(0.7 * v);
+      textFont(gameFont);
+      textSize(0.45 * v);
 
-      fill(180, 250, 335, 200);
-      text("How To Play", 6 * u + 1, 1.25 * v + 1);
+       fill(100, 150, 255);
+      text("How To Play : ESC to exit", 2.5 * u + 1, 1.5 * v + 1);
 
-      fill(100, 150, 255, 200);
-      text("How To Play", 6 * u, 1.25 * v);
+      fill(100, 150, 255);
+      text("How To Play : ESC to exit", 2.5 * u, 1.5 * v);
+    
+      textSize(0.3 * v);
+      fill(100, 150, 255);
+      text("Welcome to \"Is Anyone There?\"!",  3.5* u, 2.5 * v);
+
+      textSize(0.25 * v);
+      fill(100, 150, 255);
+      text("This is a point-and-click style adventure game. \nYou have woken up on your spaceship, with no \nmemory of what is going on. The ship's computer \nassistant informs you that the ship is in \ncritical condition, and you alone must fix it! \nExplore, gather information, solve puzzles to \nfix systems, and do so before time runs out in \norder to survive and win!",  2* u, 4.5 * v);
+      text("Use left and right arrow keys to change view \norientation, click on items you find to interact \nwith them. Items that highlight when you hover \nover them can be interacted with, but not all \ninteractable items have highlights on them... \nso look carefully, and have fun!",  2* u, 7 * v);
     }
   }
 
