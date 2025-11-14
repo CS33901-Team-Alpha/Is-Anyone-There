@@ -36,6 +36,8 @@ class ScreenTimer {
 
         this.yOffset = options.yOffset;
 
+        this.darkener = undefined;
+
         this.timerName = options.timerName;
         if(!this.timerName){
             this.timerName = 'overall';
@@ -49,6 +51,15 @@ class ScreenTimer {
             let m = floor(secs / 60);
             let s = secs % 60;
             this.label = `${m}:${nf(s, 2)}`;
+
+            // value of 10000 miliseconds is threshold for starting fadeout to black
+            if((this.timer.getRemaining() < 10000) && (this.timerName == 'contagion') && (this.darkener == undefined)){ // less than 7 seconds
+                this.darkener = new DarkeningOverlay(10000);
+                R.add(this.darkener, 99123)
+                
+                AM.fadeOut('contagionAlarm', 10000)
+                setTimeout(() => { R.remove(this.darkener)}, 10600) // remove darkener (which will be all black) after time + 600 miliseconds since gameover screen only appears after 500ms
+            }
         } else {
             setTimeout(() => {
                 this.label = '0:00';
