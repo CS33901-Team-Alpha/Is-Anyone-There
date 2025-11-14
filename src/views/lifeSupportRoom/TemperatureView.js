@@ -296,7 +296,8 @@ class TemperaturePuzzleView extends View {
             setTimeout(() => {
                 R.remove(this.smokeGif)
                 AM.fadeOut('pressureRelease', 1000)
-                GS.setString("Tip: Humans can only survive in certain temperatues,\nkeep that in mind next time");
+                // GS.setString("Tip: Humans can only survive in certain temperatues,\nkeep that in mind next time");
+                GS.setString("It seems like the ship's pressure readjustment protocol \n was not designed to be used with humans inside the room.");
                 GS.set("Player Died");
             }, 6000)
         } else if (this.checkSolved() && !this.solved) {

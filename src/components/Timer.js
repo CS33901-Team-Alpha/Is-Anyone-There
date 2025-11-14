@@ -36,7 +36,7 @@ class ScreenTimer {
 
         this.yOffset = options.yOffset;
 
-        this.darkener = undefined;
+        this.overlay = undefined;
 
         this.timerName = options.timerName;
         if(!this.timerName){
@@ -51,15 +51,33 @@ class ScreenTimer {
             let m = floor(secs / 60);
             let s = secs % 60;
             this.label = `${m}:${nf(s, 2)}`;
-
+            
+            // EFFECTS FOR CONTAGION TIMER RUNNING OUT
             // value of 10000 miliseconds is threshold for starting fadeout to black
-            if((this.timer.getRemaining() < 10000) && (this.timerName == 'contagion') && (this.darkener == undefined)){ // less than 7 seconds
-                this.darkener = new DarkeningOverlay(10000);
-                R.add(this.darkener, 99123)
+            if((this.timer.getRemaining() < 10000) && (this.timerName == 'contagion') && (this.overlay == undefined)){ // less than 10 seconds
+                this.overlay = new DarkeningOverlay(10000);
+                R.add(this.overlay, 99123)
                 
                 AM.fadeOut('contagionAlarm', 10000)
-                setTimeout(() => { R.remove(this.darkener)}, 10600) // remove darkener (which will be all black) after time + 600 miliseconds since gameover screen only appears after 500ms
+                setTimeout(() => { R.remove(this.overlay)}, 10600) // remove overlay (which will be all black) after time + 600 miliseconds since gameover screen only appears after 500ms
             }
+
+            // EFFECTS FOR REACTOR TIMER RUNNING OUT
+            if((this.timer.getRemaining() < 20000) && (this.timerName == 'reactor') && (this.overlay == undefined)){
+                this.overlay = new RadiationOverlay();
+                R.add(this.overlay, 93211)
+                AM.setVolume('radiation', 0.2)
+                AM.loop('radiation')
+
+                AI.setExistFor(4)
+                AI.addText('>_ EXCESSIVE RADIATION DETECTED IN REACTOR ROOM')
+
+                setTimeout(() => { 
+                    R.remove(this.overlay);
+                    AM.fadeOut('radiation', 2000);
+                }, 20600)
+            }
+
         } else {
             setTimeout(() => {
                 this.label = '0:00';
