@@ -414,7 +414,7 @@ function setupWorld() {
 
   // --- Room H (Engine Room) ---
   //const engineControlView = new EngineControlView();
-  const engineFiller1 = new PuzzleClueView();
+  const engineThrottle = new ThrottleView();
   const engineFiller2 = new PuzzleClueView();
   const engineFiller3 = new PuzzleClueView();
 
@@ -426,7 +426,7 @@ function setupWorld() {
   }], SM.get("MetalWall"));
 
   engineRoom.addView(new PuzzleClueView()); // first wall
-  engineRoom.addView(engineFiller1); // Puzzle wall 1
+  engineRoom.addView(engineThrottle); // Puzzle wall 1
   engineRoom.addView(sdEngineToStart); // exit wall
   engineRoom.addView(engineFiller3); // Puzzle wall 2
 
