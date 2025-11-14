@@ -152,6 +152,15 @@ class SpriteManager {
     get(name) {
         return this.sprites.get(name);
     }
+
+    /** sets y offset for shake animations for everything single sprite. Probably not very optimized because it sets it for EVERY sprite regardless of if they are
+     * on screen
+      */
+    yOffsetAll(offset){
+        for (const [name, sprite] of this.sprites) {
+            sprite.setYOffset(offset);
+        }
+    }
 }
 
 class Sprite {
@@ -162,6 +171,7 @@ class Sprite {
         this.scale = scale / 100;
         this.customSize = null;
         this.rotation = 0; // in radians
+        this.yOffset = 0; // in uv units
     }
 
     clone() {
@@ -186,6 +196,10 @@ class Sprite {
     setPos(x, y) {
         this.x = x;
         this.y = y; 
+    }
+    
+    setYOffset(offset){
+        this.yOffset = offset;
     }
 
     setRotation(r){
@@ -241,7 +255,8 @@ class Sprite {
             rotate(this.rotation)
             translate(-(this.x*u), -(this.y*v)) // change origin back for drawing
         }
-        image(this.src, this.x * u, this.y * v, w, h )
+
+        image(this.src, this.x * u, (this.y+this.yOffset)* v, w, h )
         pop();
     }
 
