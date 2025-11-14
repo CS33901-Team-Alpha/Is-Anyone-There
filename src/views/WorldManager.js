@@ -93,7 +93,7 @@ class WorldManager {
                 GS.set('BotanicalQuarantine')
 
                 // start contagion timer
-                secondaryTimer = new ScreenTimer(() => { }, {time: 15000, timerName: 'contagion'})
+                secondaryTimer = new ScreenTimer(() => { }, {time: 45000, timerName: 'contagion'})
                 R.add(secondaryTimer, 1000)
 
                 R.add(new AlarmOverlay(() => GS.is('BotanicalQuarantine')), 100);

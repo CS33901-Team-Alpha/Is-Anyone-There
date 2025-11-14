@@ -85,6 +85,7 @@ function loadSprites() {
     SM.add("OffLight6", loadImage('assets/object/offStatusLight6.png'))
     SM.add("OxygenScreen", loadImage('assets/object/OxygenScreen.png'))
     SM.add("TemperatureScreen", loadImage('assets/object/TemperatureScreen.png'))
+    SM.add("smokeGif", loadImage('assets/object/smokeAnimation.gif'))
 
     SM.add("northWallSupport", loadImage('assets/background/OxygenView.png'))
     SM.add("southWallSupport", loadImage('assets/background/SupportDoorView.png'))
