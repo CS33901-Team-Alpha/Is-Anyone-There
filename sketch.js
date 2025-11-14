@@ -265,12 +265,13 @@ function setupWorld() {
   const reactorRoom = new ViewManager();
   const botanicalRoom = new ViewManager();
   const mapRoom = new ViewManager();
+  const engineRoom = new ViewManager();
   
   // --- Room A (Start Room | start here) ---
   const computerView = new ComputerView(); // start view (index 0)
   const boxesView    = new BoxesView([ // is a sliderdoorview derived class takes you to map room (6)
     {x:12, y:2.5, scale:0.8,
-    targetRoom: 6,         // <-- map room
+    targetRoom: 7,         // <-- map room CHANGED TO ENGINE ROOM FOR TESTING
     targetViewIndex: 0,    // 
     lockedCondition : () => GS.is("Pin Solved")
     }
@@ -411,6 +412,24 @@ function setupWorld() {
   mapRoom.addView(sdMapToStart);
   mapRoom.addView(mapFiller2);
 
+  // --- Room H (Engine Room) ---
+  //const engineControlView = new EngineControlView();
+  const engineFiller1 = new PuzzleClueView();
+  const engineFiller2 = new PuzzleClueView();
+  const engineFiller3 = new PuzzleClueView();
+
+  const sdEngineToStart = new SlidingDoorView([{
+    x:12, y:2.5, scale:0.8,
+    targetRoom: 0,         // <-- start room
+    targetViewIndex: 0,    //
+    lockedCondition : () => true
+  }], SM.get("MetalWall"));
+
+  engineRoom.addView(new PuzzleClueView()); // first wall
+  engineRoom.addView(engineFiller1); // Puzzle wall 1
+  engineRoom.addView(sdEngineToStart); // exit wall
+  engineRoom.addView(engineFiller3); // Puzzle wall 2
+
   // register rooms (A=0, B=1, C=2) and let WORLD receive key events
   WORLD.addRoom(startRoom);   // index 0
   WORLD.addRoom(breakerRoom);   // index 1
@@ -419,5 +438,6 @@ function setupWorld() {
   WORLD.addRoom(reactorRoom);   // index 4
   WORLD.addRoom(botanicalRoom);   // index 5
   WORLD.addRoom(mapRoom);   // index 6
+  WORLD.addRoom(engineRoom);   // index 7
   R.add(WORLD, 1000);
 }
