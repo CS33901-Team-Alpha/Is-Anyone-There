@@ -4,7 +4,7 @@ class PlantsView3 extends SlidingDoorView {
 
         this.textNotificationHandler = new TextNotificationHandler(0.5, 0.85, {holdFadeoutFor: 3});
 
-        this.plants = [new PlantObject(4.5, 4.8, 'placeholderPlant2', new InspectComponent(
+        this.plants = [new PlantObject(6.5, 6.25, 'placeholderPlant2', new InspectComponent(
             'Testosterone',
             'The Testosthra Vine is a feral bioengineered creeper that secretes andro-sap, a resinous fluid chemically similar to human testosterone.',
             'testosteroneMolecule',
@@ -14,7 +14,7 @@ class PlantsView3 extends SlidingDoorView {
             },
             { backgroundColor: [200, 50, 50, 100] }
             )),
-            new PlantObject(1.5, 4.8, 'placeholderPlant4', new InspectComponent(
+            new PlantObject(3, 6, 'placeholderPlant4', new InspectComponent(
             'Potassium Superoxide',
             'This unnamed plant has traces of Potassium Superoxide. Perhaps this molecule\'s property to react with CO2 to produce oxygen could be useful.',
             'potassiumSuperoxideMolecule',

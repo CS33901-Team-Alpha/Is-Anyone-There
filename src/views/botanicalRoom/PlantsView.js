@@ -50,7 +50,7 @@ class PlantsView extends View {
         this.textNotificationHandler = new TextNotificationHandler(0.5, 0.85);
 
         this.plants = [
-            new PlantObject(2.5, 4.5, 'placeholderPlant', new InspectComponent(
+            new PlantObject(4, 5.5, 'placeholderPlant', new InspectComponent(
             'Ascorbic Acid',
             'In the post-collapse biolabs of the Outer Belt, ascorbic acid became the cornerstone of emergency field medicine.',
             'ascorbicAcidMolecule',
@@ -59,7 +59,7 @@ class PlantsView extends View {
                 IM.addItem(new InventoryItem('Ascorbic Acid', 'ascorbicAcidMoleculeIcon'));
             },
             { backgroundColor: [200, 50, 50, 100] })),
-            new PlantObject(7, 4.5, 'placeholderPlant3', new InspectComponent(
+            new PlantObject(9, 5.5, 'placeholderPlant3', new InspectComponent(
             'Inferon Alpha Protein',
             'The protein is secreted by the beautiful vines of the Lumafera plant, a rare organism found deep within the oxygen-saturated jungles of Epsilon IV.',
             'inferonAlphaProtein',
