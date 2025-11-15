@@ -26,7 +26,7 @@ class InspectComponent{
         this.actionCallback = actionCallback;
 
         // need for click bounds checking
-        [this.x, this.y, this.width, this.height] = [5, 1, 6, 7]
+        [this.x, this.y, this.width, this.height] = [4.5, 1, 7, 7]
         
         // extract options
         this.backgroundColor = options.backgroundColor ?? [40, 40, 60, 200] // rgba
