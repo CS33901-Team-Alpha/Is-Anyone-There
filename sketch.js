@@ -416,7 +416,7 @@ function setupWorld() {
   //const engineControlView = new EngineControlView();
   const engineThrottle = new ThrottleView();
   const engineFiller2 = new PuzzleClueView();
-  const engineFiller3 = new PuzzleClueView();
+  const engineFiller3 = new GearView();
 
   const sdEngineToStart = new SlidingDoorView([{
     x:12, y:2.5, scale:0.8,
