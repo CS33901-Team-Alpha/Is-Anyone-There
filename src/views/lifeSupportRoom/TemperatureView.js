@@ -145,6 +145,9 @@ class TemperaturePuzzleView extends View {
         this.solved = false;
 
         this.activeInterface = "ScreenView";
+
+        this.smokeGif = SM.get('smokeGif');
+        this.smokeGif.setPos(3.9, 3.2);
     }
 
     // checking if the puzzle is solved 
@@ -275,9 +278,28 @@ class TemperaturePuzzleView extends View {
         for (const node of Object.values(this.nodes)) node.dragging = false;
 
         if (this.checkOverflow()) {
-            console.log("OVERLOAD! You died!");
-            GS.setString("Tip: Humans can only survive in certain temperatues,\nkeep that in mind next time");
-            GS.set("Player Died");
+            // first play message and sound
+            AI.setExistFor(3);
+            AI.addText('>_ TEMPERATURE THRESHOLD EXCEEDED! \n >_ EMERGENCY PRESSURE RELEASE [ENABLED]')
+            AM.play('pressureRelease')
+
+            // after 3s quit out of puzzle view and play smoke
+            setTimeout(()=>{
+                this.activeInterface = "ScreenView";
+                R.add(this.highlight);
+                R.add(this.screenSprite);
+                R.remove(this.closeBtn);
+                R.add(this.smokeGif, 9999)
+            }, 3000)
+
+            // after 6 seconds to end game
+            setTimeout(() => {
+                R.remove(this.smokeGif)
+                AM.fadeOut('pressureRelease', 1000)
+                // GS.setString("Tip: Humans can only survive in certain temperatues,\nkeep that in mind next time");
+                GS.setString("It seems like the ship's pressure readjustment protocol \n was not designed to be used with humans inside the room.");
+                GS.set("Player Died");
+            }, 6000)
         } else if (this.checkSolved() && !this.solved) {
             AM.play("tempFixed")
             console.log("Puzzle solved!");

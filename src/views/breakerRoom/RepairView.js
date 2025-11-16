@@ -33,10 +33,26 @@ function repairItemUsed(itemName, x, y, width, height, notifHandler){
 
             // You die if you use electrical tape on working component
             if((itemName == 'electricalTape') && (targetId != BROKEN_COMPONENT_ID)){
-                AM.play("electricDeath")
-                console.log('Used electrical tape on working component (player died)')
-                GS.setString("Well, that was a shocking end, wasn't it?")
-                GS.set("Player Died")
+                AM.play("electricalShock")
+
+                // logic for screen shake
+                const shakeCount = 20;
+                for(let i = 0; i < shakeCount; i++){
+                    setTimeout(() => {
+                        SM.yOffsetAll(0.02 * i * Math.pow(-1, i))
+                    }, 40*i)
+                }
+
+                // immediately after the shake, we wanna end the game and stuff
+                setTimeout(()=>{
+                    SM.yOffsetAll(0) // reset offsets 
+
+                    // end game for real
+                    console.log('Used electrical tape on working component (player died)')
+                    GS.setString("Well, that was a shocking end, wasn't it?")
+                    GS.set("Player Died")
+                }, 40*shakeCount)
+
             }
             // you fix the component if you use electrical tape on broken component
             else if((itemName == 'electricalTape') && (targetId == BROKEN_COMPONENT_ID)){

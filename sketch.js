@@ -90,6 +90,9 @@ function preload() {
   AM.add("tempWarning", loadSound('assets/sounds/tempWarning.mp3'));
   AM.add("tempGood", loadSound('assets/sounds/tempGood.mp3'));
   AM.add("tempFixed", loadSound('assets/sounds/tempFixed.mp3'));
+  AM.add('electricalShock', loadSound('assets/sounds/electricalShock.mp3'))
+  AM.add('pressureRelease', loadSound('assets/sounds/pressureRelease.mp3'))
+  AM.add('radiation', loadSound('assets/sounds/radiationSound.mp3'))
   //background sounds
   AM.add("reactorLoop", loadSound('assets/sounds/reactorLoop.mp3'));
   AM.add("mapLoop", loadSound('assets/sounds/mapLoop.mp3'));
