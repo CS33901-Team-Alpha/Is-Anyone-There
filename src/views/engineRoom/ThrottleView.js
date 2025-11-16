@@ -4,6 +4,9 @@ class ThrottleView extends View
     {
         super();
 
+        this.background = SM.get("MetalWall");
+        this.background.setSize(16, 9);
+
         this.buttons = {}; // button definitions
         this.coordinates = {}; // button positions
         this.sequence = []; // correct sequence of button IDs
@@ -17,6 +20,14 @@ class ThrottleView extends View
         this.randomizeSequence(); // randomize correct sequence only on start creation
     }
 
+    shuffle(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+
     defineButtons() 
     {
         // Define buttons with shapes/colors
@@ -24,7 +35,11 @@ class ThrottleView extends View
         { name: "Blue Square", shape: "rect", color: "blue" },
         { name: "Red Circle", shape: "circle", color: "red" },
         { name: "Yellow Rect", shape: "rect", color: "yellow" },
-        { name: "Purple Circle", shape: "circle", color: "purple" }
+        { name: "Purple Circle", shape: "circle", color: "purple" },
+        { name: "Orange Square", shape: "rect", color: "orange" },
+        { name: "Green Circle", shape: "circle", color: "green" },
+        { name: "Cyan Rect", shape: "rect", color: "cyan" },
+        { name: "Magenta Circle", shape: "circle", color: "magenta" }
         ];
 
         // Assign positions in a grid
@@ -37,38 +52,62 @@ class ThrottleView extends View
                 shape: def.shape, // shape type
                 color: def.color, // current color
                 original: def.color, // store original color
-                col: i, // number of columns depending on indexes
-                row: 0
+                col: i % 4,
+                row: Math.floor(i / 4)
             };
         }
     }
 
     assignCoordinates() // position buttons on screen 
     {
-        // FIX VM USAGE. MATH IS OFF
-        const u = VM.u();
-        const v = VM.v();
-        const spacing = 3 * u; // horizontal spacing
-        const startX = (16 * u - spacing * (Object.keys(this.buttons).length - 1)) / 2; // center buttons. grabs width and subtracts total spacing then divides by 2
-        const y = 4.5 * v; // vertical center. grabs height and divides by 2 then uses the vm v
+        const spacingX = 3, spacingY = 2.5; // spacing between buttons
 
-        let i = 0;
-        for (const name of Object.keys(this.buttons)) // assign x,y coordinates
-        {
-            this.coordinates[name] = { // position objects
-                x: startX + i * spacing, // Centered horizontally + spacing
-                y: y // Centered vertically
+        const cols = 4;
+        const rows = 2;
+        
+        const totalWidth = (cols - 1) * spacingX;
+        const totalHeight = (rows - 1) * spacingY;
+
+        const startX = (16 - totalWidth) / 2;
+        const startY = (9 - totalHeight) / 2;
+
+        // Shuffle button names before assigning positions
+        const shuffledNames = this.shuffle(Object.keys(this.buttons)); // can comment out for fixed button locations. here
+
+        shuffledNames.forEach((name, index) => {
+            const col = index % cols;
+            const row = Math.floor(index / cols);
+
+            this.coordinates[name] = {
+                x: startX + col * spacingX,
+                y: startY + row * spacingY
             };
+        });
 
-            i++;
-        }
+        //to here
+
+        //Uncomment for non shuffled positions
+        //Non Shuffled
+        // for (const btn of Object.values(this.buttons)) // assign x,y coordinates
+        // {
+        //     this.coordinates[btn.name] = { // position objects
+        //         x: startX + btn.col * spacingX,
+        //         y: startY + btn.row * spacingY
+        //     };
+        // }
     }
 
     randomizeSequence() 
     {
         // create randomized sequence of button IDs
         const ids = Object.values(this.buttons).map(b => b.id); // grab the ids and put them in an array. b is each button object and b.id is the id property of that object
-        this.sequence = ids.sort(() => Math.random() - 0.5); // CHANGE THIS TO SOMETHING MORE SIMPLE
+        
+        for (let i = ids.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [ids[i], ids[j]] = [ids[j], ids[i]]; // swap
+        }
+
+        this.sequence = ids;
         this.currentIndex = 0; // reset progress
 
         console.log("Intended order:", this.sequence.map(id => {
@@ -78,36 +117,32 @@ class ThrottleView extends View
 
     draw() 
     {
-        //CHANGE VM USAGE
+        this.background?.draw();
+
         const u = VM.u();
         const v = VM.v();
 
-        // Border
-        push();
-        stroke(0); // black border
-        strokeWeight(4); // thick border
-        noFill();
-        rectMode(CENTER);
-        rect(width / 2, height / 2, width - 40, height - 40); // border rectangle
-        pop();
-
         // Buttons
-        for (const [name, btn] of Object.entries(this.buttons)) // 
+        for (const [name, btn] of Object.entries(this.buttons))
         {
             const pos = this.coordinates[name];
             if (!pos) continue;
 
+            const px = pos.x * u;
+            const py = pos.y * v;
+
             push();
             fill(btn.color);
             noStroke();
+
             if (btn.shape === "rect") 
             {
                 rectMode(CENTER); // center rect
-                rect(pos.x, pos.y, 2 * u, 2 * v, 6); // rounded corners
+                rect(px, py, 2 * u, 2 * v, 6); // rounded corners
             } 
-            else 
+            else if (btn.shape === "circle")
             {
-                ellipse(pos.x, pos.y, 2 * u, 2 * v);
+                ellipse(px, py, 2 * u, 2 * v);
             }
             pop();
         }
@@ -117,30 +152,33 @@ class ThrottleView extends View
     {
         if (this.inputLocked || this.won) return; // ignore input if locked or already won
         
-        const px = m.x * width / 16; // convert to view coords
-        const py = m.y * height / 9; // convert to view coords
+        const u = VM.u();
+        const v = VM.v(); 
+        const mx = m.x * u;
+        const my = m.y * v;
+
 
         for (const [name, btn] of Object.entries(this.buttons)) // check each button positions
         {
             const pos = this.coordinates[name]; // get button position
             if (!pos) continue;
+
+            const px = pos.x * u;
+            const py = pos.y * v;
+
             let hit = false;
 
-            if (btn.shape === "rect") 
-            {
-                hit = px >= pos.x - VM.u() && px <= pos.x + VM.u() &&
-                    py >= pos.y - VM.v() && py <= pos.y + VM.v(); // rectangular hitbox
-            } 
-            else 
-            {
-                const dx = px - pos.x; // circular hitbox
-                const dy = py - pos.y; // ...
-                hit = Math.sqrt(dx * dx + dy * dy) <= VM.u(); // radius
+            if (btn.shape === "rect") {
+                hit = mx >= (px - u) && mx <= (px + u) && // x bounds
+                    my >= (py - v) && my <= (py + v); // y bounds
+            } else if (btn.shape === "circle") {
+                const dx = mx - px;
+                const dy = my - py;
+                hit = Math.sqrt(dx * dx + dy * dy) <= u; // radius
             }
 
-            if (hit) // button was clicked
-            {
-                this.handleClick(btn); // process click
+            if (hit) {
+                this.handleClick(btn);
                 return;
             }
         }
@@ -163,11 +201,10 @@ class ThrottleView extends View
             }
         } 
         else 
-        { // FIX INPUT ON FAILURE
+        { 
             this.setAllColors("red"); // convert all the buttons to red to show a mistake
             this.inputLocked = true; // lock input during reset
             setTimeout(() => this.resetColors(), 1000); // delay then reset after 1 second
-            this.inputLocked = false; // unlock input after reset
             this.currentIndex = 0; // reset progress
         }
     }
@@ -186,5 +223,6 @@ class ThrottleView extends View
         {
             btn.color = btn.original;
         }
+        this.inputLocked = false; // unlock input
     }
 }
