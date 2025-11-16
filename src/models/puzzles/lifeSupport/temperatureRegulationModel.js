@@ -13,7 +13,7 @@ export class ThermalNodeModel {
 
     // adjusting the temperature based off of the value
     adjust(delta) {
-        this.temp += delta; 
+        // this.temp += delta; not sure what this line is because temp is changed immediately after
         this.temp = Math.min(this.max, Math.max(this.min, this.temp + delta)); // has to be bet. 0 - 100
     }
 
@@ -32,12 +32,12 @@ export class ThermalNodeModel {
 export class TemperaturePuzzleModel {
     constructor(){
         this.nodes = {
-            A: new ThermalNode("A", 50, 6.5, 5),
-            B: new ThermalNode("B", 50, 8, 5),
-            C: new ThermalNode("C", 50, 9.5, 5)
+            A: new ThermalNodeModel("A", 50, 6.5, 5),
+            B: new ThermalNodeModel("B", 50, 8, 5),
+            C: new ThermalNodeModel("C", 50, 9.5, 5)
         };
 
-        this.target = { A: Math.round(random(1, 99)), B: Math.round(random(1, 99)), C: Math.round(random(1, 99))};
+        this.target = { A: Math.round(Math.random() * (99 - 1 + 1)) + 1, B: Math.round(Math.random()* (99 - 1 + 1)) + 1, C: Math.round(Math.random()* (99 - 1 + 1)) + 1};
 
         // slider's vertical limits 
         this.minY = 4;
