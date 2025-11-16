@@ -258,6 +258,9 @@ function resetInterface() {
 function setupWorld() {
   WORLD = new WorldManager();
 
+  MINIMAP = new MinimapOverlay(WORLD);
+  R.add(MINIMAP, 50);
+
   const startRoom = new ViewManager();
   const breakerRoom = new ViewManager();
   const cryoRoom = new ViewManager();
