@@ -1,4 +1,4 @@
-export class ReactorView {
+export class ReactorStartupView extends View {
     constructor(model){
         this.model = model; 
 
@@ -9,7 +9,7 @@ export class ReactorView {
             { name: 'yellow', x: 5.25, y: 5, col: color(255, 255, 0) },
         ]; 
 
-        // this.background = SM.get("westWallReactor");
+        this.background = SM.get("westWallReactor");
         this.background.setSize(16,9);
     }
 

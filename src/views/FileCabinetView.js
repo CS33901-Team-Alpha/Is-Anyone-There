@@ -63,8 +63,25 @@ class OpenCabinetUI {
 
       AM.play('drawerClose')
     });
+
+    const nameMap = {
+      1: "firstNumber",
+      2: "secondNumber",
+      3: "thirdNumber",
+      4: "fourthNumber",
+      5: "fifthNumber",
+      6: "sixthNumber",
+      7: "seventhNumber",
+      8: "eighthNumber",
+      9: "ninthNumber"
+    };
+    this.number = Math.trunc(Math.random() * 5) + 1; 
+
+    const sprite = nameMap[this.number]; 
     
-    this.numberImage = SM.get('secondNumber');
+    console.log(`cabinet has number: ${this.number}`);
+    // when the assets are here, you can just replace "secondNumber" with sprite
+    this.numberImage = SM.get("secondNumber"); 
     this.numberImage.setPos(7, 3.4);
     this.numberImage.setScale(4);
   }
@@ -109,7 +126,7 @@ class FileCabinetView extends View {
         this.background.setSize(16, 9);
 
         this.textNotificationHandler = new TextNotificationHandler(0.5, 0.85);
-        this.secretId = 2; // index of cabinet that will be unlocked
+        this.secretId = Math.trunc(Math.random() * 4) + 1; // index of cabinet that will be unlocked
         
         this.cabinetUI = new OpenCabinetUI();
 

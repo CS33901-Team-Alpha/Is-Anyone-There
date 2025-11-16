@@ -44,38 +44,23 @@ class OperationReactorPuzzleView extends View {
         this.background = SM.get("northWallReactor");
         this.background.setSize(16, 9); 
 
-        // Define 3 rounds with their start, target, and path
-        this.rounds = [
-            { 
-                start: {x:2, y:7}, 
-                target: {x:12, y:2}, 
-                path: [
-                    {x:2, y:7}, {x:4, y:6.5}, {x:6, y:5.5}, {x:8, y:5}, {x:10, y:4}, {x:12, y:2}
-                ]
-            },
-            { 
-                start: {x:2, y:6}, 
-                target: {x:13, y:3}, 
-                path: [
-                    {x:2, y:6}, {x:5, y:5.5}, {x:7, y:4.5}, {x:10, y:3.5}, {x:13, y:3}
-                ]
-            },
-            { 
-                start: {x:2.5, y:7}, 
-                target: {x:14, y:2}, 
-                path: [
-                    {x:2.5, y:7}, {x:6, y:7}, {x:9, y:5.5}, {x:12, y:3.5}, {x:14, y:2}
-                ]
-            }
-        ];
 
         this.currentRound = 0;
         this.allowedError = 0.2;
-        this.meltdownThreshold = 3;
+        this.meltdownThreshold = 3; // player can mess up 3 times before they die
         this.canZap = true;
         this.textHandler = new TextNotificationHandler(0.5, 1);
 
         this.showStartText = true; 
+        this.rounds = []; 
+        for(let i = 0; i < 3; i++){
+            const start = {x : 2, y: random(5, 8)};
+            const target = {x : 14, y: random(2.5, 5.5)};
+            const path = this.generatePath(start, target, 4 + i);
+            this.rounds.push({start, target, path});
+
+        }
+
         this.initRound(); 
 
         this.closeBtn = new Button(14.5, 0.7, 0.8, (self) => {
@@ -111,27 +96,53 @@ class OperationReactorPuzzleView extends View {
         this.textHandler.cleanup();
         R.remove(this.highlight);
     }
+    
+    generatePath(start, target, checkpoints = 5){
+        const path = [start];
+        const dx = (target.x - start.x) / checkpoints;
+        const dy = (target.y - start.y) / checkpoints; 
 
+        for(let i = 1; i < checkpoints; i++){
+            const prev = path[i - 1];
+            let nextX = start.x + dx * i;
+            let nextY = start.y + dy * i;
+
+            // makes it so that the path isn't just straight 
+            const wiggle = Math.sin(i * random(0.6, 1.5)) * random(1, 1.8);
+            const jitterX = random(-0.7, 0.7);
+            nextY += wiggle; 
+            nextX += jitterX; 
+            path.push({x : constrain(nextX, 2, 14), y : constrain(nextY, 2, 6.5)});
+        }
+
+        path.push(target); 
+        return path; 
+    }
+    
     initRound() {
-        this.showStartText = true;  
+        this.showStartText = false;  
 
         const round = this.rounds[this.currentRound];
 
         if(!this.rod){
-        this.rod = new NuclearRod(round.start.x, round.start.y);
+            this.rod = new NuclearRod(round.start.x, round.start.y);
         } else { 
             this.rod.x = round.start.x; 
             this.rod.y = round.start.y;
             this.rod.completed = false;
             this.rod.trail = []; 
             this.rod.zapped = false; 
+            this.rod.dragging = false; 
         }
+
         this.target = round.target;
         this.path = round.path;
         this.currentCheck = 0;
         this.finished = false;
 
-    }
+        this.checkCollision();
+}
+
 
     checkSolved(){
 
