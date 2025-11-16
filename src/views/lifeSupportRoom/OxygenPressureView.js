@@ -5,19 +5,56 @@ class OxygenPressureView extends View {
     this.background = SM.get("northWallSupport");
     this.background.setSize(16, 9);
 
-    this.startingPressures = [0.2, 0.4, 0.5, 0.2];
-    this.bars = [
-      { label: "", pressure: 0.2, x: 2,  y: 2, width: 1, height: 3 },
-      { label: "", pressure: 0.4, x: 5,  y: 2, width: 1, height: 3 },
-      { label: "", pressure: 0.5, x: 8,  y: 2, width: 1, height: 3 },
-      { label: "", pressure: 0.2, x: 11, y: 2, width: 1, height: 3 },
+    this.influenceMatrixLayouts = [
+      [
+        [ +0.2,  0.0, +0.1,  0.0 ],  // KEY: AAACCCDCA
+        [  0.0, +0.1, -0.1, +0.1 ],
+        [  0.0, +0.1,  0.0, +0.2 ],
+        [  0.0, +0.2, +0.1,  0.0 ],
+      ],
+      [
+        [ +0.1, +0.3,  0.0, +0.2 ],  // KEY: ADCBBA
+        [ +0.2,  0.0, +0.2, +0.1 ],
+        [  0.0, +0.1,  0.0, +0.3 ],
+        [ +0.1, +0.3, +0.1,  0.0 ],
+      ], 
+      [
+        [ +0.2, +0.1, +0.2,  0.0 ],  // KEY: DCCBA
+        [  0.0, +0.1, +0.2, +0.2 ],
+        [ +0.1, +0.3, +0.2, +0.1 ],
+        [ +0.3,  0.0, +0.1, +0.3 ],
+      ],
+      [
+        [ +0.3, +0.1, +0.1, +0.3 ],  // KEY: BDDAC
+        [  0.0, +0.3, +0.1, +0.3 ],
+        [ +0.5, +0.4, +0.3, +0.2 ],
+        [ +0.1,  0.0, +0.2,  0.0 ],
+      ],
+      [
+        [ +0.2, +0.1,  0.0, +0.1 ],  // KEY: DDACBBBC
+        [ +0.1, +0.1, +0.1, +0.2 ],
+        [ +0.1, +0.1, +0.1,  0.0 ],
+        [  0.0, +0.1, +0.2, +0.1 ],
+      ],
     ];
 
-    this.influenceMatrix = [
-      [ +0.2,  0.0, +0.1,  0.0 ],
-      [  0.0, +0.1, -0.1, +0.1 ],
-      [  0.0, +0.1,  0.0, +0.2 ],
-      [  0.0, +0.2, +0.1,  0.0 ],
+    this.pressureLayouts = [
+        [0.2, 0.4, 0.5, 0.2],
+        [0.3, 0.0, 0.5, 0.1],
+        [0.3, 0.2, 0.1, 0.3],
+        [0.0, 0.2, 0.1, 0.2],
+        [0.3, 0.2, 0.1, 0.1]
+    ];
+
+    this.seed = int(random(0,5))
+    this.influenceMatrix = this.influenceMatrixLayouts[this.seed];
+    this.startingPressures = this.pressureLayouts[this.seed];
+
+    this.bars = [
+      { pressure: this.startingPressures[0], x: 2,  y: 2, width: 1, height: 3 },
+      { pressure: this.startingPressures[1], x: 5,  y: 2, width: 1, height: 3 },
+      { pressure: this.startingPressures[2], x: 8,  y: 2, width: 1, height: 3 },
+      { pressure: this.startingPressures[3], x: 11, y: 2, width: 1, height: 3 },
     ];
 
     this.targetPressure = 1.0;
