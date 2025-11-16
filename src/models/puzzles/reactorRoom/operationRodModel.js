@@ -1,5 +1,5 @@
 export class NuclearRodModel {
-    constructor(x = 0, y = 0){
+    constructor(x = 0, y = 0, maxTrail = 20){
         this.x = x; 
         this.y = y; 
         this.radius = 0.3; 
@@ -8,6 +8,7 @@ export class NuclearRodModel {
         this.mistakes = 0; 
         this.zapped = false; 
         this.trail = []; 
+        this.maxTrail = maxTrail;
     }
 
 
@@ -26,7 +27,7 @@ export class NuclearRodModel {
         this.x = x; 
         this.y = y;
         this.trail.push({x, y});
-        if(this.trail.length > 20){
+        if(this.trail.length > this.maxTrail){
             this.trail.shift(); 
         }
     }
@@ -52,8 +53,8 @@ export class OperationRodModel {
         this.rounds = []; 
 
         for(let i = 0; i < roundCount; i++){
-            const start = {x : 2, y: random(5, 8)};
-            const target = {x : 14, y: random(2.5, 5.5)};
+            const start = {x : 2, y: Math.random() * (8 - 5) + 5};
+            const target = {x : 14, y: Math.random() * (5.5 - 2.5) + 2.5};
             const path = this.generatePath(start, target, 4 + i);
             this.rounds.push({start, target, path});
         }
@@ -70,11 +71,11 @@ export class OperationRodModel {
             let nextY = start.y + dy * i;
 
             // makes it so that the path isn't just straight 
-            const wiggle = Math.sin(i * random(0.6, 1.5)) * random(1, 1.8);
-            const jitterX = random(-0.7, 0.7);
+            const wiggle = Math.sin(i * Math.random() * (1.5 - 0.6) + 0.6) * Math.random() * (1.8 - 1) + 1;
+            const jitterX = Math.random() * (0.7 - (-0.7)) + (-0.7);
             nextY += wiggle; 
             nextX += jitterX; 
-            path.push({x : constrain(nextX, 2, 14), y : constrain(nextY, 2, 6.5)});
+            path.push({x : Math.min(14, Math.max(2, nextX)), y : Math.min(6.5, Math.max(2, nextY))});
         }
 
         path.push(target); 
@@ -84,7 +85,7 @@ export class OperationRodModel {
     initRound() {
         const round = this.rounds[this.currentRound];
         if (!this.rod) {
-            this.rod = new NuclearRod(round.start.x, round.start.y);
+            this.rod = new NuclearRodModel(round.start.x, round.start.y);
         } else {
             Object.assign(this.rod, {
                 x: round.start.x,
