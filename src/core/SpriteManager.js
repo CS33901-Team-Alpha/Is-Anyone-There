@@ -136,6 +136,10 @@ function loadSprites() {
     
     SM.add("ammoniaMolecule", loadImage('assets/placeholders/botanical/ammonia.png'))
     SM.add("ammoniaMoleculeIcon", loadImage('assets/placeholders/botanical/ammoniaIcon.png'))
+
+    //Map Room
+    SM.add("MapUnsolved", loadImage('assets/object/MapPuzzleUnsolved.png'))
+    SM.add("MapSolved", loadImage('assets/object/MapPuzzleSolved.png'))
 }
 
 

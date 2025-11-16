@@ -6,16 +6,14 @@ class ShipMapView extends View {
     this.background.setSize(16, 9);
 
     this.rooms = {
-      "Engine Room":      {col: 0, row: 1, connections:   ["Nuclear Reactor"]},
-      "Botanical Room":   {col: 1, row: 0, connections:   ["Nuclear Reactor", "Cryochamber"]},
-      "Nuclear Reactor":  {col: 1, row: 1, connections:   ["Engine Room", "Botanical Room", "Breaker Box Room"]},
-      "Life Support":     {col: 1, row: 2, connections:   ["Breaker Box Room", "Monitor Room"]},
-      "Cryochamber":      {col: 2, row: 0, connections:   ["Botanical Room", "Breaker Box Room"]},
-      "Breaker Box Room": {col: 2, row: 1, connections:   ["Nuclear Reactor", "Cryochamber", "Terminal Room", "Life Support"]},
-      "Monitor Room":     {col: 2, row: 2, connections:   ["Life Support", "Map Room"]},
-      "Terminal Room":    {col: 3, row: 0.5, connections: ["Breaker Box Room", "Navigation"]},
-      "Map Room":         {col: 3, row: 1.5, connections: ["Monitor Room", "Navigation"]},
-      "Navigation":       {col: 4, row: 1, connections:   ["Terminal Room", "Map Room"]}
+      "Engine Room":      {col: 0, row: 1.1, connections:   ["Nuclear Reactor"]},
+      "Botanical Room":   {col: 1.25, row: 0.2, connections:   ["Nuclear Reactor"]},
+      "Nuclear Reactor":  {col: 1, row: 1.1, connections:   ["Engine Room", "Botanical Room", "Breaker Box Room"]},
+      "Life Support":     {col: 1.25, row: 2, connections:   ["Breaker Box Room", "Map Room"]},
+      "Cryochamber":      {col: 2.6, row: 0, connections:   ["Breaker Box Room"]},
+      "Breaker Box Room": {col: 2.1, row: 1.1, connections:   ["Nuclear Reactor", "Cryochamber", "Terminal Room", "Life Support"]},
+      "Map Room":         {col: 2.6, row: 2.2, connections: ["Life Support", "Terminal Room"]},
+      "Terminal Room":    {col: 3.3, row: 1.1, connections: ["Breaker Box Room", "Map Room"]},
     };
 
     const allPositions = []; // to keep track of used positions
@@ -28,8 +26,7 @@ class ShipMapView extends View {
     const shuffled = shuffle(allPositions); // shuffle positions
     const roomNames = [ // list of room names
       "Engine Room", "Botanical Room", "Nuclear Reactor", "Life Support",
-      "Cryochamber", "Breaker Box Room", "Monitor Room", "Terminal Room",
-      "Map Room", "Navigation"
+      "Cryochamber", "Breaker Box Room", "Terminal Room", "Map Room"
     ];
 
     this.roomsRandomized = {}; // to hold randomized room positions
@@ -94,14 +91,15 @@ class ShipMapView extends View {
     const h = 1.4 * v;
     this.checkWinCondition();
 
+
     if (this.roomsRandomized[name].solved) 
     {
       push();
-      fill(20, 20, 20, 240); // normal color for solved rooms
+      fill(20, 20, 20, 240); // normal color when solved
       stroke(0, 255, 255);
       strokeWeight(2);
       rectMode(CENTER);
-      rect(x, y, w, h, 6);
+      rect(x, y, w, h);
       noStroke();
       fill(0, 255, 255);
       textAlign(CENTER, CENTER);
@@ -113,11 +111,11 @@ class ShipMapView extends View {
     else 
     {
       push();
-      fill(255, 0, 0); // red color for unsolved rooms
+      fill(255, 0, 0); // red color when unsolved
       stroke(100, 100, 100);
       strokeWeight(1);
       rectMode(CENTER);
-      rect(x, y, w, h, 6);
+      rect(x, y, w, h);
       noStroke();
       fill(0, 255, 255);
       textAlign(CENTER, CENTER);
@@ -152,7 +150,7 @@ class ShipMapView extends View {
         // sets coordinates for Breaker Box and Life Support special case
         if (name === "Breaker Box Room" && conn === "Life Support") {
 
-          customMidY = (this.coordinates["Breaker Box Room"].y + this.coordinates["Monitor Room"].y) / 2;
+          customMidY = (this.coordinates["Breaker Box Room"].y + this.coordinates["Map Room"].y) / 2;
           customMidX = (this.coordinates["Nuclear Reactor"].x + this.coordinates["Life Support"].x) / 2;
         }
 
@@ -194,7 +192,7 @@ class ShipMapView extends View {
 
     push();
 
-    this.drawConnections(u, v);
+    //this.drawConnections(u, v);
 
     for (const [name, pos] of Object.entries(this.coordinates)) {
       this.drawRooms(pos.x, pos.y, name, u, v);
