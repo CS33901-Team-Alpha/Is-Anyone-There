@@ -150,6 +150,8 @@ class ShipMapView extends View {
   winConditionMet() {
     if (this.normalized) return true;
 
+    AI.addText('>_  SPACECRAFT LAYOUT GENERATING... \n>_  MAP H.U.D. FUNCTIONALITY RESTORED \n>_  PRESS \'M\' TO ACCESS MINIMAP');
+
     //move all the rooms back to their normal positions
     for (var [name, pos] of Object.entries(this.rooms)) {
       this.roomsRandomized[name] = {

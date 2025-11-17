@@ -7,7 +7,7 @@ class MinimapOverlay {
     this.visible = false;
 
     this.sizeUnits = 3;
-    this.xUnits = 0.6;
+    this.xUnits = 12.4;
     this.yUnits = 0.6;
   }
 

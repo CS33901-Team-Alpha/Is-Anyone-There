@@ -128,22 +128,22 @@ class WorldManager {
         }
         if(currentIndex == 3){ // entering life support
             AM.stopAll();
-            AM.play("lifeSupportLoop");
+            AM.loop("lifeSupportLoop");
             AM.stop("goodArrow2");
         }
         if(currentIndex == 2){ // entering cryo rooms
             AM.stopAll();
-            AM.play("cryoLoop");
+            AM.loop("cryoLoop");
             AM.stop("goodArrow2");
         }
         if(currentIndex == 1){ // entering breaker rooms
             AM.stopAll();
-            AM.play("technoLoop");
+            AM.loop("technoLoop");
             AM.stop("goodArrow2");
         }
         if(currentIndex == 0){ // entering beginning room
             AM.stopAll();
-            AM.play("startGame");
+            AM.loop("startGame");
             AM.stop("goodArrow2");
         }
     }
