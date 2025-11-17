@@ -96,6 +96,10 @@ class AiMessageHandler {
         }
     }
 
+    setExistFor(value){
+        this.existFor = value;
+    }
+
     // add text at position specified at constructor
     addText(text){
         // add to front at Top, create queue structure
