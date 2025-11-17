@@ -17,17 +17,12 @@ function constrain(value, min, max) {
     return Math.max(min, Math.min(max, value));
 }
 
-// exported because this needs testing
 /**
  * 
- * @param {*} x 
- * @param {*} y 
- * @returns 
+ * @param {number} min 
+ * @param {number} max 
+ * @returns {number}
  */
-export function transform(x,y) { // UNIMPLEMENTED, tansforms input mouse coordinates into pinpad buttons x and y values
-    return x,y; 
-}
-
 function random(min, max) {
     if (max === undefined) {
         max = min;
@@ -67,8 +62,25 @@ export class PinButton {
     }
 }
 
+/**
+ * @private
+ * @param {number | null} x x spot on pin grid
+ * @param {number | null} y y spot on pin grid
+ * @param {number} v value of pin button
+ * @returns a pin button, this is a shortcut func
+ */
 function p(x,y,v) {
     return new PinButton(x,y,v);
+}
+
+/**
+ * forwarded all the computation to this function.
+ * @param {number} x x coord from external (controler probably)
+ * @param {number} y y coord from external
+ * @returns {{x:number,y:number}} Object of x and y for the pinpad grid. 
+ */
+export function transform(x,y) {
+    return {x,y};
 }
 
 const state = {
@@ -112,7 +124,7 @@ export class Passkey {
         this.junkCarrier = {}
 
         // any errors in case something is wrong.
-        if(password.length() !== PASSWORD_SIZE) throw new Error("Password does not fit pasword, size conflict.");
+        if(password.length !== PASSWORD_SIZE) throw new Error("Password does not fit pasword, size conflict.");
 
     }
 
@@ -217,28 +229,25 @@ export class Passkey {
      */
     backspace() {
         this.insert -= 2;
-        thisng.entryDriver.next();
+        this.entryDriver.next();
         // will leave an entry as undefined but no issues forseen.
     }
 
+    /**
+     * Stops the password from inputting, just use if this causes lag or performange issues, cause the generator is basically ALWAYS running.
+     */
+    stop() {
+        this.entryDriver.return(false);
+        // not really checking if this stops this. but i'd image the function is done now.
+    }
 
     /**
-     * Class requierments:
-     * 
-     * inputs:
-     *  - indivisual numbers
-     *  - resets
-     * 
-     * undo:
-     *  - reset the entier puzzle, set pass solved to false index 0 fill password
-     *  - reset input (also do at start)
-     * 
-     * TODO:
-     *  - reset input & index function, cancel generator, and reboot it
-     *  - 
-     * 
+     * starts up the generator again without reseting
      */
-
+    reboot() {
+        this.entryDriver = this.passwordEntryBehavior_();
+        this.entryDriver.next();
+    }
 }
 
 /**
@@ -263,7 +272,7 @@ export class Pinpad {
             p(0,0, 1 ), p(1,0, 2 ), p(2,0, 3 ),
             p(0,1, 4 ), p(1,1, 5 ), p(2,1, 6 ),
             p(0,2, 7 ), p(1,2, 8 ), p(2,2, 9 )
-        ];
+        ]; 
 
         //setting the state
         this.state = state.IDLE; // state to prevent spamming
@@ -273,10 +282,50 @@ export class Pinpad {
 
         // setting the password and initiallizing the passkey interface
         this.key = new Passkey(password);
+
+        // just an idea, but would control if stuff is input, allowing calls on object even when not on screen.
+        // this.inview = true;
     }
 
-    enter(index) {
-        this.input[this.insert] = this.pins[index].press();
+    /* Class plan:
+     * getters:
+     * A LOT OF GETTERS for the front end
+     * 
+     * state:
+     * - list: IDLE, INPUT, PROCESSING
+     * - IDLE: nothing is occuring, and buttons are ready to be pushed.
+     * - INPUT: A location was entered, and what if a pin was pressed, and the passkey processing of all that needs to be acted on. allows for animation time
+     * 
+     * 
+     * 
+     * 
+     * 
+     */
+    /** Coordinates based on the grid of pins, (null, null) is no pin press
+     * before input, use the transform function in the input to convert input coordinates into useable pinpad numbers.
+     * 
+     * @param {number | { x: number, y:number } | null} pos1 X coordinate pushed OR the object of { x:number, y:number } such as given by the {@link transform} function
+     * @param {number | null} pos2 Y coordinate pushed
+     * 
+     * @example
+     * ```
+     * pad.push(1,1); // push the middle button
+     * pad.push({ x: 1, y: 1 });
+     * pad.push(transform(1,1));
+     * ```
+     */
+    push(pos1, pos2 = null) {
+        let x = -1;
+        let y = -1;
+        if(typeof pos1 === "object" && pos1 !== null) {
+            x = pos1.x;
+            y = pos1.y;
+        } else {
+            if(pos1 === 0 || !!pos1) x = pos1; // !! checks for not falsy ( null, undefined, NaN, ect.) also checks for 0 because 0 is falsy.
+            if(pos2 === 0 || !!pos2) y = pos2; 
+        }
+
+        // 
     }
 }
 
