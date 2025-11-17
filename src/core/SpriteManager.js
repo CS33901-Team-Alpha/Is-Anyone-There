@@ -141,6 +141,21 @@ function loadSprites() {
     //Map Room
     SM.add("MapUnsolved", loadImage('assets/object/MapPuzzleUnsolved.png'))
     SM.add("MapSolved", loadImage('assets/object/MapPuzzleSolved.png'))
+
+    SM.add("northWallMap", loadImage('assets/background/map1.png'))
+    SM.add("southWallMap", loadImage('assets/background/map3.png'))
+    SM.add("eastWallMap", loadImage('assets/background/map2.png'))
+    SM.add("westWallMap", loadImage('assets/background/map4.png'))
+
+    SM.add("minimap0", loadImage('assets/object/minimap0.png'))
+    SM.add("minimap1", loadImage('assets/object/minimap1.png'))
+    SM.add("minimap2", loadImage('assets/object/minimap2.png'))
+    SM.add("minimap3", loadImage('assets/object/minimap3.png'))
+    SM.add("minimap4", loadImage('assets/object/minimap4.png'))
+    SM.add("minimap5", loadImage('assets/object/minimap5.png'))
+    SM.add("minimap6", loadImage('assets/object/minimap6.png'))
+    SM.add("minimap7", loadImage('assets/object/minimap7.png'))
+    
 }
 
 

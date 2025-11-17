@@ -28,22 +28,21 @@ class MinimapOverlay {
     const x = this.xUnits * u;
     const y = this.yUnits * v;
 
-    const currentIndex = this.world.current ?? 0;
-    const room = this.world.rooms?.[currentIndex];
-    const roomName = room?.name || `Room #${currentIndex}`;
+    const currentIndex = this.world.current;
+    const roomName = `minimap${currentIndex}`;
 
     push();
 
-    stroke(255, 255, 255);
-    strokeWeight(5);
-    fill(0, 0, 0);
-    rect(x, y, size, size, 8);
-
     noStroke();
-    fill(255);
-    textAlign(CENTER, CENTER);
-    textSize(0.25 * v);
-    text(roomName, x + size / 2, y + size / 2);
+    var miniMapSprite = SM.get(roomName);
+    if (miniMapSprite && miniMapSprite.src) {
+      image(miniMapSprite.src, (x+0.1), (y+0.1), (size-0.2), (size-0.2));
+    }
+
+    stroke(0, 0, 0);
+    strokeWeight(0.15 * u);
+    noFill();
+    rect(x, y, size, size, 0.2*u);
 
     pop();
   }

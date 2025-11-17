@@ -83,15 +83,26 @@ class LifeSupportView extends View {
     this.background = SM.get("westWallSupport");
     this.background.setSize(16, 9);
 
-    this.signSprite1 = new SystemSign(0.1, 3, 0.4, 'ElectricalSign');
-    this.leftSprite1 = new IndicatorLight(3.9, 3.8,0.2, 'GreenLight1', 'OffLight1', 'fixedElectricalComponent');
-    this.rightSprite1 = new IndicatorLight(5.4, 3.8,0.2, 'OffLight2', 'RedLight1', 'fixedElectricalComponent');
-    this.signSprite2 = new SystemSign(7.6, 3, 0.4, 'OxygenSign');
-    this.leftSprite2 = new IndicatorLight(11.5, 3.8, 0.2, 'GreenLight2', 'OffLight3', 'regulateOxygenPuzzleSolved');
-    this.rightSprite2 = new IndicatorLight(13.25, 3.8, 0.2, 'OffLight4', 'RedLight2', 'regulateOxygenPuzzleSolved');
-    this.signSprite3 = new SystemSign(3, 5.5, 0.4, 'TemperatureSign');
-    this.leftSprite3 = new IndicatorLight(7.2, 6.3, 0.2, 'GreenLight3', 'OffLight5', 'regulateTempPuzzleSolved');
-    this.rightSprite3 = new IndicatorLight(9, 6.3, 0.2, 'OffLight6', 'RedLight3', 'regulateTempPuzzleSolved');
+    this.signSprite1 = new SystemSign(0.1, 3, 0.35, 'ElectricalSign');
+    this.leftSprite1 = new IndicatorLight(4.3, 3.2, 0.125, 'GreenLight1', 'OffLight1', 'fixedElectricalComponent');
+    this.rightSprite1 = new IndicatorLight(4.3, 4.3, 0.125, 'OffLight2', 'RedLight1', 'fixedElectricalComponent');
+    this.signSprite2 = new SystemSign(5.15, 2.9, 0.35, 'OxygenSign');
+    this.leftSprite2 = new IndicatorLight(9.3,  3.2, 0.125, 'GreenLight2', 'OffLight3', 'regulateOxygenPuzzleSolved');
+    this.rightSprite2 = new IndicatorLight(9.3, 4.3, 0.125, 'OffLight4', 'RedLight2', 'regulateOxygenPuzzleSolved');
+    this.signSprite3 = new SystemSign(3, 5.5, 0.35, 'TemperatureSign');
+    this.leftSprite3 = new IndicatorLight(7.3, 5.8, 0.125, 'GreenLight3', 'OffLight5', 'regulateTempPuzzleSolved');
+    this.rightSprite3 = new IndicatorLight(7.3, 6.9, 0.125, 'OffLight6', 'RedLight3', 'regulateTempPuzzleSolved');
+  
+    this.slidingDoor = new StandaloneSlidingDoor(11.5, 2.6, 1, () => {}, true, 2, null, 6, 1, () => true);
+
+    this.slidingDoor.setRoom(this);
+  
+  }
+
+  mousePressed(p) {
+    const m = p || VM.mouse();
+
+    if (this.slidingDoor.mousePressed(m)) {return true;} // stop propagation
   }
 
   draw() {
@@ -102,6 +113,8 @@ class LifeSupportView extends View {
     textSize(0.7 * VM.U);
     textAlign(CENTER, CENTER);
     text("Life Support Status", 8 * VM.U, 1 * VM.V);
+
+    this.slidingDoor.draw();
 
     pop();
   }
@@ -116,6 +129,7 @@ class LifeSupportView extends View {
     this.rightSprite1.update(dt);
     this.rightSprite2.update(dt);
     this.rightSprite3.update(dt);
+    this.slidingDoor.update(dt);
   }
 
   onEnter() {
@@ -130,6 +144,8 @@ class LifeSupportView extends View {
     this.rightSprite1.onEnter();
     this.rightSprite2.onEnter();
     this.rightSprite3.onEnter();
+
+    this.slidingDoor.onEnter();
   }
 
   onExit() {
@@ -144,5 +160,7 @@ class LifeSupportView extends View {
     this.rightSprite1.onExit();
     this.rightSprite2.onExit();
     this.rightSprite3.onExit();
+
+    this.slidingDoor.onExit();
   }
 }

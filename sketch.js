@@ -138,7 +138,7 @@ function setup() { //ref ? only ran once ever?
   // insert checkers here
   GS.checkFor("Ended", () => { return GS.is("Game Complete") || GS.is("Timer Up") || GS.is("Player Died"); })
 
-  GS.setString("You Have Survived, the Spaceship is saved! Thank you for Playing!")
+  GS.setString("You Have Survived and Fixed the Spaceship! Thank you for Playing!")
 
   R = new Renderer(); //ref
 
@@ -276,14 +276,13 @@ function setupWorld() {
   // --- Room A (Start Room | start here) ---
   const computerView = new ComputerView(); // start view (index 0)
   const boxesView    = new BoxesView([ // is a sliderdoorview derived class takes you to map room (6)
-    {x:12, y:2.5, scale:0.8,
+    {x:12, y:1.7, scale:0.8,
     targetRoom: 6,         // <-- map room 
-    targetViewIndex: 0,    // 
+    targetViewIndex: 2,    // 
     lockedCondition : () => GS.is("Pin Solved")
     }
   ]);
-  const fcView       = new FileCabinetView();
-
+  const fcView = new FileCabinetView();
   // Door in start room -> breaker room (index 1), land on view 0
   const sdStartToBreaker = new SlidingDoorView([{
     x:12, y:2.5, scale:0.8,
@@ -291,8 +290,6 @@ function setupWorld() {
     targetViewIndex: 0,    //
     lockedCondition : () => GS.is("Pin Solved")
   }]);
-
-  
   startRoom.addView(computerView);  // index 0 (start)
   startRoom.addView(boxesView);
   startRoom.addView(fcView);
@@ -376,17 +373,10 @@ function setupWorld() {
   reactorRoom.addView(operationReactorView);
   reactorRoom.addView(restartReactorView);
   reactorRoom.addView(sdReactorToBreaker);
-  //reactorRoom.addView(sdReactorToBotanical); -> removed door to botanical temporarily
   
   // --- Room F (Botanical Room) ---
   const plantsView = new PlantsView();
   const plantsView2 = new PlantsView2();
-  // const sdBotanicalToReactor = new SlidingDoorView([{ // to nuclear
-  //   x:12, y:2.5, scale:0.8,
-  //   targetRoom: 4,         // <-- nuclear index
-  //   targetViewIndex: 0, 
-  //   lockedCondition : () => {true}
-  // }], SM.get("MetalWall"));
   const sdBotanicalToReactor = new PlantsView3([{ // has door to nuclear
     x:12, y:2.8, scale:0.8,
     targetRoom: 4,         // <-- nuclear index
@@ -403,25 +393,31 @@ function setupWorld() {
 
   // --- Room G (Map Room) ---
   const shipMapView = new ShipMapView();
-  const mapFiller = new PuzzleClueView();
-  const mapFiller2 = new PuzzleClueView();
+  const mapFiller = new PuzzleClueView("southWallMap");
+
+  const sdMapToSupport = new SlidingDoorView([{
+    x:11, y:2.3, scale:0.8,
+    targetRoom: 3,         // <-- start room
+    targetViewIndex: 3,    //
+    lockedCondition : () => true
+  }], SM.get("westWallMap"));
 
   const sdMapToStart = new SlidingDoorView([{
-    x:12, y:2.5, scale:0.8,
+    x:5.5, y:2.4, scale:0.8,
     targetRoom: 0,         // <-- start room
-    targetViewIndex: 0,    //
+    targetViewIndex: 1,    //
     lockedCondition : () => true
-  }], SM.get("MetalWall"));
+  }], SM.get("northWallMap"));
 
-  mapRoom.addView(shipMapView);
   mapRoom.addView(mapFiller);
+  mapRoom.addView(sdMapToSupport);
   mapRoom.addView(sdMapToStart);
-  mapRoom.addView(mapFiller2);
+  mapRoom.addView(shipMapView);
 
   // --- Room H (Engine Room) ---
   //const engineControlView = new EngineControlView();
   const engineThrottle = new ThrottleView();
-  const engineFiller2 = new PuzzleClueView();
+  //const engineFiller2 = new PuzzleClueView();
   const engineFiller3 = new GearView();
 
   const sdEngineToStart = new SlidingDoorView([{
@@ -431,10 +427,9 @@ function setupWorld() {
     lockedCondition : () => true
   }], SM.get("MetalWall"));
 
-  engineRoom.addView(new PuzzleClueView()); // first wall
   engineRoom.addView(engineThrottle); // Puzzle wall 1
   engineRoom.addView(sdEngineToStart); // exit wall
-  engineRoom.addView(engineFiller3); // Puzzle wall 2
+  engineRoom.addView(new GearView()); // Puzzle wall 2
 
   // register rooms (A=0, B=1, C=2) and let WORLD receive key events
   WORLD.addRoom(startRoom);   // index 0

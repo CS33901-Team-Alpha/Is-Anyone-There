@@ -1,8 +1,8 @@
 class PuzzleClueView extends View {
-  constructor() {
+  constructor(string) {
     super();
 
-    this.background = SM.get("MetalWall");
+    this.background = SM.get(string);
     this.background.setSize(16, 9);
   }
 
