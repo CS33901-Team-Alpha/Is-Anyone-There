@@ -1,0 +1,27 @@
+{
+  "name": "is-anyone-there",
+  "version": "1.0.0",
+  "description": "Main repository for Team Alpha's Game for Gregory Delozier's Software Engineering class (Kent State University, Fall 2025)",
+  "main": "p5.min.js",
+  "directories": {
+    "test": "features"
+  },
+  "scripts": {
+    "test": "cucumber-js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cshantery/Is-Anyone-There.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/cshantery/Is-Anyone-There/issues"
+  },
+  "homepage": "https://github.com/cshantery/Is-Anyone-There#readme",
+  "devDependencies": {
+    "@cucumber/cucumber": "^12.2.0"
+  }
+}
