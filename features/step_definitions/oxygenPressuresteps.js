@@ -5,9 +5,7 @@ import OxygenPressureModel from '../../src/models/puzzles/lifeSupport/oxygenPres
 let model;
 let changedBarIndex;
 
-// =========================
-// GIVEN
-// =========================
+//given
 
 Given('a new OxygenPressureModel', function () {
     model = new OxygenPressureModel();
@@ -29,9 +27,7 @@ Given('a new OxygenPressureModel with all pressures at target', function () {
     changedBarIndex = undefined;
 });
 
-// =========================
-// WHEN
-// =========================
+//when
 
 When('I reset the model', function () {
     model.reset();
@@ -43,9 +39,7 @@ When('I change the pressure of bar {int}', function (barIndex) {
     model.changePressure(barIndex);
 });
 
-// =========================
-// THEN
-// =========================
+//then
 
 Then('the model should not be solved', function () {
     assert.strictEqual(model.solved, false, `Expected puzzle not solved, got solved = ${model.solved}`);
