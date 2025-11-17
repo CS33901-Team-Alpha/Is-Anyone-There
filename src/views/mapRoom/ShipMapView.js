@@ -1,252 +1,138 @@
 class ShipMapView extends View {
   constructor() {
-    super();
-
+    super(0, 0, 0, 'Map Room Puzzle');
     this.background = SM.get("MetalWall");
     this.background.setSize(16, 9);
 
     this.rooms = {
-      "Engine Room":      {col: 0, row: 1.1, connections:   ["Nuclear Reactor"]},
-      "Botanical Room":   {col: 1.25, row: 0.2, connections:   ["Nuclear Reactor"]},
-      "Nuclear Reactor":  {col: 1, row: 1.1, connections:   ["Engine Room", "Botanical Room", "Breaker Box Room"]},
-      "Life Support":     {col: 1.25, row: 2, connections:   ["Breaker Box Room", "Map Room"]},
-      "Cryochamber":      {col: 2.6, row: 0, connections:   ["Breaker Box Room"]},
-      "Breaker Box Room": {col: 2.1, row: 1.1, connections:   ["Nuclear Reactor", "Cryochamber", "Terminal Room", "Life Support"]},
-      "Map Room":         {col: 2.6, row: 2.2, connections: ["Life Support", "Terminal Room"]},
-      "Terminal Room":    {col: 3.3, row: 1.1, connections: ["Breaker Box Room", "Map Room"]},
+      "Engine Room":      {x: 3.66, y: 4.45},
+      "Botanical Room":   {x: 6.9, y: 2.7},
+      "Nuclear Reactor":  {x: 6.25, y: 4.45},
+      "Life Support":     {x: 6.9, y: 6.1},
+      "Cryochamber":      {x: 10.35, y: 2.3},
+      "Breaker Box Room": {x: 9.1, y: 4.45},
+      "Map Room":         {x: 10.4, y: 6.55},
+      "Terminal Room":    {x: 12.25, y: 4.45},
     };
 
-    const allPositions = []; // to keep track of used positions
-    for (let row = 0; row <= 2; row++) { // 3 rows
-      for (let col = 0; col <= 4; col++) { // 5 columns
-        allPositions.push({ col, row }); // add position to list
-      }
-    }
+    let allPositions = [ // to keep track of all room positions(8)
+      {x: 3.66, y: 4.45},
+      {x: 6.9, y: 2.7}, 
+      {x: 6.25, y: 4.45}, 
+      {x: 6.9, y: 6.1}, 
+      {x: 10.35, y: 2.3}, 
+      {x: 9.1, y: 4.45}, 
+      {x: 10.4, y: 6.55}, 
+      {x: 12.25, y: 4.45}
+    ]; 
 
-    const shuffled = shuffle(allPositions); // shuffle positions
-    const roomNames = [ // list of room names
+    let roomNames = [ // list of room names
       "Engine Room", "Botanical Room", "Nuclear Reactor", "Life Support",
-      "Cryochamber", "Breaker Box Room", "Terminal Room", "Map Room"
+      "Cryochamber", "Breaker Box Room", "Map Room", "Terminal Room"
     ];
+    
+    //shuffle names
+    for (let i = roomNames.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1)); // random index from 0 to i
+      [roomNames[i], roomNames[j]] = [roomNames[j], roomNames[i]]; // swap elements
+    }
 
     this.roomsRandomized = {}; // to hold randomized room positions
     for (let i = 0; i < roomNames.length; i++) { // assign positions to rooms
-      const name = roomNames[i]; // get room name
-      const pos = shuffled[i]; // get shuffled position
+      var name = roomNames[i]; // get room name
+      var pos = allPositions[i]; // get position
       this.roomsRandomized[name] = { // assign position to room
-        col: pos.col,
-        row: pos.row,
-        connections: this.rooms[name].connections, // keep original connections
+        x: pos.x,
+        y: pos.y,
         solved: false
       };
     }
 
-    this.coordinates = {};
-    this.normalCoordinates = {};
     this.draggingRoom = null;
     this.normalized = false;
   }
 
-  shuffle(array) {
-    for (let i = array.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1)); // random index from 0 to i
-      [array[i], array[j]] = [array[j], array[i]]; // swap elements
-    }
-    return array; // return shuffled array
-  }
-
-  onEnter() {
-    this.assignCoordinates();
-  }
-
-  assignCoordinates() {
-    const u = VM.u();
-    const v = VM.v();
-
-    const columns = 5;
-    const rows = 3;
-    const columnSpacing = 2.75 * u;
-    const rowSpacing = 2.25 * v;
-
-    // origin points for drawing
-    const startX = (16 * u - (columns - 1) * columnSpacing) / 2;
-    const startY = (9 * v - (rows - 1) * rowSpacing) / 2;
-
-    // assigns coordinates to rooms based on spacing and origin point.
-    for (const [name, pos] of Object.entries(this.roomsRandomized)) {
-      if (name === this.draggingRoom) continue; // dragging didn't work unless this was here
-      const x = startX + pos.col * columnSpacing;
-      const y = startY + pos.row * rowSpacing;
-      this.coordinates[name] = { x, y };
-    }
-
-    for (const [name, pos] of Object.entries(this.rooms)) { // normal positions for win condition
-      const x = startX + pos.col * columnSpacing;
-      const y = startY + pos.row * rowSpacing;
-      this.normalCoordinates[name] = { x, y };
-    }
-  }
-
-  drawRooms(x, y, name, u, v) {
-    const w = 2 * u;
-    const h = 1.4 * v;
-    this.checkWinCondition();
-
-
-    if (this.roomsRandomized[name].solved) 
-    {
-      push();
-      fill(20, 20, 20, 240); // normal color when solved
-      stroke(0, 255, 255);
-      strokeWeight(2);
-      rectMode(CENTER);
-      rect(x, y, w, h);
-      noStroke();
-      fill(0, 255, 255);
-      textAlign(CENTER, CENTER);
-      textSize(0.35 * v);
-      textFont(terminusFont);
-      text(name, x, y, w * 0.9, h * 0.9);
-      pop();
-    } 
-    else 
-    {
-      push();
-      fill(255, 0, 0); // red color when unsolved
-      stroke(100, 100, 100);
-      strokeWeight(1);
-      rectMode(CENTER);
-      rect(x, y, w, h);
-      noStroke();
-      fill(0, 255, 255);
-      textAlign(CENTER, CENTER);
-      textSize(0.35 * v);
-      textFont(terminusFont);
-      text(name, x, y, w * 0.9, h * 0.9);
-      pop();
-    }
-  }
-
-  drawConnections(u, v) {
-    stroke(0, 180, 255);
-    strokeWeight(2);
-    noFill();
-
-    for (const [name, data] of Object.entries(this.rooms)) {
-      const start = this.coordinates[name];
-
-      for (const conn of data.connections) {
-        // makes sure to only draw lines once by skipping entries that are not in alphabetical order
-        if (name >= conn) continue;
-
-        const end = this.coordinates[conn];
-
-        const xLength = end.x - start.x;
-        const yLength = end.y - start.y;
-
-        // used for special cases where the default doesn't work
-        let customMidX = null;
-        let customMidY = null;
-
-        // sets coordinates for Breaker Box and Life Support special case
-        if (name === "Breaker Box Room" && conn === "Life Support") {
-
-          customMidY = (this.coordinates["Breaker Box Room"].y + this.coordinates["Map Room"].y) / 2;
-          customMidX = (this.coordinates["Nuclear Reactor"].x + this.coordinates["Life Support"].x) / 2;
-        }
-
-        // draws lines between connected rooms
-        beginShape();
-        vertex(start.x, start.y);
-
-        // special case for Breaker Box and Life Support connection
-        if (customMidX !== null && customMidY !== null) {
-          vertex(start.x, customMidY);
-          vertex(customMidX, customMidY);
-          vertex(customMidX, end.y);
-        } 
-        // default case for drawing lines
-        else {
-          if (Math.abs(xLength) > Math.abs(yLength)) {
-            const midX = start.x + xLength / 2;
-            vertex(midX, start.y);
-            vertex(midX, end.y);
-          } 
-          else {
-            const midY = start.y + yLength / 2;
-            vertex(start.x, midY);
-            vertex(end.x, midY);
-          }
-        }
-
-        vertex(end.x, end.y);
-        endShape();
-      }
-    }
+  shuffleNames(array) {
+    
   }
 
   draw() {
     this.background?.draw();
 
-    const u = VM.u();
-    const v = VM.v();
+    var u = VM.u();
+    var v = VM.v();
 
-    this.assignCoordinates();
+    if(this.normalized) {
+      var MapSprite = SM.get("MapSolved");
+    } else {
+      var MapSprite = SM.get("MapUnsolved");
+    }
+    if (MapSprite && MapSprite.src) {
+      rect(1*u, 0.25*v, 14*u, 8.5*v);
+      image(MapSprite.src, 1.25 * u, 0.5 * v, 13.5 * u, 8 * v);
+      fill(0,0,0,200);
+    } else {
+      fill(0);
+      rect(1.5 * u, 1 * v, 13 * u, 7 * v, 10);
+    }
 
     push();
 
-    //this.drawConnections(u, v);
+    for (var [name, pos] of Object.entries(this.roomsRandomized)) {
+      var w = 1.8 * u;
+      var h = 1.15 * v;
+      var x = pos.x * u;
+      var y = pos.y * v;
+      this.checkWinCondition();
 
-    for (const [name, pos] of Object.entries(this.coordinates)) {
-      this.drawRooms(pos.x, pos.y, name, u, v);
+      if (this.roomsRandomized[name].solved) 
+      {
+        push();
+        fill(20, 20, 20, 240); // normal color when solved
+        stroke(0, 255, 255);
+        strokeWeight(2);
+        rectMode(CENTER);
+        rect(x, y, w, h);
+        noStroke();
+        fill(0, 255, 255);
+        textAlign(CENTER, CENTER);
+        textSize(0.3 * v);
+        textFont(terminusFont);
+        text(name, x, y, w * 0.9, h * 0.9);
+        pop();
+      } 
+      else 
+      {
+        push();
+        fill(255, 0, 0); // red color when unsolved
+        stroke(100, 100, 100);
+        strokeWeight(1);
+        rectMode(CENTER);
+        rect(x, y, w, h);
+        noStroke();
+        fill(0, 255, 255);
+        textAlign(CENTER, CENTER);
+        textSize(0.3 * v);
+        textFont(terminusFont);
+        text(name, x, y, w * 0.9, h * 0.9);
+        pop();
+      }
     }
 
     pop();
   }
 
-  mousePressed(m) {
-    if (this.normalized) return;
-    // Check if any room was clicked
-    for (const [name, pos] of Object.entries(this.coordinates)) {
-    const u = VM.u();
-    const v = VM.v();
-    const w = 2 * u; // Room dimensions
-    const h = 1.4 * v; // ... dimensions
-    const px = m.x * width / 16; // Convert to pixel coordinates
-    const py = m.y * height / 9; // ... pixel coordinates
-
-
-    const inX = px >= pos.x - w / 2 && px <= pos.x + w / 2; // within x bounds
-    const inY = py >= pos.y - h / 2 && py <= pos.y + h / 2; // ... y bounds
-
-    if (inX && inY) { // Room was clicked
-      this.draggingRoom = name;
-      return;
-    }
-  }
-  }
-
-  mouseDragged(m) {
-    if (this.normalized) return;
-    if (!this.draggingRoom) return;
-
-    this.coordinates[this.draggingRoom] = {
-      x: m.x * width / 16,
-      y: m.y * height / 9
-    };
-  }
-
   checkWinCondition() {
     let allSolved = true;
 
-    for (const [name, pos] of Object.entries(this.roomsRandomized)) { // check each room
-      const currentPos = this.coordinates[name]; // current position
-      const targetPos = this.normalCoordinates[name]; // target position
+    for (var [name, pos] of Object.entries(this.roomsRandomized)) { // check each room
+      var currentPos = this.roomsRandomized[name]; // current position
+      var targetPos = this.rooms[name]; // target position
 
-      const dx = Math.abs(currentPos.x - targetPos.x); // distance in x
-      const dy = Math.abs(currentPos.y - targetPos.y); // distance in y
+      var dx = Math.abs((currentPos.x * VM.u()) - (targetPos.x * VM.u())); // distance in x
+      var dy = Math.abs((currentPos.y * VM.v()) - (targetPos.y * VM.v())); // distance in y
 
-      const withinBounds = dx <= 1 * VM.u() && dy <= 1 * VM.v(); // check if within bounds
+      var withinBounds = dx <= (1 * VM.u()) && dy <= (1 * VM.v()); // check if within bounds
       this.roomsRandomized[name].solved = withinBounds; // mark as solved if within bounds
 
       if (!withinBounds) { // if any room is not solved
@@ -265,18 +151,52 @@ class ShipMapView extends View {
     if (this.normalized) return true;
 
     //move all the rooms back to their normal positions
-    for (const [name, pos] of Object.entries(this.normalCoordinates)) {
-      this.coordinates[name] = {
+    for (var [name, pos] of Object.entries(this.rooms)) {
+      this.roomsRandomized[name] = {
         x: pos.x,
         y: pos.y
       };
     }
 
-    screenTimer.addTime(30);
     this.normalized = true;
 
     GS.set("Minimap Unlocked");
 
     return true;
   }
+
+  mousePressed(m) {
+    if (this.normalized) return;
+    // Check if any room was clicked
+    for (var [name, pos] of Object.entries(this.roomsRandomized)) {
+    var u = VM.u();
+    var v = VM.v();
+    var w = 2 * u; // Room dimensions
+    var h = 1.4 * v; // ... dimensions
+    var x = pos.x * u;
+    var y = pos.y * v;
+    var mx = m.x * u; // Convert mouse to pixel coordinates
+    var my = m.y * v; // ... pixel coordinates
+
+
+    var inX = mx >= x - w / 2 && mx <= x + w / 2; // within x bounds
+    var inY = my >= y - h / 2 && my <= y + h / 2; // ... y bounds
+
+    if (inX && inY) { // Room was clicked
+      this.draggingRoom = name;
+      return;
+    }
+  }
+  }
+
+  mouseDragged(m) {
+    if (this.normalized) return;
+    if (!this.draggingRoom) return;
+
+    this.roomsRandomized[this.draggingRoom] = {
+      x: m.x,
+      y: m.y
+    };
+  }
+
 }

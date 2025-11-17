@@ -113,12 +113,12 @@ class WorldManager {
         }
         if(currentIndex == 6){ // entering map room
             AM.stopAll();
-            AM.play("mapLoop");
+            AM.loop("mapLoop");
             AM.stop("goodArrow2");
         }
         if(currentIndex == 4){ // entering reactors
             AM.stopAll();
-            AM.play("reactorLoop");
+            AM.loop("reactorLoop");
             AM.stop("goodArrow2");
 
             // if(!GS.is('reactorStabilized')){
