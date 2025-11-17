@@ -281,15 +281,16 @@ function setupWorld() {
     targetViewIndex: 2,    // 
     lockedCondition : () => GS.is("Pin Solved")
     }
-  ]);
+  ], GS.getPassword3());
   const fcView = new FileCabinetView();
   // Door in start room -> breaker room (index 1), land on view 0
+  const backgroundName = 'SouthWall' + GS.getPassword1();
   const sdStartToBreaker = new SlidingDoorView([{
     x:12, y:2.5, scale:0.8,
     targetRoom: 1,         // <-- breaker room
     targetViewIndex: 0,    //
     lockedCondition : () => GS.is("Pin Solved")
-  }]);
+  }], SM.get(backgroundName));
   startRoom.addView(computerView);  // index 0 (start)
   startRoom.addView(boxesView);
   startRoom.addView(fcView);

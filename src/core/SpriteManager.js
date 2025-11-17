@@ -8,8 +8,27 @@ function loadSprites() {
 
     SM.add("FileCabinet", loadImage('assets/object/fileCabinet.webp'));
     SM.add("NorthWall", loadImage('assets/background/pcWall.webp')); 
-    SM.add("EastWall", loadImage('assets/background/boxesWall.webp')); 
-    SM.add("SouthWall", loadImage('assets/background/billBoardWall.webp'));
+
+    SM.add("EastWall1", loadImage('assets/background/boxesWall1.png')); 
+    SM.add("EastWall2", loadImage('assets/background/boxesWall2.png')); 
+    SM.add("EastWall3", loadImage('assets/background/boxesWall3.png')); 
+    SM.add("EastWall4", loadImage('assets/background/boxesWall4.png')); 
+    SM.add("EastWall5", loadImage('assets/background/boxesWall5.png')); 
+    SM.add("EastWall6", loadImage('assets/background/boxesWall6.png')); 
+    SM.add("EastWall7", loadImage('assets/background/boxesWall7.png')); 
+    SM.add("EastWall8", loadImage('assets/background/boxesWall8.png')); 
+    SM.add("EastWall9", loadImage('assets/background/boxesWall9.webp')); 
+
+    SM.add("SouthWall1", loadImage('assets/background/billBoardWall1.png'));
+    SM.add("SouthWall2", loadImage('assets/background/billBoardWall2.png'));
+    SM.add("SouthWall3", loadImage('assets/background/billBoardWall3.png'));
+    SM.add("SouthWall4", loadImage('assets/background/billBoardWall4.png'));
+    SM.add("SouthWall5", loadImage('assets/background/billBoardWall5.png'));
+    SM.add("SouthWall6", loadImage('assets/background/billBoardWall6.png'));
+    SM.add("SouthWall7", loadImage('assets/background/billBoardWall7.webp'));
+    SM.add("SouthWall8", loadImage('assets/background/billBoardWall8.png'));
+    SM.add("SouthWall9", loadImage('assets/background/billBoardWall9.png'));
+
     SM.add("WestWall", loadImage('assets/background/cabinetWall.webp'));
     SM.add("pinpad", loadImage('assets/object/keypad.webp'));
     SM.add("FullKeypad", loadImage('assets/object/FullKeypad.webp'));
@@ -19,7 +38,15 @@ function loadSprites() {
     SM.add("FileCabinet3", loadImage('assets/object/fileCabinet.webp'));
     SM.add("FileCabinet4", loadImage('assets/object/fileCabinet.webp'));
 
-    SM.add("secondNumber", loadImage('assets/object/secondNumber.png'));
+    SM.add("secondNumber1", loadImage('assets/object/pinpadGreen1.png'));
+    SM.add("secondNumber2", loadImage('assets/object/pinpadGreen2.png'));
+    SM.add("secondNumber3", loadImage('assets/object/pinpadGreen3.png'));
+    SM.add("secondNumber4", loadImage('assets/object/pinpadGreen4.png'));
+    SM.add("secondNumber5", loadImage('assets/object/pinpadGreen5.png'));
+    SM.add("secondNumber6", loadImage('assets/object/pinpadGreen6.png'));
+    SM.add("secondNumber7", loadImage('assets/object/pinpadGreen7.png'));
+    SM.add("secondNumber8", loadImage('assets/object/pinpadGreen8.png'));
+    SM.add("secondNumber9", loadImage('assets/object/pinpadGreen9.png'));
     SM.add("screen", loadImage('assets/object/screen.webp'));
 
     SM.add("SlidingDoor1", loadImage('assets/object/SlidingDoor1.svg'));

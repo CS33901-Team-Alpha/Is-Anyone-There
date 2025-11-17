@@ -64,26 +64,13 @@ class OpenCabinetUI {
       AM.play('drawerClose')
     });
 
-    const nameMap = {
-      1: "firstNumber",
-      2: "secondNumber",
-      3: "thirdNumber",
-      4: "fourthNumber",
-      5: "fifthNumber",
-      6: "sixthNumber",
-      7: "seventhNumber",
-      8: "eighthNumber",
-      9: "ninthNumber"
-    };
-    this.number = Math.trunc(Math.random() * 5) + 1; 
-
-    const sprite = nameMap[this.number]; 
+    this.number = GS.getPassword2();
     
-    console.log(`cabinet has number: ${this.number}`);
-    // when the assets are here, you can just replace "secondNumber" with sprite
-    this.numberImage = SM.get("secondNumber"); 
-    this.numberImage.setPos(7, 3.4);
-    this.numberImage.setScale(4);
+    console.log(`cabinet has number: `+ this.number);
+    const spriteName = `secondNumber`+ this.number;
+    this.numberImage = SM.get(spriteName); 
+    this.numberImage.setPos(6.5, 3);
+    this.numberImage.setScale(0.75);
   }
 
   draw() {

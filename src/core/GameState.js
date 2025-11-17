@@ -36,6 +36,10 @@ class GameState {
         this.states = new Set(); // simple states, string set
         this.checks = new Map(); // array for functions
         this.deaths = 0          // count for deaths 
+        this.password = this.generatePassword();
+        this.password1 = this.password[0];
+        this.password2 = this.password[1];
+        this.password3 = this.password[2];
 
         this.endString = "";
     }
@@ -105,6 +109,32 @@ class GameState {
 
     getString(string) {
         return this.endString;
+    }
+
+    generatePassword(){
+      let password = "";
+      for (let i = 0; i < 3; ++i) {
+        const num = str(int(random(1, 10)));
+        password += num;
+      }
+      console.log(password);
+      return password;
+    }
+
+    getPassword() {
+        return this.password;
+    }
+
+    getPassword1() {
+        return this.password1;
+    }
+
+    getPassword2() {
+        return this.password2;
+    }
+
+    getPassword3() {
+        return this.password3;
     }
 
     // Object?

@@ -1,6 +1,7 @@
 class BoxesView extends SlidingDoorView{
-  constructor(slidingDoors = []) {
-    super(slidingDoors, SM.get("EastWall"));
+  constructor(slidingDoors = [], string) {
+    const backgroundName = 'EastWall' + string;
+    super(slidingDoors, SM.get(backgroundName));
   }
 
   update(dt) {

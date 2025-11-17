@@ -330,7 +330,7 @@ class PinButton extends Button {
 }
 
 class Pinpad {
-    constructor( pass, onExit = () => {}) {
+    constructor(pass, onExit = () => {}) {
         this.code = [];
         this.onExit = onExit;
         this.label = "";
@@ -494,7 +494,7 @@ class ComputerView extends View {
         this.pinpad.setScale(0.5);
         this.pinpad.setPos(12.5, 6);
 
-        this.pass = this.generatePassword();
+        this.pass = GS.getPassword();
 
         this.terminalHighlight = new HighlightEvent(
             2.33, 0.25, 10.1, 6.6, 255, 255, 255,
@@ -542,16 +542,6 @@ class ComputerView extends View {
             }));
             
         });
-    }
-
-    generatePassword(){
-      let password = "";
-      for (let i = 0; i < 3; ++i) {
-        const num = str(int(random(1, 10)));
-        password += num;
-      }
-      console.log(password);
-      return password;
     }
 
     onEnter() {
