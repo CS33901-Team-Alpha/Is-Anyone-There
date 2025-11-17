@@ -274,6 +274,9 @@ class ShipMapView extends View {
 
     screenTimer.addTime(30);
     this.normalized = true;
+
+    GS.set("Minimap Unlocked");
+
     return true;
   }
 }

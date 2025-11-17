@@ -7,6 +7,14 @@ class WorldManager {
 
     keyPressed() {
         if (window.activeInterface) return false; // Don't block when a modal is open - let the interface handle it
+        
+        if (key === 'm' || key === 'M') {
+            if (window.MINIMAP) {
+                MINIMAP.toggle();
+            }
+            return true; // consume the keypress
+        }
+        
         const room = this.activeRoom;
         if (room && typeof room.keyPressed === 'function') {
             room.keyPressed();

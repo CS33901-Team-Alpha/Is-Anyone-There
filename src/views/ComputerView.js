@@ -128,8 +128,13 @@ class Terminal {
       }
     });
 
-      this.registerCommand("compass", () => {
+    this.registerCommand("compass", () => {
       this.print("This is a test");
+    });
+
+    this.registerCommand("unlock-map", () => {
+        GS.set("Minimap Unlocked");
+        this.print("Map Unlocked");
     });
   }
 
