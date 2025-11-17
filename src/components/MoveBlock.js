@@ -16,6 +16,14 @@ class MoveBlock {
     this.dragDy = 0;
 
     this.color = [random(255), random(255), random(255)];
+
+    this.angle = 0; //new variable for rotating the block
+  }
+
+  rotate(dir) { //rotates the block based on the inputted direction
+    if (!this.drag) return; //if a block is not being dragged don't rotate it
+
+    this.angle = (this.angle + dir * 45 + 360) % 360; //updates the angle of rotation
   }
 
   isMouseInBounds(mx, my) {
@@ -36,15 +44,44 @@ class MoveBlock {
     // constatly update real coordinates of block
     this.x = m.x - this.dragDx;
     this.y = m.y - this.dragDy;
+
+    this.angle = (this.angle + 45 * dt) % 360;
   }
 
   draw() {
+    /*
     const u = VM.u();
     const v = VM.v();
 
     noStroke();
     fill(this.color[0], this.color[1], this.color[2]);
     rect(this.x * u, this.y * v, this.size * u, this.size * v, 8);
+    */
+
+    //updated the draw function to account for rotation
+
+    const u = VM.u();
+    const v = VM.v();
+
+    push();
+
+    
+    translate((this.x + this.size/2) * u, (this.y + this.size/2) * v);
+
+    
+    rotate(radians(this.angle));
+
+    noStroke();
+    fill(this.color[0], this.color[1], this.color[2]);
+    rect(
+      -(this.size/2) * u,
+      -(this.size/2) * v,
+      this.size * u,
+      this.size * v,
+      8
+    );
+
+    pop();
   }
 
   mousePressed(p) {
@@ -61,4 +98,5 @@ class MoveBlock {
   mouseReleased() {
     this.drag = false;
   }
+
 }
