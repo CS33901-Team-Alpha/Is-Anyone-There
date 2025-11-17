@@ -74,6 +74,7 @@ class ShipMapView extends View {
 
     // assigns coordinates to rooms based on spacing and origin point.
     for (const [name, pos] of Object.entries(this.roomsRandomized)) {
+      if (name === this.draggingRoom) continue; // dragging didn't work unless this was here
       const x = startX + pos.col * columnSpacing;
       const y = startY + pos.row * rowSpacing;
       this.coordinates[name] = { x, y };
@@ -190,6 +191,8 @@ class ShipMapView extends View {
     const u = VM.u();
     const v = VM.v();
 
+    this.assignCoordinates();
+
     push();
 
     //this.drawConnections(u, v);
@@ -274,6 +277,3 @@ class ShipMapView extends View {
     return true;
   }
 }
-
-// RUN COMMAND "COMPASS"
-// 296 4188367 "4185300"
