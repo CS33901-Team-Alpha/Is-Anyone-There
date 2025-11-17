@@ -277,7 +277,7 @@ function setupWorld() {
   const computerView = new ComputerView(); // start view (index 0)
   const boxesView    = new BoxesView([ // is a sliderdoorview derived class takes you to map room (6)
     {x:12, y:2.5, scale:0.8,
-    targetRoom: 7,         // <-- map room CHANGED TO ENGINE ROOM FOR TESTING
+    targetRoom: 6,         // <-- map room 
     targetViewIndex: 0,    // 
     lockedCondition : () => GS.is("Pin Solved")
     }
@@ -426,7 +426,7 @@ function setupWorld() {
 
   const sdEngineToStart = new SlidingDoorView([{
     x:12, y:2.5, scale:0.8,
-    targetRoom: 0,         // <-- start room
+    targetRoom: 4,         // <-- nuclear
     targetViewIndex: 0,    //
     lockedCondition : () => true
   }], SM.get("MetalWall"));

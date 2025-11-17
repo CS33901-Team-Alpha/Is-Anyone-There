@@ -36,7 +36,6 @@ class PlantsView3 extends SlidingDoorView {
 
     draw() {
         super.draw()
-        // Optional: add custom drawing logic here
     }
 
     onEnter() {

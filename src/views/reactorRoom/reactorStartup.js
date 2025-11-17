@@ -1,10 +1,12 @@
 class ReactorStartupView extends View {
     constructor() { 
-        super(); 
-
+        super()
         this.background = SM.get("westWallReactor"); 
         this.background.setSize(16, 9); 
+
         this.textHandler = new TextNotificationHandler(0.5, 1); 
+
+        this.door = new StandaloneSlidingDoor(2, 2.7, 1, () => {}, true, 2, null, 7, 0, () => true);
 
         // reactor simon-says color zones
         this.colors = [
@@ -37,6 +39,7 @@ class ReactorStartupView extends View {
             this.activeInterface = "ScreenView";
             R.add(this.highlight);
             R.remove(this.closeBtn);
+            this.door.toggleVisibility();
         });
 
         // clickable highlight
@@ -44,6 +47,7 @@ class ReactorStartupView extends View {
             R.remove(this.highlight);
             R.add(this.closeBtn);
             this.activeInterface = "PuzzleView";
+            this.door.toggleVisibility()
         });
 
         this.locked = false;
@@ -53,11 +57,17 @@ class ReactorStartupView extends View {
 
     // cleans up leftover text notifications 
     onEnter() {
+        this.door.onEnter()
         this.textHandler.cleanup()
         R.add(this.highlight);
     }
 
     onExit() {
+        this.door.onExit()
+        if(this.activeInterface == 'PuzzleView'){
+            this.door.toggleVisibility()
+        }
+
         this.activeInterface = "ScreenView";
         this.textHandler.cleanup()
         R.remove(this.highlight);
@@ -178,6 +188,7 @@ class ReactorStartupView extends View {
 
 
     update(dt) {
+        this.door.update(dt);
         this.textHandler.update(dt);
     }
 
@@ -212,6 +223,7 @@ class ReactorStartupView extends View {
     }
 
     draw() {
+        this.door.draw()
         if (this.background) this.background.draw();
         else background(10); // fallback bg 
         const u = VM.u();

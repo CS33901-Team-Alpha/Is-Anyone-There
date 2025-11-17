@@ -48,9 +48,23 @@ class SlidingDoor {
         this.animating = false; 
         this.animationTimer = 0; 
         this.frameDuration = frameDuration; // 0.1s per frame
+
+        this.visible = true;
+    }
+
+    // NOTE: toggle visibility also disables all interaction
+    toggleVisibility(){
+        if(this.visible) {
+            R.remove(this.highlight)
+        }
+        else{
+            R.add(this.highlight)
+        }
+        this.visible = !this.visible;
     }
 
     mousePressed(p) {
+        if(!this.visible) return; // dont do anything if door is not being displayed
         const m = p || VM.mouse();
         const hit = (
             m.x >= this.x && m.x <= this.x + doorClickWidth &&
@@ -142,7 +156,7 @@ class SlidingDoor {
     }
 
     draw() {
-        this.frames[this.currentFrame].draw();
+        if(this.visible) {this.frames[this.currentFrame].draw();}
     }
 
     onEnter() {
@@ -203,9 +217,23 @@ class StandaloneSlidingDoor {
         this.animating = false; 
         this.animationTimer = 0; 
         this.frameDuration = frameDuration; // 0.1s per frame
+
+        this.visible = true;
+    }
+
+    // NOTE: toggle visibility also disables all interaction
+    toggleVisibility(){
+        if(this.visible) {
+            R.remove(this.highlight)
+        }
+        else{
+            R.add(this.highlight)
+        }
+        this.visible = !this.visible;
     }
 
     mousePressed(p) {
+        if(!this.visible) return; // dont do anything if door is not being displayed
         const m = p || VM.mouse();
         const hit = (
             m.x >= this.x && m.x <= this.x + doorClickWidth &&
@@ -297,7 +325,7 @@ class StandaloneSlidingDoor {
     }
 
     draw() {
-        this.frames[this.currentFrame].draw();
+        if(this.visible) this.frames[this.currentFrame].draw();
     }
 
     onEnter() {
@@ -317,7 +345,7 @@ class SlidingDoorView extends View {
     // if someone in the future wants a different background 
     constructor(slidingDoors = [], backgroundAsset = null) {
         super(0, 0, 0, '');
-        
+
         // if someone wants a new background, insert it.. 
         // on default will use southWall
         this.background = backgroundAsset ?? SM.get("SouthWall");
@@ -333,8 +361,7 @@ class SlidingDoorView extends View {
             config.onClick ?? (() => { }),
             config
         ));
-
-        }
+    }
 
     update(dt) {
         this.textNotificationHandler.update(dt); 
@@ -343,13 +370,12 @@ class SlidingDoorView extends View {
 
     draw() {
         this.background.draw();
-        this.door.forEach(door => door.draw());
+        this.door.forEach(door => door.draw()); // not sure if this even does anything
     }
 
     onEnter() {
         R.add(this); 
         this.door.forEach(door => door.onEnter());
-
     }
 
     onExit() {
@@ -362,11 +388,15 @@ class SlidingDoorView extends View {
         for (const door of this.door) {
             if (door.mousePressed(p)) return true; // stop propagation
         }
-        return false;
+        return true;
     }
 
     setRoom(vm) {
         this.door.forEach(d => d.setRoom(this));
+    }
+
+    toggleDoor(){
+        this.door.forEach(d => d.toggleVisibility());
     }
 }
 
