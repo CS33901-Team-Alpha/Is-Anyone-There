@@ -1,5 +1,9 @@
 export class SlidingDoorModel {
-    constructor(cfg = {}) {
+    /**
+     * 
+     * @param {Object{ locked: boolean, ... }} cfg 
+     */
+    constructor(cfg = { locked: true, lockedCondition: (() => false), autoCloseDelay: 2, frameDuration: 0.1 }) {
         this.locked = cfg.locked ?? true;
         this.lockedCondition = cfg.lockedCondition ?? (() => false);
 

@@ -8,3 +8,5 @@ dist/
 *.log
 
 .env
+PLAYGROUND.js
+package.json

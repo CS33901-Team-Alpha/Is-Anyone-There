@@ -75,7 +75,7 @@ function p(x,y,v) {
 
 /**
  * forwarded all the computation to this function.
- * @param {number} x x coord from external (controler probably)
+ * @param {number} x x coord from external (controler probably) 
  * @param {number} y y coord from external
  * @returns {{x:number,y:number}} Object of x and y for the pinpad grid. 
  */
@@ -315,6 +315,7 @@ export class Pinpad {
      * ```
      */
     push(pos1, pos2 = null) {
+        // getting the x and y of the cell
         let x = -1;
         let y = -1;
         if(typeof pos1 === "object" && pos1 !== null) {
