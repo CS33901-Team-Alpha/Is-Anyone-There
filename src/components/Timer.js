@@ -34,7 +34,7 @@ class ScreenTimer {
      *          - Also NOTE: any timer that is not called overall will be placed below the overall
      */
     constructor(onEnd = () => {}, options = {}) {
-        this.timer = new Timer(!options.time ? 20000 : options.time);   
+        this.timer = new Timer(!options.time ? 240000 : options.time);   
         this.label = '';
         this.onEnd = onEnd;
 
@@ -68,7 +68,7 @@ class ScreenTimer {
                 setTimeout(() => { R.remove(this.overlay)}, 10600) // remove overlay (which will be all black) after time + 600 miliseconds since gameover screen only appears after 500ms
             }
             // EFFECTS FOR REACTOR TIMER RUNNING OUT
-            if((this.timerName == 'reactor') && (this.overlay == undefined)){
+            else if((this.timerName == 'reactor') && (this.overlay == undefined)){
                 this.overlay = new RadiationOverlay();
                 R.add(this.overlay, 93211)
                 AM.setVolume('radiation', 0.2)
