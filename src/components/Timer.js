@@ -20,6 +20,10 @@ class Timer {
     getSeconds() {
         return ceil(this.getRemaining() / 1000);
     }
+
+    setFinished() {
+        this.duration = millis() - this.start
+    }
 }
 
 class ScreenTimer {
@@ -30,7 +34,7 @@ class ScreenTimer {
      *          - Also NOTE: any timer that is not called overall will be placed below the overall
      */
     constructor(onEnd = () => {}, options = {}) {
-        this.timer = new Timer(!options.time ? 240000 : options.time);   
+        this.timer = new Timer(!options.time ? 20000 : options.time);   
         this.label = '';
         this.onEnd = onEnd;
 
@@ -50,20 +54,21 @@ class ScreenTimer {
             let secs = floor(this.timer.getRemaining() / 1000);
             let m = floor(secs / 60);
             let s = secs % 60;
-            this.label = `${m}:${nf(s, 2)}`;
-            
+            this.label = `${m}:${nf(s, 2)}`;       
+        } else {
             // EFFECTS FOR CONTAGION TIMER RUNNING OUT
             // value of 10000 miliseconds is threshold for starting fadeout to black
-            if((this.timer.getRemaining() < 10000) && (this.timerName == 'contagion') && (this.overlay == undefined)){ // less than 10 seconds
+            if((this.timerName == 'contagion' || this.timerName == 'overall') && (this.overlay == undefined)){ // less than 10 seconds
                 this.overlay = new DarkeningOverlay(10000);
                 R.add(this.overlay, 99123)
+
+                GS.setString("Avoiding Lethal Contagions are probably better to avoid going forward");
                 
                 AM.fadeOut('contagionAlarm', 10000)
                 setTimeout(() => { R.remove(this.overlay)}, 10600) // remove overlay (which will be all black) after time + 600 miliseconds since gameover screen only appears after 500ms
             }
-
             // EFFECTS FOR REACTOR TIMER RUNNING OUT
-            if((this.timer.getRemaining() < 20000) && (this.timerName == 'reactor') && (this.overlay == undefined)){
+            if((this.timerName == 'reactor') && (this.overlay == undefined)){
                 this.overlay = new RadiationOverlay();
                 R.add(this.overlay, 93211)
                 AM.setVolume('radiation', 0.2)
@@ -71,26 +76,26 @@ class ScreenTimer {
 
                 AI.setExistFor(4)
                 AI.addText('>_ EXCESSIVE RADIATION DETECTED IN REACTOR ROOM')
+                GS.setString("Nuclear engineering is incredibly dangerous and sensitive.\n Something to keep in mind...");
 
                 setTimeout(() => { 
                     R.remove(this.overlay);
-                    AM.fadeOut('radiation', 2000);
-                }, 20600)
+                    AM.fadeOut('radiation', 5000);
+                }, 5600)
             }
-
-        } else {
+            let EndDelay = this.timerName == 'reactor'? 5500 : 10500;
             setTimeout(() => {
                 this.label = '0:00';
                 if(this.timerName == 'overall'){
                     GS.setString("Looks like you have to speed up a little...")
+                    AI.addText('>_ \n>_ \n>_ ');
                     GS.set("Timer Up");
                 }
                 else{
-                    GS.setString("Looks like you have to speed up a little...")
                     GS.set("Timer Up") // change to custom timeout ending?
                 }
                 this.onEnd();
-            }, 500);
+            }, EndDelay);
         }
     }
 
@@ -128,6 +133,10 @@ class ScreenTimer {
         text(this.label, x + tw / 2, y + th / 2);
         drawingContext.shadowBlur = 0;
         pop();
+    }
+
+    setFinished() {
+        this.timer.setFinished();
     }
 
     addTime(seconds) {

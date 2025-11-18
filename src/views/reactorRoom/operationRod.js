@@ -170,7 +170,7 @@ class OperationReactorPuzzleView extends View {
     triggerMeltdown(){
         AI.addText('>_  MALFUNCTION DETECTED \n>_  Severity: CRITICAL \n>_  REACTOR MELTDOWN BEGUN!!');
         AM.play("reactorExplosion");
-        GS.setString("Nuclear Reactors are very dangerous,\nbe careful around them from now on");
+        secondaryTimer.setFinished();
 
         // reset rod for retry
         setTimeout(() => {
