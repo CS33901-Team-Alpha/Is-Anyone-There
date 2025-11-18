@@ -152,7 +152,7 @@ class ShipMapView extends View {
       var dx = Math.abs((currentPos.x * VM.u()) - (targetPos.x * VM.u())); // distance in x
       var dy = Math.abs((currentPos.y * VM.v()) - (targetPos.y * VM.v())); // distance in y
 
-      var withinBounds = dx <= (1 * VM.u()) && dy <= (1 * VM.v()); // check if within bounds
+      var withinBounds = dx <= (0.5 * VM.u()) && dy <= (0.5 * VM.v()); // check if within bounds
       this.roomsRandomized[name].solved = withinBounds; // mark as solved if within bounds
 
       if (!withinBounds) { // if any room is not solved
