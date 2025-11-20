@@ -96,7 +96,38 @@ class GameState {
         }
     }
 
-    incrimentDeaths(){
+    loadState(){
+        const savedState = JSON.parse(localStorage.getItem('currentGameState'))
+
+        // only bring state over if it exists, if not, then leave gamestate object as is (everything unset, 0 deaths)
+        if(savedState){
+            this.deaths = savedState.deaths || 0
+
+            for(const state of savedState.states){
+                this.set(state)
+            }
+        }
+    }
+
+    persistState(){
+        // looks weird but this will convert the gamestate into a JSON string, then back into a JS object so we can add states to it (see getStatesAsObj)
+        const gsObj = JSON.parse(JSON.stringify(this))
+        gsObj.states = this.getStatesAsArr()
+
+        // make a filter list of states that we wanna save
+        const save = ['Pin Solved']; // save these states, drop others
+        gsObj.states = gsObj.states.filter((state) => save.includes(state))
+
+        localStorage.setItem('currentGameState', JSON.stringify(gsObj))
+    }
+
+    // we need this because our this.states is a Set, and JSON.stringify (what we use to persist) does convert the elements of the set into
+    // the output (they show up as {})
+    getStatesAsArr(){
+        return Array.from(this.states)
+    }
+
+    incrementDeaths(){
         this.deaths++;
     }
     getDeaths() {

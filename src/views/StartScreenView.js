@@ -404,22 +404,20 @@ class EndScreenView extends View {
     // Clear any active interfaces
     window.activeInterface = null;
 
-    //get the curent death count
-    let currentDeaths = GS.getDeaths();
-
     //if the game is not solved then incriment the deaths
     if(!this.solved){
-      currentDeaths++;
+      GS.incrementDeaths()
     }
 
-    const newGame = new GameState();
-    newGame.deaths = currentDeaths;
+    // const newGame = new GameState();
+    // newGame.deaths = currentDeaths;
 
-    //conert current game state object to string
-    const newGameString = JSON.stringify(newGame); 
+    //convert current game state object to string
+    // const newGameString = JSON.stringify(newGame); 
     //save game state string in local storage with unique key
-    localStorage.setItem('currentGameState', newGameString);
-    console.log(`New game ready to start. Total deaths: ${newGame.deaths}`);
+
+    localStorage.setItem('currentGameState', JSON.stringify(GS));
+    GS.persistState()
 
     const finalStateString = JSON.stringify(GS);
     localStorage.setItem('completedGame', finalStateString);
