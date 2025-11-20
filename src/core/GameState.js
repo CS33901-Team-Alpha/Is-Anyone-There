@@ -17,18 +17,20 @@ Game State Variables Currently in Use:
 - "Player Died" - denotes when the player dies somehow
 - "Game Complete" - denotes when the game's win condition is met, completing the game
 - "Wires Solved" - denotes when wires/flow puzzle solved, unlocks cryo door
+- 'fixedElectricalComponent' - denotes when repair puzzle in breaker room is done, unlocks reactor
 - "regulateOxygenPuzzleSolved" - denotes when oxygen puzzle has been solved in Life Support
 - "regulateTempPuzzleSolved" - denotes when the temperature puzzle has been solved in Life Support
 - "Ended" - checkfor value thatis set when an end condition for the game is met
             right now that is "Game Complete", "Timer Up", and "Player Died"
 - "reactorStartupInitialized" - Reactor Sequence has begun; start timer
 - "reactorStartupComplete" - completed reactor startup puzzle
-- "restartReactorComplete" - complted restart reactor puzzle
+- "restartReactorComplete" - completed restart reactor puzzle
 - "operationRodComplete" - completed reactor rod puzzle
-- "reactorStabilized" - stabilized reactor (aka all puzzles done in order) - used to preven timer from popping up again when you enter reactor
+- "reactorStabilized" - stabilized reactor (aka all puzzles done in order) - used to preven ttimer from popping up again when you enter reactor
 - "BotanicalRoomVisited" - whether we have been to botanical room before (prevent contagion event from starting if we have)
 - "BotanicalQuarantine" - whether the quarantine is currently active. Can be used to play alarms and other things during the event. 
 - "BotanicalComponentOpen" - When a plant has been clicked on, denotes the info page is open; used for fixing hitbox issue
+- "Minimap Unlocked" - denotes when the map puzzle is solved; allows minimap to be used
 */
 
 class GameState {
@@ -115,7 +117,9 @@ class GameState {
         gsObj.states = this.getStatesAsArr()
 
         // make a filter list of states that we wanna save
-        const save = ['Pin Solved']; // save these states, drop others
+        const save = ['Pin Solved','fixedElectricalComponent', 'Wires Solved', 'reactorStartupComplete', 
+                        'restartReactorComplete', 'operationRodComplete', 'regulateOxygenPuzzleSolved', 
+                        'regulateTempPuzzleSolved', 'Life Support Access Granted', 'Minimap Unlocked']; // save these states, drop others
         gsObj.states = gsObj.states.filter((state) => save.includes(state))
 
         localStorage.setItem('currentGameState', JSON.stringify(gsObj))
