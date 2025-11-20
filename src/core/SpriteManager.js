@@ -93,6 +93,8 @@ function loadSprites() {
     SM.add("eastWallBreaker", loadImage('assets/background/warning.webp'))
     SM.add("westWallBreaker", loadImage('assets/background/blankWall.png'))
 
+    SM.add("CryoPad", loadImage('assets/object/CryoPadScreen.png'))
+
     //Life Support Room
     SM.add("StatusSign", loadImage('assets/object/SupportStatusSign.png'));
     SM.add("TemperatureSign", loadImage('assets/object/TempSign.png'));

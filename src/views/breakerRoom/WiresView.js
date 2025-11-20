@@ -16,8 +16,8 @@ class WiresView extends View
 
   // Calculate origin to center the grid on a 16x9 canvas
   this.origin = {
-    x: (16 - this.gridSize * this.cellSize) / 6,
-    y: (9 - this.gridSize * this.cellSize) / 2
+    x: (16 - this.gridSize * this.cellSize) / 2,
+    y: (9 - this.gridSize * this.cellSize) / 2.5
   };
 
   // Track which wires have been successfully connected
@@ -128,6 +128,31 @@ class WiresView extends View
   this.slidingDoor = new StandaloneSlidingDoor(12, 1.2, 1, () => {}, true, 2, null, 2, 0, () => GS.is("Wires Solved"));
 
   this.slidingDoor.setRoom(this);
+
+  this.closeBtn = new Button(3, 0.75, 0.8, (self) => {
+      this.activeInterface = "ScreenView";
+      R.add(this.highlight);
+      R.add(this.PadSprite);
+      R.remove(this.closeBtn);
+      this.slidingDoor.onEnter();
+    });
+
+    // clickable highlight
+    this.highlight = new HighlightEvent(5.4, 2.45, 4.7, 3.7, 255,255,255,() =>{
+      R.remove(this.highlight);
+      R.remove(this.PadSprite);
+      R.add(this.closeBtn);
+      this.slidingDoor.onExit();
+      this.activeInterface = "PuzzleView";
+    });
+
+  this.PadSprite = SM.get("CryoPad");
+  this.PadSprite.setPos(5.5, 2.5);
+  this.PadSprite.setScale(0.6);
+
+  this.locked = false;
+
+  this.activeInterface = "ScreenView";
 }
 
 _initGrid() {
@@ -196,179 +221,189 @@ _placeEndpoints() {
 
 
 draw() {
-    // Draw background
-    if (this.background) {
+  // Draw background
+  if (this.background) {
     this.background.draw(); // Render the sprite
-    } else {
+  } else {
     background(20); // Fallback if sprite is missing
+  }
+
+  if(this.activeInterface == "PuzzleView") {
+    fill(0, 0, 0, 180); // Red, Green, Blue
+    rect(2.5* VM.U, 0.25*VM.V, 11*VM.U, 7.5*VM.V);
+
+    // Apply screen shake offsets if active
+    let shakeOffsetX = 0;
+    let shakeOffsetY = 0;
+    if (this.shakeTime > 0) {
+      shakeOffsetX = (Math.random() - 0.5) * this.shakeMagnitude;
+      shakeOffsetY = (Math.random() - 0.5) * this.shakeMagnitude;
+      this.shakeTime -= 1;
     }
 
-
-  // Apply screen shake offsets if active
-  let shakeOffsetX = 0;
-  let shakeOffsetY = 0;
-  if (this.shakeTime > 0) {
-    shakeOffsetX = (Math.random() - 0.5) * this.shakeMagnitude;
-    shakeOffsetY = (Math.random() - 0.5) * this.shakeMagnitude;
-    this.shakeTime -= 1;
-  }
-
-  // Draw grid cells
-  for (let y = 0; y < this.gridSize; y++) {
-    for (let x = 0; x < this.gridSize; x++) {
-      const cell = this.grid[y][x];
-      const px = VM.U * (this.origin.x + x * this.cellSize + shakeOffsetX);
-      const py = VM.V * (this.origin.y + y * this.cellSize + shakeOffsetY);
-      const sizeU = VM.U * this.cellSize;
-      const sizeV = VM.V * this.cellSize;
-
-      // Draw grid cell background and border
-      push();
-      stroke(230);         // Light grey border
-      strokeWeight(2);     // Border thickness
-      fill(40);            // Dark grey cell fill
-      rect(px, py, sizeU, sizeV);
-      pop();
-
-      // Draw endpoint if present
-      if (cell.img) {
-        fill(cell.img);    // Use color name as fill
-        push();
-        stroke(255);       // White border around endpoint
-        strokeWeight(4);
-        ellipse(px + sizeU / 2, py + sizeV / 2, sizeU * 0.6);
-        pop();
-      }
-    }
-  }
-
-  // Draw wire paths for each color
-  for (const color in this.paths) {
-    const path = this.paths[color];
-    push();
-    stroke(color);         // Wire color
-    strokeWeight(10);      // Wire thickness
-    noFill();
-    beginShape();
-    for (const pt of path) {
-      const cx = VM.U * (this.origin.x + pt.x * this.cellSize + this.cellSize / 2);
-      const cy = VM.V * (this.origin.y + pt.y * this.cellSize + this.cellSize / 2);
-      vertex(cx, cy);
-    }
-    endShape();
-    pop();
-  }
-
-  // Compute which wires are currently valid
-  const solvedColors = this.colors.filter(color => this._validatePath(color, this.paths[color]));
-
-  // Draw progress tracker bar
-  const barX = VM.U * 8;
-  const barY = VM.V * 0.6;
-
-  textAlign(CENTER);
-  textSize(16);
-  stroke(255);
-  strokeWeight(2);
-  fill('Black');
-  text(`Wires Connected: ${solvedColors.length} / ${this.colors.length}`, barX, barY);
-
-  // Draw color dots for each wire status
-  for (let i = 0; i < this.colors.length; i++) {
-    const color = this.colors[i];
-    const isSolved = solvedColors.includes(color);
-    push();
-    fill(isSolved ? color : 'gray'); // Show color if solved, gray if not
-    stroke(255);
-    strokeWeight(1);
-    ellipse(barX - 60 + i * 40, barY + 20, 20);
-    pop();
-  }
-
-  // Flash uncovered cells if all wires are valid but puzzle isn't complete
-  const allValid = this.colors.every(color => this._validatePath(color, this.paths[color]));
-  const puzzleComplete = this._checkWinCondition();
-
-  if (allValid && !puzzleComplete) {
+    // Draw grid cells
     for (let y = 0; y < this.gridSize; y++) {
       for (let x = 0; x < this.gridSize; x++) {
-        const isCovered = Object.values(this.paths).some(path =>
-          path.some(pt => pt.x === x && pt.y === y)
-        );
+        const cell = this.grid[y][x];
+        const px = VM.U * (this.origin.x + x * this.cellSize + shakeOffsetX);
+        const py = VM.V * (this.origin.y + y * this.cellSize + shakeOffsetY);
+        const sizeU = VM.U * this.cellSize;
+        const sizeV = VM.V * this.cellSize;
 
-        // Highlight empty cells with a soft white flash
-        if (!isCovered) {
-          const px = VM.U * (this.origin.x + x * this.cellSize);
-          const py = VM.V * (this.origin.y + y * this.cellSize);
-          fill(255, 255, 255, 80); // semi-transparent white
-          noStroke();
-          rect(px, py, VM.U * this.cellSize, VM.V * this.cellSize);
+        // Draw grid cell background and border
+        push();
+        stroke(230);         // Light grey border
+        strokeWeight(2);     // Border thickness
+        fill(40);            // Dark grey cell fill
+        rect(px, py, sizeU, sizeV);
+        pop();
+
+        // Draw endpoint if present
+        if (cell.img) {
+          fill(cell.img);    // Use color name as fill
+          push();
+          stroke(255);       // White border around endpoint
+          strokeWeight(4);
+          ellipse(px + sizeU / 2, py + sizeV / 2, sizeU * 0.6);
+          pop();
+        }
+      }
+    }
+
+    // Draw wire paths for each color
+    for (const color in this.paths) {
+      const path = this.paths[color];
+      push();
+      stroke(color);         // Wire color
+      strokeWeight(10);      // Wire thickness
+      noFill();
+      beginShape();
+      for (const pt of path) {
+        const cx = VM.U * (this.origin.x + pt.x * this.cellSize + this.cellSize / 2);
+        const cy = VM.V * (this.origin.y + pt.y * this.cellSize + this.cellSize / 2);
+        vertex(cx, cy);
+      }
+      endShape();
+      pop();
+    }
+
+    // Compute which wires are currently valid
+    const solvedColors = this.colors.filter(color => this._validatePath(color, this.paths[color]));
+
+    // Draw progress tracker bar
+    const barX = VM.U * 8;
+    const barY = VM.V * 0.6;
+
+    textAlign(CENTER);
+    textSize(16);
+    stroke(255);
+    strokeWeight(2);
+    fill('Black');
+    text(`Wires Connected: ${solvedColors.length} / ${this.colors.length}`, barX, barY);
+
+    // Draw color dots for each wire status
+    for (let i = 0; i < this.colors.length; i++) {
+      const color = this.colors[i];
+      const isSolved = solvedColors.includes(color);
+      push();
+      fill(isSolved ? color : 'gray'); // Show color if solved, gray if not
+      stroke(255);
+      strokeWeight(1);
+      ellipse(barX - 60 + i * 40, barY + 20, 20);
+      pop();
+    }
+
+    // Flash uncovered cells if all wires are valid but puzzle isn't complete
+    const allValid = this.colors.every(color => this._validatePath(color, this.paths[color]));
+    const puzzleComplete = this._checkWinCondition();
+
+    if (allValid && !puzzleComplete) {
+      for (let y = 0; y < this.gridSize; y++) {
+        for (let x = 0; x < this.gridSize; x++) {
+          const isCovered = Object.values(this.paths).some(path =>
+            path.some(pt => pt.x === x && pt.y === y)
+          );
+
+          // Highlight empty cells with a soft white flash
+          if (!isCovered) {
+            const px = VM.U * (this.origin.x + x * this.cellSize);
+            const py = VM.V * (this.origin.y + y * this.cellSize);
+            fill(255, 255, 255, 80); // semi-transparent white
+            noStroke();
+            rect(px, py, VM.U * this.cellSize, VM.V * this.cellSize);
+          }
         }
       }
     }
   }
-
-  this.slidingDoor.draw();
+  else {
+    this.slidingDoor.draw();
+  }
 }
 
 mousePressed(m) {
+
   // Get the grid cell under the mouse
 
   if (this.slidingDoor.mousePressed(m)) {return true;} // stop propagation
+  if(this.activeInterface == "PuzzleView") {
 
-  const cell = this._getCellAtMouse(m);
-  if (!cell) return;
+    const cell = this._getCellAtMouse(m);
+    if (!cell) return;
 
-  // Check if the cell is an endpoint
-  const ep = this.endpoints.find(e => e.x === cell.x && e.y === cell.y);
+    // Check if the cell is an endpoint
+    const ep = this.endpoints.find(e => e.x === cell.x && e.y === cell.y);
 
-  // If it's a valid endpoint, begin dragging a wire of that color
-  if (ep) {
-    this.draggingColor = ep.color;
-    this.paths[ep.color] = [{ x: cell.x, y: cell.y }]; // start path with this cell
+    // If it's a valid endpoint, begin dragging a wire of that color
+    if (ep) {
+      this.draggingColor = ep.color;
+      this.paths[ep.color] = [{ x: cell.x, y: cell.y }]; // start path with this cell
+    }
   }
 }
 
 mouseDragged(m) {
-  // If no wire is being dragged, exit
-  if (!this.draggingColor) return;
+  if(this.activeInterface == "PuzzleView") {
+    // If no wire is being dragged, exit
+    if (!this.draggingColor) return;
 
-  // Get the cell under the mouse
-  const cell = this._getCellAtMouse(m);
-  if (!cell) return;
+    // Get the cell under the mouse
+    const cell = this._getCellAtMouse(m);
+    if (!cell) return;
 
-  const path = this.paths[this.draggingColor];
-  const last = path[path.length - 1];
+    const path = this.paths[this.draggingColor];
+    const last = path[path.length - 1];
 
-  // Only proceed if the cell is different from the last one
-  if (last.x !== cell.x || last.y !== cell.y) {
-    const dx = Math.abs(cell.x - last.x);
-    const dy = Math.abs(cell.y - last.y);
+    // Only proceed if the cell is different from the last one
+    if (last.x !== cell.x || last.y !== cell.y) {
+      const dx = Math.abs(cell.x - last.x);
+      const dy = Math.abs(cell.y - last.y);
 
-    // Only allow cardinal moves (no diagonals)
-    if ((dx === 1 && dy === 0) || (dx === 0 && dy === 1)) {
+      // Only allow cardinal moves (no diagonals)
+      if ((dx === 1 && dy === 0) || (dx === 0 && dy === 1)) {
 
-      // Check if we're backtracking to a previous cell
-      const index = path.findIndex(pt => pt.x === cell.x && pt.y === cell.y);
+        // Check if we're backtracking to a previous cell
+        const index = path.findIndex(pt => pt.x === cell.x && pt.y === cell.y);
 
-      if (index !== -1) {
-        // If so, trim the path to that point
-        path.splice(index + 1);
-      } else {
-        // Remove overlaps from other paths
-        for (const otherColor in this.paths) {
-          if (otherColor === this.draggingColor) continue;
+        if (index !== -1) {
+          // If so, trim the path to that point
+          path.splice(index + 1);
+        } else {
+          // Remove overlaps from other paths
+          for (const otherColor in this.paths) {
+            if (otherColor === this.draggingColor) continue;
 
-          const otherPath = this.paths[otherColor];
-          const overlapIndex = otherPath.findIndex(pt => pt.x === cell.x && pt.y === cell.y);
+            const otherPath = this.paths[otherColor];
+            const overlapIndex = otherPath.findIndex(pt => pt.x === cell.x && pt.y === cell.y);
 
-          if (overlapIndex !== -1) {
-            otherPath.splice(overlapIndex); // truncate overlapping path
+            if (overlapIndex !== -1) {
+              otherPath.splice(overlapIndex); // truncate overlapping path
+            }
           }
-        }
 
-        // Add the new cell to the path
-        path.push({ x: cell.x, y: cell.y });
+          // Add the new cell to the path
+          path.push({ x: cell.x, y: cell.y });
+        }
       }
     }
   }
@@ -377,34 +412,36 @@ mouseDragged(m) {
 mouseReleased() {
   let valid = false;
 
-  // If a wire was being dragged, validate its path
-  if (this.draggingColor) {
-    const path = this.paths[this.draggingColor];
-    valid = this._validatePath(this.draggingColor, path);
+  if(this.activeInterface == "PuzzleView") {
+    // If a wire was being dragged, validate its path
+    if (this.draggingColor) {
+      const path = this.paths[this.draggingColor];
+      valid = this._validatePath(this.draggingColor, path);
 
-    if (!valid) {
-      // If invalid, clear the path
-      this.paths[this.draggingColor] = [];
-    } else {
-        // If valid, mark this color as solved
-        AM.play("wireConnect");
-      this.solvedColors.add(this.draggingColor);
+      if (!valid) {
+        // If invalid, clear the path
+        this.paths[this.draggingColor] = [];
+      } else {
+          // If valid, mark this color as solved
+          AM.play("wireConnect");
+        this.solvedColors.add(this.draggingColor);
+      }
     }
-  }
 
-  // Reset dragging state
-  this.draggingColor = null;
+    // Reset dragging state
+    this.draggingColor = null;
 
-  // Check if the puzzle is fully solved
-  if (this._checkWinCondition()) {
-    AM.play("allWires");
-    this._onPuzzleComplete();
-  } else {
-    // If all wires are valid but grid isn't fully covered, trigger flashing
-    const allValid = this.colors.every(color => this._validatePath(color, this.paths[color]));
-    if (allValid) {
-      this.flashEmptyCells = true;
-      this.flashTimer = 10; // flash for 10 frames
+    // Check if the puzzle is fully solved
+    if (this._checkWinCondition()) {
+      AM.play("allWires");
+      this._onPuzzleComplete();
+    } else {
+      // If all wires are valid but grid isn't fully covered, trigger flashing
+      const allValid = this.colors.every(color => this._validatePath(color, this.paths[color]));
+      if (allValid) {
+        this.flashEmptyCells = true;
+        this.flashTimer = 10; // flash for 10 frames
+      }
     }
   }
 }
@@ -510,7 +547,7 @@ _onPuzzleComplete() {
   this.shakeTime = 10;
 
   // Show puzzle completion message
-  this.textNotif.addText("Cryogenic Chamber Room Unlocked");
+  AI.addText(">_ Cryogenic Chamber Compartment: UNLOCKED");
 
   // Exit interface mode
   window.activeInterface = null;
@@ -525,6 +562,8 @@ onEnter() {
     }
   R.add(this);
   this.slidingDoor.onEnter();
+  R.add(this.highlight);
+  R.add(this.PadSprite);
 }
 
 onExit() {
@@ -534,6 +573,9 @@ onExit() {
   R.remove(this);
   this.slidingDoor.onExit();
   this.textNotificationHandler.cleanup(); 
+  this.activeInterface = "ScreenView";
+  R.remove(this.highlight);
+  R.remove(this.PadSprite);
 }
 
 update(dt) {
