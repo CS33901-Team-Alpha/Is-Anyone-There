@@ -6,7 +6,7 @@ class ReactorStartupView extends View {
 
         this.textHandler = new TextNotificationHandler(0.5, 1); 
 
-        this.door = new StandaloneSlidingDoor(2, 2.7, 1, () => {}, true, 2, null, 7, 0, () => true);
+        this.door = new StandaloneSlidingDoor(4.75, 2.6, 1, () => {}, true, 2, null, 7, 0, () => true);
 
         // reactor simon-says color zones
         this.colors = [
