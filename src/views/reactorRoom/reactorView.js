@@ -1,7 +1,5 @@
 export class ReactorStartupView extends View {
-    constructor(model){
-        this.model = model; 
-
+    constructor(){
         this.colorInfo = [
             { name: 'red', x: 8,  y: 3.25, col: color(255, 0, 0) },
             { name: 'blue', x: 10.75, y: 5, col: color(0, 128, 255) },
