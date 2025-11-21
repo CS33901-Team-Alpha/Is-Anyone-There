@@ -20,7 +20,7 @@ export class FileCabinetModel {
 
 export class OpenCabinetModel {
     constructor(){
-        this.number = Math.trunc(Math.random() * 5) + 1; 
-        this.active = false; // so that controller can use this later
+        this.number = Math.trunc(Math.random() * 4); 
+        this.active = false; // whether cabinet is open
     }
 }
