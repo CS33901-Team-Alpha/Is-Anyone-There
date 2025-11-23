@@ -24,6 +24,7 @@ class GearView extends View {
     this.snapTolerance = 10;
     this.posTolerance = 0.5;
 
+    this.allSolved = false;
   }
 
   
@@ -95,6 +96,10 @@ class GearView extends View {
 
     //compares position and angle difference with tolerance
     if (dx < this.posTolerance && dy < this.posTolerance && (da < this.snapTolerance || da > 360 - this.snapTolerance) && ds < 0.01) {
+      if(!block.solved){
+        AM.play("gearClick")
+      }
+      block.solved = true;
       block.x = s.x;
       block.y = s.y;
       block.angle = s.angle;
@@ -102,6 +107,8 @@ class GearView extends View {
     }
 
 }
+
+counter = 0
 
     allSocketsFilled() { //loops through all of the sockets to see if they are filled
     for (let i = 0; i < this.blocks.length; i++) {
@@ -121,6 +128,11 @@ class GearView extends View {
             return false; //if one is out of place returns false
         }
     }
+    if(!this.allSolved){
+      AM.play("gearComplete")
+      this.allSolved = true;
+    }
+        
         return true;
     }
 }
