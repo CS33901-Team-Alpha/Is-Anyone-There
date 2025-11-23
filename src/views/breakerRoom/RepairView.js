@@ -471,10 +471,7 @@ class RepairView extends View {
         this.repairCabinet.onEnter();
         this.componentHolder.onEnter();
         this.slidingDoor.onEnter();
-        AM.stop("startGame")
-        if(!AM.isLooping("technoLoop")){
-            AM.loop('technoLoop')
-        }
+
         
     }
     
