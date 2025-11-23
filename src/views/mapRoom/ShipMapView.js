@@ -44,7 +44,8 @@ class ShipMapView extends View {
       this.roomsRandomized[name] = { // assign position to room
         x: pos.x,
         y: pos.y,
-        solved: false
+        solved: false,
+        wasSolved: false
       };
     }
 
@@ -106,6 +107,11 @@ class ShipMapView extends View {
 
         if (this.roomsRandomized[name].solved) 
         {
+          if(!this.roomsRandomized[name].wasSolved){
+            AM.play("mapInsert");
+            this.roomsRandomized[name].wasSolved = true;
+          }
+          
           push();
           fill(20, 20, 20, 240); // normal color when solved
           stroke(100);
@@ -169,7 +175,7 @@ class ShipMapView extends View {
 
   winConditionMet() {
     if (this.normalized) return true;
-
+    AM.play("mapComplete");
     AI.addText('>_  SPACECRAFT LAYOUT GENERATING... \n>_  MAP H.U.D. FUNCTIONALITY RESTORED \n>_  PRESS \'M\' TO ACCESS MINIMAP');
 
     //move all the rooms back to their normal positions
@@ -206,6 +212,7 @@ class ShipMapView extends View {
         var inY = my >= y - h / 2 && my <= y + h / 2; // ... y bounds
 
         if (inX && inY) { // Room was clicked
+          AM.play("mapClick");
           this.draggingRoom = name;
           return;
         }
