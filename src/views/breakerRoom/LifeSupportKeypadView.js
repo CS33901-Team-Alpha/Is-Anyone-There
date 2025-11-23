@@ -1,337 +1,490 @@
-class TextButton {
-    constructor(x, y, size, text, onClick = () => {}) {
+/** Temporarily utility object function for checking the collision
+ * if we do more rooms like this (where you have to drag items to use them), we 
+ * probably wanna figure out a better way.
+ */
+let BROKEN_COMPONENT_ID = null; // changed to null for randomization 
+const repairTargetRegistry = {};
+function repairItemUsed(itemName, x, y, width, height, notifHandler){
+    // takes as input which item was used, with it's position and size
+
+    // console.log(repairTargetRegistry)
+
+    for(targetId in repairTargetRegistry){
+        const targetx = repairTargetRegistry[targetId]['x']
+        const targety = repairTargetRegistry[targetId]['y']
+        const targetw = repairTargetRegistry[targetId]['w']
+        const targeth = repairTargetRegistry[targetId]['h']
+
+        // for now only checks if top left corner of item is within the bounds of target
+        const collide = (x >= targetx &&
+            x <= targetx + targetw &&
+            y >= targety &&
+            y <= targety + targeth)
+
+        if(collide){
+            // if(targetId == BROKEN_COMPONENT_ID){
+            //     console.log(`used ${itemName} on target component`)
+            //     notifHandler.addText(`used ${itemName} on broken component.`)
+            // }
+            // else{
+            //     console.log(`used ${itemName} on perfectly working component.`)
+            //     notifHandler.addText(`used ${itemName} on perfectly working component.`)
+            // }
+
+            // You die if you use electrical tape on working component
+            if((itemName == 'electricalTape') && (targetId != BROKEN_COMPONENT_ID)){
+                AM.play("electricalShock")
+
+                // logic for screen shake
+                const shakeCount = 20;
+                for(let i = 0; i < shakeCount; i++){
+                    setTimeout(() => {
+                        SM.yOffsetAll(0.02 * i * Math.pow(-1, i))
+                    }, 40*i)
+                }
+
+                // immediately after the shake, we wanna end the game and stuff
+                setTimeout(()=>{
+                    SM.yOffsetAll(0) // reset offsets 
+
+                    // end game for real
+                    console.log('Used electrical tape on working component (player died)')
+                    GS.setString("Well, that was a shocking end, wasn't it?")
+                    GS.set("Player Died")
+                }, 40*shakeCount)
+
+            }
+            // you fix the component if you use electrical tape on broken component
+            else if((itemName == 'electricalTape') && (targetId == BROKEN_COMPONENT_ID)){
+                AM.play("fixElectronic")
+                notifHandler.addText('You have fixed a broken component!')
+                
+                AI.addText('>_  ACTION RECOGNIZED... \n>_  ELECTRICAL SYSTEM STABILIZING... \n>_  SYSTEM REMAINS CRITICAL - MANUAL ACTIONS REQUIRED');
+                
+                GS.set("fixedElectricalComponent");
+            }
+            else if((itemName == 'voltimeter') && (targetId != BROKEN_COMPONENT_ID)){
+                AM.play("componentGood");
+                notifHandler.addText('This component seems to be working fine.')
+            }
+            else if((itemName == 'voltimeter') && (targetId == BROKEN_COMPONENT_ID)){
+                AM.play("componentBad");
+                notifHandler.addText('This component is not functional.')
+            }
+            else{
+                console.log('A collision happened and this interaction is not defined.')
+            }
+
+            break;
+        }
+    }
+}
+
+/**
+ * Class for repair item moving
+ */
+class MoveableRepairItem {
+    /* Ideally we want a moveable object base class later 
+    
+        itemUsed
+    */
+    constructor(x, y, imgName, scale, notifHandler, itemUsed = () => {}) {
+        this.id = imgName;
+        this.itemUsed = itemUsed;
+        this.textNotificationHandler = notifHandler;
+        this.initialx = x;
+        this.initialy = y;
+
         this.x = x;
         this.y = y;
-        this.size = size;
-        this.text = text;
-        this.onClick = onClick;
-        
-        this.baseColor = color(80, 100, 120);
-        this.hoverColor = color(100, 120, 140);
-        this.textColor = color(255);
+
+        this.sprite = SM.get(imgName)
+        this.sprite.setPos(this.x, this.y);
+        this.sprite.setScale(scale);
+
+        [this.width, this.height] = this.sprite.getWH()
+
+        this.drag = false;
+        this.dragDx = 0;
+        this.dragDy = 0;
+
+        this.active = false; // if item is actually visible
     }
-    
+
     isMouseInBounds(mx, my) {
         const m = mx != null && my != null ? { x: mx, y: my } : VM.mouse();
         return (
             m.x >= this.x &&
-            m.x <= this.x + this.size &&
+            m.x <= this.x + this.width &&
             m.y >= this.y &&
-            m.y <= this.y + this.size
+            m.y <= this.y + this.height
         );
-    }
-    
-    update(dt) {}
-    
-    draw() {
-        const u = VM.u();
-        const v = VM.v();
-        
-        const c = this.isMouseInBounds() ? this.hoverColor : this.baseColor;
-        
-        push();
-        // Draw button background
-        stroke(150);
-        strokeWeight(2);
-        fill(c);
-        rect(this.x * u, this.y * v, this.size * u, this.size * v, 0.1 * u);
-        
-        // Draw text
-        fill(this.textColor);
-        textAlign(CENTER, CENTER);
-        textFont(terminusFont);
-        textSize(0.2 * v);
-        text(this.text, 
-             (this.x + this.size/2) * u, 
-             (this.y + this.size/2) * v);
-        pop();
-    }
-    
-    mousePressed(p) {
-        if (this.isMouseInBounds(p?.x, p?.y)) {
-            this.onClick(this);
-            return true;
-        }
-        return false;
-    }
-}
-
-class LifeSupportKeypad {
-    constructor(onExit = () => {}) {
-        this.input = "";
-        this.onExit = onExit;
-        this.password = "LIFE"; // The required password
-        this.isProcessing = false;
-        this.feedbackColor = null; // null, 'green', or 'red'
-        this.feedbackMessage = "";
-        this.maxLength = 12; // Maximum input length
-        
-        // Mark interface as active
-        window.activeInterface = 'LifeSupportKeypad';
-        
-        // Create exit button
-        this._exitBtn = new Button(13.5, 1, 0.8, (self) => {
-            this.cleanup();
-        });
-        R.add(this._exitBtn, 15);
-        
-        // Add background image
-        this.background = SM.get("southWallBreaker");
-        if (this.background) {
-            this.background = this.background.clone();
-            this.background.setPos(0, 0);
-            this.background.setSize(16, 9);
-            R.add(this.background, 5);
-        }
-        
-        // Create letter buttons
-        this.letterButtons = [];
-        this.createLetterButtons();
-        
-        // Create control buttons
-        this.createControlButtons();
-    }
-
-    createLetterButtons() {
-        const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        const buttonSize = 0.6;
-        const spacing = 0.7;
-        const startX = 2;
-        const startY = 4;
-        
-        for (let i = 0; i < letters.length; i++) {
-            const letter = letters[i];
-            const col = i % 8; // 8 letters per row
-            const row = Math.floor(i / 8);
-            
-            const x = startX + col * spacing;
-            const y = startY + row * spacing;
-            
-            const btn = new TextButton(x, y, buttonSize, letter, () => {
-                if (this.isProcessing) return;
-                
-                if (this.input.length < this.maxLength) {
-                    this.input += letter;
-                    this.feedbackMessage = "";
-                    this.feedbackColor = null;
-                    
-                    // Play button sound if available
-                    if (AM && AM.play) {
-                        AM.play('buttonBeep');
-                    }
-                }
-            });
-            
-            this.letterButtons.push(btn);
-            R.add(btn, 12);
-        }
-    }
-    
-    createControlButtons() {
-        // Clear button
-        this.clearBtn = new TextButton(11, 4, 1, "CLEAR", () => {
-            if (this.isProcessing) return;
-            this.input = "";
-            this.feedbackMessage = "";
-            this.feedbackColor = null;
-            
-            if (AM && AM.play) {
-                AM.play('buttonBeep');
-            }
-        });
-        R.add(this.clearBtn, 12);
-        
-        // Backspace button
-        this.backspaceBtn = new TextButton(11, 5, 1, "BACK", () => {
-            if (this.isProcessing) return;
-            this.input = this.input.slice(0, -1);
-            this.feedbackMessage = "";
-            this.feedbackColor = null;
-            
-            if (AM && AM.play) {
-                AM.play('buttonBeep');
-            }
-        });
-        R.add(this.backspaceBtn, 12);
-        
-        // Enter button
-        this.enterBtn = new TextButton(11, 6, 1, "ENTER", () => {
-            if (this.isProcessing) return;
-            this.submitPassword();
-        });
-        R.add(this.enterBtn, 12);
-    }
-
-    cleanup() {
-        // Clean up interface
-        R.selfRemove(this._exitBtn);
-        if (this.background) {
-            R.remove(this.background);
-        }
-        
-        // Remove letter buttons
-        this.letterButtons.forEach(btn => R.remove(btn));
-        
-        // Remove control buttons
-        R.remove(this.clearBtn);
-        R.remove(this.backspaceBtn);
-        R.remove(this.enterBtn);
-        
-        R.remove(this);
-        
-        // Clear active interface flag and call onExit callback
-        window.activeInterface = null;
-        this.onExit();
-    }
-
-    draw() {
-        const u = VM.u();
-        const v = VM.v();
-
-        push();
-        
-        // Draw keypad panel overlay
-        fill(40, 40, 60, 200);
-        stroke(100);
-        strokeWeight(4);
-        rect(1.5 * u, 1 * v, 13 * u, 7 * v);
-        
-        // Draw title
-        fill(200);
-        textAlign(CENTER, CENTER);
-        textFont(terminusFont);
-        textSize(0.4 * v);
-        text("LIFE SUPPORT ACCESS", 8 * u, 1.8 * v);
-        
-        // Draw input display area
-        fill(20, 20, 30);
-        stroke(150);
-        strokeWeight(2);
-        rect(2 * u, 2.5 * v, 8 * u, 0.8 * v);
-        
-        // Set text color based on feedback
-        if (this.feedbackColor === 'green') {
-            fill(0, 255, 0); // Green for correct
-        } else if (this.feedbackColor === 'red') {
-            fill(255, 0, 0); // Red for incorrect
-        } else {
-            fill(255, 255, 255); // White for normal
-        }
-        
-        // Draw input text
-        textAlign(LEFT, CENTER);
-        textSize(0.3 * v);
-        textFont(terminusFont);
-        
-        // Display actual letters instead of asterisks for better usability
-        text(this.input, 2.2 * u, 2.9 * v);
-        
-        // Draw cursor
-        if (!this.isProcessing && frameCount % 60 < 30) { // Blinking cursor
-            const cursorX = 2.2 * u + textWidth(this.input);
-            stroke(255);
-            line(cursorX, 2.6 * v, cursorX, 3.2 * v);
-        }
-        
-        // Draw feedback message
-        if (this.feedbackMessage) {
-            fill(this.feedbackColor === 'green' ? color(0, 255, 0) : 
-                 this.feedbackColor === 'red' ? color(255, 0, 0) : color(255));
-            textAlign(CENTER, CENTER);
-            textSize(0.25 * v);
-            text(this.feedbackMessage, 8 * u, 7.5 * v);
-        }
-        fill(50, 80, 50, 180);
-        stroke(120, 200, 120);
-        strokeWeight(2);
-        rect(3.5 * u, 6.5 * v, 4 * u, 0.8 * v, 0.2 * u);
-
-        fill(200, 255, 200);
-        textAlign(CENTER, CENTER);
-        textFont(terminusFont);
-        textSize(0.3 * v);
-        text("LIFE IS GOOD", 5.5 * u, 6.9 * v);
-        pop();
     }
 
     update(dt) {
-        // Handle feedback timeout
-        if (this.isProcessing) {
-            // Feedback will be cleared by the timeout
-        }
-    }
-
-    keyPressed() {
-        // Ensure this keypad is the active interface
-        if (window.activeInterface !== 'LifeSupportKeypad') {
-            return false;
-        }
-
-        // ESC key exits the keypad
-        if (keyCode === ESCAPE) {
-            this.cleanup();
-            return true;
-        }
-        
-        // All other input is handled by buttons
-        return true;
-    }
-
-    submitPassword() {
-        if (this.input.length === 0) {
-            this.showFeedback("Enter a password", "red");
+        if (!this.drag) {
+            this.sprite.setPos(this.x, this.y); // make sure we reset to original position
             return;
         }
 
-        this.isProcessing = true;
-        
-        if (this.input === this.password) {
-            this.showFeedback("ACCESS GRANTED", "green");
-            
-            // Play success sound
-            if (AM && AM.play) {
-                AM.play('successPinpad');
-            }
-            
-            // Set game state to indicate life support access
-            if (GS && GS.set) {
-                GS.set("Life Support Access Granted");
-            }
-            
-            // Transition to life support room after delay
-            setTimeout(() => {
-                this.cleanup();
-                if (WORLD && WORLD.gotoRoom) {
-                    WORLD.gotoRoom(3, 0); // Room D is index 3
-                }
-            }, 1500);
-            
-        } else {
-            this.showFeedback("ACCESS DENIED", "red");
-            
-            // Play failure sound
-            if (AM && AM.play) {
-                AM.play('failurePinpad');
-            }
-            
-            setTimeout(() => {
-                this.input = "";
-                this.feedbackMessage = "";
-                this.feedbackColor = null;
-                this.isProcessing = false;
-            }, 1500);
+        const m = VM.mouse();
+
+        this.x = m.x - this.dragDx;
+        this.y = m.y - this.dragDy;
+
+        this.sprite.setPos(this.x, this.y); // update position on drag
+    }
+
+    mousePressed(p) {
+        if (this.isMouseInBounds(p?.x, p?.y)) {
+            const m = VM.mouse();
+            this.drag = true;
+
+            // change in positions on drag
+            this.dragDx = m.x - this.x;
+            this.dragDy = m.y - this.y;
         }
     }
 
-    showFeedback(message, color) {
-        this.feedbackMessage = message;
-        this.feedbackColor = color;
+    mouseReleased() {
+        // pass current coordinates into itemUsed callback (before teleporting to initial x and y)
+        if(this.drag){
+            this.itemUsed(this.id, this.x, this.y, this.width, this.height, this.textNotificationHandler);
+        }
+        
+        this.drag = false;
+
+        this.x = this.initialx;
+        this.y = this.initialy;
+
+    }
+
+    // make the item actually visible
+    onEnter(){
+        R.add(this.sprite, 16)
+
+        this.active = true;
+    }
+
+    onExit(){
+        R.remove(this.sprite)
+        this.active = false;
     }
 }
 
-// Factory function to create and show the keypad
-function showLifeSupportKeypad(onExit = () => {}) {
-    const keypad = new LifeSupportKeypad(onExit);
-    R.add(keypad, 30); // High z-index to render on top
-    return keypad;
+/**
+ * Class for static components that will be fixed my movable items
+ */
+class ElectricalComponent {
+    constructor(id, x, y, imgName, scale, onClick=()=>{}) {
+        this.id = id;
+        this.x = x;
+        this.y = y;
+        this.click = onClick;
+
+        this.sprite = SM.get(imgName)
+        this.sprite.setPos(this.x, this.y);
+        this.sprite.setScale(scale);
+
+        [this.width, this.height] = this.sprite.getWH()
+
+        // add to repair target registry for collision checking with items
+        repairTargetRegistry[id] = {x:this.x-0.3, y:this.y-0.3, w:this.width, h:this.height};
+    }
+
+    isMouseInBounds(mx, my) {
+        const m = mx != null && my != null ? { x: mx, y: my } : VM.mouse();
+        return (
+            m.x >= this.x &&
+            m.x <= this.x + this.width &&
+            m.y >= this.y &&
+            m.y <= this.y + this.height
+        );
+    }
+
+    update(dt) {
+    }
+
+    mousePressed(p) {
+        if (this.isMouseInBounds(p?.x, p?.y)) {
+            this.click(this);
+        }
+    }
+
+    mouseReleased() {
+        this.drag = false;
+    }
+
+    onEnter(){
+        R.add(this.sprite, 13)
+    }
+
+    onExit(){
+        R.remove(this.sprite)
+    }
+}
+
+/**
+ * Repair Tool Cabinet holds moveable items
+ */
+class RepairToolCabinet {
+    constructor(x, y, scale, notifHandler, onClick = () => {}) {
+        this.x = x;
+        this.y = y;
+        this.scale = scale;
+
+        // constants
+        this.clicksToBreak = 10; // break lock
+        // for hitbox
+        this.width = 4;
+        this.height = 3;
+
+        // cabinet
+        this.closedSprite = SM.get("closedRepair");
+        this.closedSprite.setPos(this.x+0.5, this.y);
+        this.closedSprite.setScale(this.scale);
+
+        this.openSprite = SM.get("openRepair");
+        this.openSprite.setPos(this.x-0.6, this.y);
+        this.openSprite.setScale(this.scale+0.1);
+
+        // items - scale and pos manually set for now
+        this.voltimeter = new MoveableRepairItem(this.x + 2.4, this.y + 2.02, 'voltimeter', 0.08, notifHandler, repairItemUsed);
+        this.electricalTape = new MoveableRepairItem(this.x + 1.3, this.y + 2.25, 'electricalTape', 0.1, notifHandler, repairItemUsed);
+
+        // --- lock visuals and mechanics
+        // should be in lower right corner of repair tool cabinet, manually placed for now
+        this.lockSprite = SM.get("rustyLock");
+        this.lockSprite.setPos(this.x + 2.6, this.y + 2.5);
+        this.lockSprite.setScale(0.5);
+
+        this.animationPlaying = false;
+        this.clicks = 0;
+        this.lockBroken = false;
+
+        this.onClick = onClick;
+    }
+
+    isMouseInBounds(mx, my) {
+        const m = mx != null && my != null ? { x: mx, y: my } : VM.mouse();
+
+        return (
+            m.x >= this.x &&
+            m.x <= this.x + this.width &&
+            m.y >= this.y &&
+            m.y <= this.y + this.height
+        );
+    }
+
+    update(dt) {
+        // MAKE THIS TIME BASED NOT EXECUTION COUNT BASED
+        if (this.animationPlaying) {
+            /* you can play around with these values for the animation. Just note that rotatio is in radians, so PI/180 is 1 degree.
+            I made the speed and range of rotation increase with clicks so it seems like it's being pulled more the more u click it
+            */
+            this.lockSprite.setRotation(
+                this.lockSprite.rotation + this.clicks * (Math.PI / 180)
+            );
+
+            if (this.lockSprite.rotation > this.clicks * (Math.PI / 45)) {
+                this.lockSprite.rotation = 0;
+                this.animationPlaying = false;
+            }
+        }
+    }
+
+    onEnter() {
+        R.add(this.closedSprite, 9);
+        if(!this.lockBroken) {
+            R.add(this.lockSprite, 10);
+        }
+    }
+    onExit() {
+        R.remove(this.closedSprite);
+        R.remove(this.lockSprite);
+        R.add(this.openSprite);
+
+        // call onexit to cleanup the moveable objects after cabinet has been opened
+        this.voltimeter.onExit()
+        this.electricalTape.onExit()
+    }
+
+    mousePressed(p) {
+        if (this.isMouseInBounds(p?.x, p?.y)) {
+            if(!this.lockBroken){
+                AM.play("doorLock");
+            }
+            
+            this.onClick(this.clicks);
+
+            // play quick animation to show lock moving
+            this.animationPlaying = true;
+            this.clicks += 1;
+
+            if (this.clicks > this.clicksToBreak) {
+                if(!this.lockBroken){
+                    AM.play("lockBreak");
+                }
+                
+                this.lockBroken = true;
+
+                R.remove(this.closedSprite);
+                R.remove(this.lockSprite);
+
+                R.add(this.openSprite);
+
+                // add items and call their onenters
+                R.add(this.voltimeter)
+                this.voltimeter.onEnter();
+                
+                R.add(this.electricalTape)
+                this.electricalTape.onEnter();
+            }
+        }
+    }
+}
+
+/**
+ * Component holder will hold the ElectricalComponent objects
+ */
+class ComponentHolderObject{
+    constructor(x, y, scale, viewNotifHandler, onClick = () => {}) {
+        this.x = x;
+        this.y = y;
+        this.scale = scale;
+        this.textNotificationHandler = viewNotifHandler;
+
+        this.sprite = SM.get('componentHolder');
+        this.sprite.setPos(this.x, this.y);
+        this.sprite.setScale(this.scale);
+
+        [this.width, this.height] = this.sprite.getWH()
+
+        // manually position electrical components
+        const componentClickMessage = () => {
+            if(Math.random() > 0.5){
+                this.textNotificationHandler.addText("Maybe one of these electrical components is broken.");
+            }
+            else{
+                this.textNotificationHandler.addText("Perhaps I can repair this?");
+            }
+        }
+
+        this.ecs = [];
+        this.ecs.push(new ElectricalComponent(0, 1.8, 6, 'cpu1', 0.8, componentClickMessage))
+        this.ecs.push(new ElectricalComponent(1, 1.9, 7.2, 'cpu2', 0.7, componentClickMessage))
+        this.ecs.push(new ElectricalComponent(2, 7.2, 6.6, 'cpu3', 0.75, componentClickMessage))
+        this.ecs.push(new ElectricalComponent(3, 5.3, 6.3, 'cpu4', 0.75, componentClickMessage))
+
+        this.onClick = onClick;
+    }
+
+    isMouseInBounds(mx, my) {
+        const m = mx != null && my != null ? { x: mx, y: my } : VM.mouse();
+
+        return (
+            m.x >= this.x &&
+            m.x <= this.x + this.width &&
+            m.y >= this.y &&
+            m.y <= this.y + this.height
+        );
+    }
+
+    onEnter() {
+        R.add(this.sprite, 9)
+
+        for(let ec of this.ecs){
+            R.add(ec, 10);
+            ec.onEnter();
+        }
+    }
+    onExit() {
+        R.remove(this.sprite);
+        for(let ec of this.ecs){
+            R.remove(ec);
+            ec.onExit();
+        }
+    }
+
+    mousePressed(p) {
+        if (this.isMouseInBounds(p?.x, p?.y)) {
+            this.onClick(this);
+        }
+    }
+}
+
+class RepairView extends View {
+    constructor() {
+        super(0, 0, 0, "");
+        this.background = SM.get("eastWallBreaker");
+        this.background.setSize(16, 9);
+
+        this.textNotificationHandler = new TextNotificationHandler(0.5, 0.85, {
+            holdFadeoutFor: 2.5,
+        });
+
+        this.repairCabinet = new RepairToolCabinet(0.9, 0.9, 1, this.textNotificationHandler, (clickCount) => {
+            if (clickCount == 0) {
+                this.textNotificationHandler.addText(
+                    "A lock seems to be holding this cabinet shut."
+                );
+            } else if (clickCount == 2) {
+                this.textNotificationHandler.addText("This lock looks old...");
+            }
+        });
+
+        this.componentHolder = new ComponentHolderObject(1.2, 5, 1.9, this.textNotificationHandler, ()=>{});
+
+        const TOTAL_COMPONENTS = this.componentHolder.ecs.length; 
+        const RANDOM_COMPONENT = Math.trunc(Math.random() * TOTAL_COMPONENTS );
+        BROKEN_COMPONENT_ID = RANDOM_COMPONENT;
+        console.log(`Broken component ID set to ${BROKEN_COMPONENT_ID}`);
+
+
+        this.slidingDoor = new StandaloneSlidingDoor(12, 2.3, 1, () => {}, true, 2, null, 4, 3, () => {
+            return GS.is('fixedElectricalComponent')
+        });
+
+        this.slidingDoor.setRoom(this);
+    }
+
+    update(dt) {
+        // pass time to fading logic for text notifications
+        this.textNotificationHandler.update(dt);
+        this.slidingDoor.update(dt);
+    }
+
+    draw() {
+        this.slidingDoor.draw();
+    }
+
+    mousePressed(m) {
+        if (this.slidingDoor.mousePressed(m)) {return true;} // stop propagation
+    }
+
+    onEnter() {
+        R.add(this.background);
+        R.add(this.repairCabinet);
+        R.add(this.componentHolder);
+
+        // call on enters
+        this.repairCabinet.onEnter();
+        this.componentHolder.onEnter();
+        this.slidingDoor.onEnter();
+
+        
+    }
+    
+    onExit() {
+        R.remove(this.background);
+        R.remove(this.repairCabinet);
+        R.remove(this.componentHolder);
+
+        this.textNotificationHandler.cleanup()
+        
+        // call on exits
+        this.repairCabinet.onExit();
+        this.componentHolder.onExit();
+        this.slidingDoor.onExit();
+    }
 }
