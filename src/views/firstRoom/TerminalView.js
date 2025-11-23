@@ -66,7 +66,7 @@ export class TerminalView {
 
         // input row + blinking cursor
         const cursor = frameCount % 60 < 30 ? "_" : " ";
-        const inputLine = "> " + this.input + cursor;
+        const inputLine = "> " + input + cursor;
 
 
         fill(0, 255, 0, 100);
