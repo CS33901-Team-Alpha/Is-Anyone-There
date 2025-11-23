@@ -10,10 +10,10 @@ export class FileCabinetModel {
 
     containsPoint(mx, my){
     return (
-            m.x >= this.x &&
-            m.x <= this.x + this.width &&
-            m.y >= this.y &&
-            m.y <= this.y + this.height
+            mx >= this.x &&
+            mx <= this.x + this.width &&
+            my >= this.y &&
+            my <= this.y + this.height
         );
     }
 }
@@ -24,3 +24,6 @@ export class OpenCabinetModel {
         this.active = false; // whether cabinet is open
     }
 }
+
+
+export default FileCabinetModel;

@@ -49,3 +49,5 @@ class TerminalModel {
         }
     }
 }
+
+export default TerminalModel;
