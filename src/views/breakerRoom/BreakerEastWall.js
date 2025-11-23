@@ -83,10 +83,6 @@ class EastWall extends View {
   }
 
   onEnter() {
-    AM.stop("startGame")
-    if(!AM.isLooping("technoLoop")){
-            AM.loop('technoLoop')
-        }
     R.add(this.background);
     if (this.keypadGraphic) {
       R.add(this.keypadGraphic);
