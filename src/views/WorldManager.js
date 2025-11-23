@@ -111,6 +111,11 @@ class WorldManager {
         if(currentIndex != 5){ // leaving botanical botanical
             IM.cleanup()
         }
+        if(currentIndex == 7){ // entering map room
+            AM.stopAll();
+            AM.loop("engineRoom");
+            AM.stop("goodArrow2");
+        }
         if(currentIndex == 6){ // entering map room
             AM.stopAll();
             AM.loop("mapLoop");
@@ -138,7 +143,7 @@ class WorldManager {
         }
         if(currentIndex == 1){ // entering breaker rooms
             AM.stopAll();
-            AM.loop("technoLoop");
+            AM.loop("technoLoop2");
             AM.stop("goodArrow2");
         }
         if(currentIndex == 0){ // entering beginning room
