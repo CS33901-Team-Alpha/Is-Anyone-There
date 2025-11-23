@@ -1,102 +1,86 @@
-class FileCabinetView {
-    constructor(id, x, y, scale, img) {
-        this.id = id;
-        this.x = x;
-        this.y = y;
-        this.scale = scale;
+import { Button } from '../../components/Button.js';
+import { TextNotificationHandler } from '../../components/TextNotification.js';
+import { Renderer } from '../../core/Renderer.js';
 
-        this.background = SM.get(img);
-        this.background.setPos(this.x, this.y);
-        this.background.setScale(this.scale);
 
-        this.width = 1.93;
-        this.height = 2.3;
 
-        this.highlight = new HighlightEvent(this.x, this.y, this.width, this.height);
 
-        this.onClickCallback = () => { };
-    }
-    // for controller 
-    onClick(callback) {
-        this.onClickCallback = callback;
+
+export class FileCabinetView {
+    constructor(model) {
+        this.model = model;
+        this.sprite = null;
+        this.highlight = null;
+        this.spriteName = `FileCabinet${this.model.id + 1}`;
     }
 
-    isMouseInBounds(mx, my) {
-        return (
-            m.x >= this.x &&
-            m.x <= this.x + this.width &&
-            m.y >= this.y &&
-            m.y <= this.y + this.height
+    init() {
+        this.sprite = SM.get(this.spriteName);
+        if (this.sprite) {
+            this.sprite.setPos(this.model.x, this.model.y);
+            this.sprite.setScale(this.model.scale);
+        } else {
+            console.warn(`FileCabinetView: sprite '${this.spriteName}' not found`);
+        }
+
+        this.highlight = new TextNotificationHandler(
+            this.model.x,
+            this.model.y,
+            this.model.width,
+            this.model.height
         );
     }
 
-    mousePressed(p) {
-        if (this.isMouseInBounds(p?.x, p?.y)) {
-            this.onClickCallback(this.id);
-        }
-    }
+    draw() { } // sprites handled by renderer
 
     onEnter() {
-        R.add(this.background, 9);
+        if (this.sprite) R.add(this.sprite, 9);
         R.add(this.highlight);
     }
-
     onExit() {
-        R.remove(this.background);
+        if (this.sprite) R.remove(this.sprite);
         R.remove(this.highlight);
     }
 }
 
-class OpenCabinetUIView {
-    constructor() {
-        this.numberImage = null;
-        this._closeBtn = null;
-        this.onExitCallback = () => { };
-    }
-
-    onClick(number) {
-        const nameMap = {
-            1: "firstNumber",
-            2: "secondNumber",
-            3: "thirdNumber",
-            4: "fourthNumber",
-            5: "fifthNumber",
-            6: "sixthNumber",
-            7: "seventhNumber",
-            8: "eighthNumber",
-            9: "ninthNumber"
-        };
-
-        this.numberImage = SM.get(nameMap[number]);
-        this.numberImage.setPos(7, 3.4);
-        this.numberImage.setScale(4);
-        R.add(this.numberImage, 15);
-
-        // close button removes itself and calls cleanup onRemove
+export class OpenCabinetUIView {
+    constructor(model) {
+        this.model = model;
         this._closeBtn = new Button(11.5, 2.4, 0.6, (self) => {
-        this.onRemove()
-        this.onExitCallback();
-        AM.play('drawerClose')
+            R.selfRemove(self);
+            R.remove(this);
+            this.model.hide();
+            AM.play('drawerClose');
         });
-        R.add(this._closeBtn, 11);
+
+        this.numberImage = null;
+        this.spriteName = 'secondNumber';
     }
 
-    onRemove(){
-        if(this.numberImage) R.remove(this.numberImage);
-        if(this._closeBtn) R.remove(this._closeBtn);
+    init() {
+        this.sprite = SM.get(this.spriteName); 
+        if (!this.sprite) console.warn('sprite', this.spriteName, 'not found');
     }
 
-    onExit(callback){
-        this.onExitCallback = callback;
-    }
-
-    draw(){
+    draw() {
+        if (!this.model.visible) return;
         const u = VM.u(), v = VM.v();
         push();
-        fill(169,169,169);
+        fill(169, 169, 169);
         stroke(255);
         strokeWeight(2);
         rect(3.5 * u, 2.2 * v, 9 * u, 4.6666 * v, 10);
         pop();
     }
+
+    onAdd() {
+        if (!this.model.visible) return;
+        R.add(this._closeBtn, 11);
+        if (this.numberImage) R.add(this.numberImage, 15);
+    }
+    onRemove() {
+        R.remove(this._closeBtn);
+        if (this.numberImage) R.remove(this.numberImage);
+    }
 }
+

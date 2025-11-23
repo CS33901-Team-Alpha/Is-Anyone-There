@@ -1,4 +1,4 @@
-class TerminalView { 
+export class TerminalView { 
     render({input, history, maxLines}){
         const u = VM.u(); 
         const v = VM.v(); 
@@ -23,7 +23,6 @@ class TerminalView {
 
         // header text w/ glow
         textAlign(LEFT, CENTER);
-        textFont(terminusFont);
         textSize(0.45 * v);
 
         fill(0, 255, 0, 150);
@@ -46,14 +45,13 @@ class TerminalView {
         const lineH = 0.6 * v;
 
         textAlign(LEFT, TOP);
-        textFont(terminusFont);
         textSize(0.4 * v);
 
-        const startIndex = Math.max(0, this.history.length - this.maxLines);
+        const startIndex = Math.max(0, history.length - maxLines);
         let y = top;
 
-        for (let i = startIndex; i < this.history.length; i++) {
-        const lineText = "> " + this.history[i];
+        for (let i = startIndex; i < history.length; i++) {
+        const lineText = "> " + history[i];
 
         // glow
         fill(0, 255, 0, 100);
@@ -69,6 +67,7 @@ class TerminalView {
         // input row + blinking cursor
         const cursor = frameCount % 60 < 30 ? "_" : " ";
         const inputLine = "> " + this.input + cursor;
+
 
         fill(0, 255, 0, 100);
         text(inputLine, left + 1, y + 1);

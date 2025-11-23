@@ -1,4 +1,4 @@
-class Button {
+export class Button {
   constructor(x, y, size, onClick = () => {}) {
     this.x = x;
     this.y = y;

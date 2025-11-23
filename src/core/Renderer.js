@@ -1,4 +1,4 @@
-class Renderer {
+export class Renderer {
     /**
      * Access this via the global R object in your views/objects. 
      * For explanation and help see DOCUMENTATION.md in the root directory of the project.
@@ -89,3 +89,5 @@ class Renderer {
         this._toRemove.clear();
     }
 }
+
+window.Renderer = Renderer;

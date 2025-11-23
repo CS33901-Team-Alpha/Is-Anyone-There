@@ -6,7 +6,7 @@
  * - Do NOT import anything; this attaches VM to window.
  */
 
-export const VM = {
+window.VM = {
 
     // pixels-per-unit (updated after canvas size changes)
     U: 0,

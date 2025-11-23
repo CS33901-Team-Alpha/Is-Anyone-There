@@ -1,4 +1,4 @@
-class WorldManager {
+export class WorldManager {
     constructor() {
         this.rooms = [];   // array of ViewManager instances
         this.current = 0;  // index of active room

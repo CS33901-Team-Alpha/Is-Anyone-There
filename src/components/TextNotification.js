@@ -41,7 +41,7 @@ class DisplayText{
     getY(){ return this.y}
 }
 
-class TextNotificationHandler {
+export class TextNotificationHandler {
     /**
      * Class for handling fading notifications.
      * 

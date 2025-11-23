@@ -1,4 +1,4 @@
-class TerminalModel {
+export class TerminalModel {
     constructor(){
         this.input = ""; 
         this.history = []; 

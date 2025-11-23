@@ -25,7 +25,7 @@ class View {
   onExit() {}
 }
 
-class ViewManager {
+export class ViewManager {
   constructor() {
     this.Views = [];
     this._currentView = 0;

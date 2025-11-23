@@ -1,10 +1,133 @@
-let fileCabinet;
+export class SpriteManager {
+    constructor() {
+        this.sprites = new Map();
+    }
 
-function loadSprites() {
+    add(name, img) {
+        const sprite = new Sprite(img);
+        this.sprites.set(name, sprite);
+    }
+
+    get(name) {
+        return this.sprites.get(name);
+    }
+}
+
+class Sprite {
+    constructor(src, x = 0, y = 0, scale = 1) {
+        this.src = src;
+        this.x = x;
+        this.y = y;
+        this.scale = scale / 100;
+        this.customSize = null;
+        this.rotation = 0; // in radians
+    }
+
+    clone() {
+        const copy = new Sprite(this.src);
+        copy.x = this.x;
+        copy.y = this.y;
+        copy.scale = this.scale;       // keep normalized scale (0..1)
+        copy.customSize = this.customSize ? { ...this.customSize } : null;
+        return copy;
+    }
+
+
+    setScale(scale) {
+        this.scale = scale / 100;
+        this.customSize = null;
+    }
+
+    setSize(w, h) {
+        this.customSize = { w, h};
+    }
+
+    setPos(x, y) {
+        this.x = x;
+        this.y = y; 
+    }
+
+    setRotation(r){
+        this.rotation = r;
+    }
+
+    getNativeSize() {
+        return [this.src.width, this.src.height];
+    }
+
+    getVirtualSize() {
+        const u = VM.u();
+        const v = VM.v();
+        const dpr = pixelDensity(); // or window.devicePixelRatio
+        return [
+            (this.src.width / dpr) * this.scale / u,
+            (this.src.height / dpr) * this.scale / v
+        ];
+    }
+
+    // temporary because idk what getvirtualsize returns
+    // should give us the w and h in virtual units (0-16, and 0-9)
+    getWH(){
+        let w, h
+        if (this.customSize) {
+            w = this.customSize.w;
+            h = this.customSize.h;
+        } else {
+            w = this.src.width * this.scale;
+            h = this.src.height * this.scale;
+        }
+
+        return [w, h]
+    }
+
+    draw() {
+        const u = VM.u();
+        const v = VM.v();
+
+        let w, h
+        if (this.customSize) {
+            w = this.customSize.w * u;
+            h = this.customSize.h * v;
+        } else {
+            w = this.src.width * this.scale * u;
+            h = this.src.height * this.scale * v;
+        }
+
+        push();
+        
+        if(this.rotation != 0){
+            translate(this.x*u, this.y*v) // change origin for rotation to be around current sprite
+            rotate(this.rotation)
+            translate(-(this.x*u), -(this.y*v)) // change origin back for drawing
+        }
+        image(this.src, this.x * u, this.y * v, w, h )
+        pop();
+    }
+
+    update(dt) {
+
+    }
+}
+
+if (!window.SM) {
+    window.SM = new SpriteManager();
+}
+
+export const SM = window.SM;
+
+
+
+
+export function loadSprites() {
     /**
      * Preload your sprites as images in this function, to use them in your code, use global SM
      * object's SM.get('name').
      */
+
+    if (!window.SM) {
+        console.warn("loadSprites: SpriteManager not present");
+    }
+    console.log("loadSprites: starting to add sprites");
 
     SM.add("FileCabinet", loadImage('assets/object/fileCabinet.webp'));
     SM.add("NorthWall", loadImage('assets/background/pcWall.webp')); 
@@ -120,113 +243,4 @@ function loadSprites() {
 
 
 
-class SpriteManager {
-    constructor() {
-        this.sprites = new Map();
-    }
 
-    add(name, img) {
-        const sprite = new Sprite(img);
-        this.sprites.set(name, sprite);
-    }
-
-    get(name) {
-        return this.sprites.get(name);
-    }
-}
-
-class Sprite {
-    constructor(src, x = 0, y = 0, scale = 1) {
-        this.src = src;
-        this.x = x;
-        this.y = y;
-        this.scale = scale / 100;
-        this.customSize = null;
-        this.rotation = 0; // in radians
-    }
-
-    clone() {
-        const copy = new Sprite(this.src);
-        copy.x = this.x;
-        copy.y = this.y;
-        copy.scale = this.scale;       // keep normalized scale (0..1)
-        copy.customSize = this.customSize ? { ...this.customSize } : null;
-        return copy;
-    }
-
-
-    setScale(scale) {
-        this.scale = scale / 100;
-        this.customSize = null;
-    }
-
-    setSize(w, h) {
-        this.customSize = { w, h};
-    }
-
-    setPos(x, y) {
-        this.x = x;
-        this.y = y; 
-    }
-
-    setRotation(r){
-        this.rotation = r;
-    }
-
-    getNativeSize() {
-        return [this.src.width, this.src.height];
-    }
-
-    getVirtualSize() {
-        const u = VM.u();
-        const v = VM.v();
-        const dpr = pixelDensity(); // or window.devicePixelRatio
-        return [
-            (this.src.width / dpr) * this.scale / u,
-            (this.src.height / dpr) * this.scale / v
-        ];
-    }
-
-    // temporary because idk what getvirtualsize returns
-    // should give us the w and h in virtual units (0-16, and 0-9)
-    getWH(){
-        let w, h
-        if (this.customSize) {
-            w = this.customSize.w;
-            h = this.customSize.h;
-        } else {
-            w = this.src.width * this.scale;
-            h = this.src.height * this.scale;
-        }
-
-        return [w, h]
-    }
-
-    draw() {
-        const u = VM.u();
-        const v = VM.v();
-
-        let w, h
-        if (this.customSize) {
-            w = this.customSize.w * u;
-            h = this.customSize.h * v;
-        } else {
-            w = this.src.width * this.scale * u;
-            h = this.src.height * this.scale * v;
-        }
-
-        push();
-        
-        if(this.rotation != 0){
-            translate(this.x*u, this.y*v) // change origin for rotation to be around current sprite
-            rotate(this.rotation)
-            translate(-(this.x*u), -(this.y*v)) // change origin back for drawing
-        }
-        image(this.src, this.x * u, this.y * v, w, h )
-        pop();
-    }
-
-    update(dt) {
-
-    }
-}
