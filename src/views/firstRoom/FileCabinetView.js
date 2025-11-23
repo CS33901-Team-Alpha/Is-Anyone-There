@@ -1,31 +1,28 @@
 import { Button } from '../../components/Button.js';
-import { TextNotificationHandler } from '../../components/TextNotification.js';
-import { Renderer } from '../../core/Renderer.js';
 
 export class FileCabinetView {
-    constructor() {
-        this.sprite = null;
-        this.highlight = null;
-    }
+    constructor(model) {
+        this.model = model;
+        this.sprite = SM.get(model.spriteName);
 
-    /**
-     * @param {Object} config - { spriteName, x, y, scale, width, height }
-     */
-    init(config) {
-        const { spriteName, x, y, scale, width, height } = config;
-
-        this.sprite = SM.get(spriteName);
         if (this.sprite) {
-            this.sprite.setPos(x, y);
-            this.sprite.setScale(scale);
+            this.sprite.setPos(model.x, model.y);
+            this.sprite.setScale(model.scale);
         } else {
-            console.warn(`FileCabinetView: sprite '${spriteName}' not found`);
+            console.warn(`FileCabinetView: sprite '${model.spriteName}' not found`);
         }
 
-        this.highlight = new TextNotificationHandler(x, y, width, height);
+        this.highlight = new TextNotificationHandler(
+            model.x,
+            model.y,
+            model.width,
+            model.height
+        );
     }
 
-    draw() { } // handled by Renderer
+    draw() {
+        // sprites handled by renderer
+    }
 
     onEnter() {
         if (this.sprite) R.add(this.sprite, 9);
@@ -39,28 +36,35 @@ export class FileCabinetView {
 }
 
 export class OpenCabinetUIView {
-    constructor() {
+    constructor(model) {
+        this.model = model;
+
         this._closeBtn = new Button(11.5, 2.4, 0.6, (self) => {
             R.selfRemove(self);
             R.remove(this);
+            this.model.hide();
             AM.play('drawerClose');
         });
-        this.sprite = null;
+
+        const spriteName = `secondNumber`;
+        this.numberImage = SM.get(spriteName) || SM.get('secondNumber');
+
+        if (this.numberImage) {
+            this.numberImage.setPos(6.5, 3);
+            this.numberImage.setScale(0.75);
+        } else {
+            console.warn(
+                `OpenCabinetUIView: neither '${spriteName}' nor 'secondNumber' found`
+            );
+        }
     }
 
-    /**
-     * @param {Object} config - { spriteName, visible }
-     */
-    init(config) {
-        const { spriteName } = config;
-        this.sprite = SM.get(spriteName); 
-        if (!this.sprite) console.warn('sprite', spriteName, 'not found');
-    }
+    draw() {
+        if (!this.model.visible) return;
 
-    draw(config) {
-        if (!config.visible) return;
+        const u = VM.u(),
+            v = VM.v();
 
-        const u = VM.u(), v = VM.v();
         push();
         fill(169, 169, 169);
         stroke(255);
@@ -69,14 +73,14 @@ export class OpenCabinetUIView {
         pop();
     }
 
-    onAdd(config) {
-        if (!config.visible) return;
+    onAdd() {
+        if (!this.model.visible) return;
         R.add(this._closeBtn, 11);
-        if (this.sprite) R.add(this.sprite, 15);
+        if (this.numberImage) R.add(this.numberImage, 15);
     }
 
     onRemove() {
         R.remove(this._closeBtn);
-        if (this.sprite) R.remove(this.sprite);
+        if (this.numberImage) R.remove(this.numberImage);
     }
 }

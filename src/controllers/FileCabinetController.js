@@ -1,6 +1,5 @@
 import { FileCabinetView, OpenCabinetUIView } from '../views/firstRoom/FileCabinetView.js';
 import { FileCabinetModel, OpenCabinetModel } from '../models/puzzles/first/FileCabinetModel.js';
-import { Button } from '../components/Button.js';
 import { TextNotificationHandler } from "../components/TextNotification.js";
 
 

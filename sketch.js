@@ -44,24 +44,24 @@ window.setup = function () {
 
     R = new Renderer();
 
-    // Terminal MVC
-    terminalMVC = {
-        model: new TerminalModel(),
-        view: new TerminalView(),
-        ctrl: null,
-        draw() {
-            if (this.ctrl) this.ctrl.draw();
-        },
-        keyPressed() {
-            if (this.ctrl) this.ctrl.keyPressed();
-        }
-    };
-    terminalMVC.ctrl = new TerminalController(terminalMVC.model, terminalMVC.view);
-    R.add(terminalMVC, 1000);
+    // // Terminal MVC
+    // terminalMVC = {
+    //     model: new TerminalModel(),
+    //     view: new TerminalView(),
+    //     ctrl: null,
+    //     draw() {
+    //         if (this.ctrl) this.ctrl.draw();
+    //     },
+    //     keyPressed() {
+    //         if (this.ctrl) this.ctrl.keyPressed();
+    //     }
+    // };
+    // terminalMVC.ctrl = new TerminalController(terminalMVC.model, terminalMVC.view);
+    // R.add(terminalMVC, 1000);
 
-    fileCabinetMVC = {
-      
-    }
+    fileCabinetMVC = new FileCabinetController(); 
+    R.add(fileCabinetMVC, 1000);
+
 
 };
 
