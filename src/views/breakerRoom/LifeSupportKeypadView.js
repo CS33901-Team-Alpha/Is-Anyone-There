@@ -241,7 +241,16 @@ class LifeSupportKeypad {
             textSize(0.25 * v);
             text(this.feedbackMessage, 8 * u, 7.5 * v);
         }
-        
+        fill(50, 80, 50, 180);
+        stroke(120, 200, 120);
+        strokeWeight(2);
+        rect(3.5 * u, 6.5 * v, 4 * u, 0.8 * v, 0.2 * u);
+
+        fill(200, 255, 200);
+        textAlign(CENTER, CENTER);
+        textFont(terminusFont);
+        textSize(0.3 * v);
+        text("LIFE IS GOOD", 5.5 * u, 6.9 * v);
         pop();
     }
 
