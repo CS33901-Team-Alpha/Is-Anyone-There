@@ -66,6 +66,7 @@ function preload() {
   AM.add("door-lock", loadSound('assets/sounds/door-lock.mp3'));
   AM.add("doorOpen", loadSound('assets/sounds/doorOpen.mp3'));
   AM.add("technoLoop", loadSound('assets/sounds/technoLoop.mp3'));
+  AM.add("technoLoop2", loadSound('assets/sounds/technoLoop2.mp3'));
   AM.add("startGame", loadSound('assets/sounds/startGame.mp3'));
   AM.add("cryoLoop", loadSound('assets/sounds/cryoLoop.mp3'));
     //sounds added recently
@@ -93,6 +94,13 @@ function preload() {
   AM.add('electricalShock', loadSound('assets/sounds/electricalShock.mp3'))
   AM.add('pressureRelease', loadSound('assets/sounds/pressureRelease.mp3'))
   AM.add('radiation', loadSound('assets/sounds/radiationSound.mp3'))
+  AM.add('mapClick', loadSound('assets/sounds/mapClick.mp3'))
+  AM.add('mapComplete', loadSound('assets/sounds/mapComplete.mp3'))
+  AM.add('mapInsert', loadSound('assets/sounds/mapInsert.mp3'))
+  AM.add('gearTurn', loadSound('assets/sounds/gearTurn.mp3'))
+  AM.add('gearClick', loadSound('assets/sounds/gearClick.mp3'))
+  AM.add('gearComplete', loadSound('assets/sounds/gearComplete.mp3'))
+  AM.add('engineRoom', loadSound('assets/sounds/engineRoom.mp3'))
   //background sounds
   AM.add("reactorLoop", loadSound('assets/sounds/reactorLoop.mp3'));
   AM.add("mapLoop", loadSound('assets/sounds/mapLoop.mp3'));
