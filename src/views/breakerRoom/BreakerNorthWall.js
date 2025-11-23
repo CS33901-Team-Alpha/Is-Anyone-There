@@ -10,11 +10,7 @@ class NorthWall extends View {
   draw() {}
 
   onEnter() {
-    R.add(this.background);
-    AM.stop("startGame")
-    if(!AM.isLooping("technoLoop")){
-            AM.loop('technoLoop')
-        }
+ 
   }
 
   onExit() {
