@@ -1,385 +1,99 @@
-//ref  |  search for pending refactoring
-import { VM } from './VM.js';
-import { StartScreenView } from './src/views/StartScreenView.js';
-import { SpriteManager } from './SpriteManager.js';
-import { AudioManager } from './AudioManager.js';
-import { GameState } from './GameState.js';
-import { Renderer } from './Renderer.js';
-import { View } from './ViewManager.js'; // Assuming View.js exists
-import { ViewManager } from './ViewManager.js';
-import { WorldManager } from './WorldManager.js';
-import { StartScreenView } from './StartScreenView.js';
-import { EndScreenView } from './EndScreenView.js';
-import { ScreenTimer } from './Timer.js';
-import { WiresView } from './WiresView.js';
+import { loadSprites, SM } from "./src/core/SpriteManager.js";
+import { Renderer } from "./src/core/Renderer.js";
+
+import { TerminalModel } from './src/models/TerminalModel.js';
+import { TerminalView } from './src/views/firstRoom/TerminalView.js';
+import { TerminalController } from './src/controllers/TerminalController.js';
+
+import { FileCabinetController } from './src/controllers/FileCabinetController.js';
 
 let cnv;
 let R;
-let SM = new SpriteManager(); // Sprite Manager
-let AM; 
-let GS;  //ref
-let WORLD;  //ref
-let AI = new AiMessageHandler(1, 7.3);
-let IM = new InventoryManager();
+let terminalMVC;
+let fileCabinetMVC;
 
-// secondary timer storage variable, so we can delete it later from anywhere
-// right now is created in WorldManager, when you first go into reactor
-let secondaryTimer;
-
-let endscreenShown = false; //ref | changing conditions might not need to be global because of GS
-let ended = false; //ref -----^
-
-// Interface state tracking
-let activeInterface = null; // tracks if Terminal, Pinpad, or other interface is active
-
-// Assets
-let gameFont;
-let terminusFont;
-let startScreenMusic;
-let henryAudio; //ref
-let henryImage; //ref
-let screenTimer;
-
+// ------------------------
+// Canvas setup
+// ------------------------
 function fit16x9() {
-  const k = Math.min(windowWidth / 16, windowHeight / 9);
-  const W = Math.floor(16 * k);
-  const H = Math.floor(9 * k);
+    const k = Math.min(windowWidth / 16, windowHeight / 9);
+    const W = 16 * k;
+    const H = 9 * k;
 
-  if (!cnv) {
-    cnv = createCanvas(W, H);
-  } else {
-    resizeCanvas(W, H);
-  }
+    if (!cnv) cnv = createCanvas(W, H);
+    else resizeCanvas(W, H);
 
-  // Center canvas
-  const x = Math.floor((windowWidth - W) / 2);
-  const y = Math.floor((windowHeight - H) / 2);
-  cnv.position(x, y);
+    cnv.position((windowWidth - W) / 2, (windowHeight - H) / 2);
 }
 
-window.preload = function() {
-  loadSprites(); // in SpriteManager.js and loads all images, 
-  AM = new AudioManager();
-  loadSounds();
-  // may be able to load partially? if lag is an issue?
-  startScreenMusic = loadSound('assets/Is_Anybody_There.mp3');  
-  
-  gameFont     = loadFont('assets/font/PressStart2P-Regular.ttf');
-  terminusFont = loadFont('assets/font/terminus.ttf');
-
-  // Load start screen music
-//ref | switch to audio manager
-  
-  // Load henry password sequence assets
-  henryAudio = loadSound('assets/secrets/henry/connectionTerminated.mp3');
-  henryImage = loadImage('assets/secrets/henry/connectionTerminated.jpg');
+// ------------------------
+// p5.js preload
+// ------------------------
+function preload() {
+    console.log("Preloading sprites...");
+    loadFirstRoomSprites(); // loads first room sprites
+    loadSprites();          // loads general sprites
 }
 
-window.setup = function() { //ref ? only ran once ever?
-  fit16x9();
-  userStartAudio(); 
-  VM.updateUnits(); // compute VM.U / VM.V now that width/height exist
-  canvas.oncontextmenu = () => false; // Disable browser right-click menu
+// ------------------------
+// p5.js setup
+// ------------------------
+window.setup = function () {
+    fit16x9();
+    VM.updateUnits();
+    canvas.oncontextmenu = () => false; // Disable browser right-click menu
 
-  const savedState = localStorage.getItem('currentGameState');
+    R = new Renderer();
 
-  if(savedState){
-    const savedData = JSON.parse(savedState);
-    console.log(`saved state found...Current death count: ${savedData.deaths || 0}`);
-    GS = new GameState(); //ref
-    // Load the saved death count into the new GameState object
-    GS.deaths = savedData.deaths || 0;
-  } else {
-    console.log("no state found, creating new state...");
-    GS = new GameState(); //ref | basically do this no matter what.
-  }
+    // Terminal MVC
+    terminalMVC = {
+        model: new TerminalModel(),
+        view: new TerminalView(),
+        ctrl: null,
+        draw() {
+            if (this.ctrl) this.ctrl.draw();
+        },
+        keyPressed() {
+            if (this.ctrl) this.ctrl.keyPressed();
+        }
+    };
+    terminalMVC.ctrl = new TerminalController(terminalMVC.model, terminalMVC.view);
+    R.add(terminalMVC, 1000);
 
-  // insert checkers here
-  GS.checkFor("Ended", () => { return GS.is("Game Complete") || GS.is("Timer Up") || GS.is("Player Died"); })
+    // // File Cabinet MVC
+    // fileCabinetMVC = new FileCabinetController();
+    // fileCabinetMVC.initSprites();
+    // fileCabinetMVC.onEnter();
+    // R.add(fileCabinetMVC, 900);
 
-  GS.setString("You Have Survived, the Spaceship is saved! Thank you for Playing!")
+};
 
-  R = new Renderer(); //ref
+// ------------------------
+// p5.js draw
+// ------------------------
+window.draw = function () {
+    VM.updateUnits();
+    VM.updateMouseFromP5();
+    background(20);
 
-  const startScreen = new StartScreenView(() => {
-    if (startScreenMusic && startScreenMusic.isPlaying()) startScreenMusic.stop(); //ref | change to audio manager?
-    R.selfRemove(startScreen);
-
-    screenTimer = new ScreenTimer(() => { });
-    R.add(screenTimer, 1);
-
-    setupWorld(); // ⬅️ new
-
-    GS.set("Game Started"); // for General Use
-    GS.set("Show AI Startup"); // for AI Messages
-  });  //ref | look into wrapping with end
-
-  // High z so it draws on top until removed
-  R.add(startScreen, 999);
-}
-
-window.draw = function() {
-  // Keep VM in sync each frame (handles window resizes, etc.)
-  VM.updateUnits();
-  VM.updateMouseFromP5();
-
-  background(20);
-
-  const dt = deltaTime / 1000;
- // if(!ended) {
-   // endScreen = new EndScreenView(GS.is("Game Complete")); //update endscreen state
-  //}
-
-  if(GS.is("Ended")) {
-    ended = true;
-    /* -- Implement Tracking Deaths across restarts -- */
-    //if(!GS.getSolved()) {
-      //GS.incrementDeaths();
-    //}
-
-    if(!endscreenShown) {
-      R.remove(screenTimer)
-      R.remove(secondaryTimer)
-
-      R.add(endScreen, 999);
-      endscreenShown = true;
-      AI.cleanup();
+    if (R) {
+        R.update(deltaTime / 1000);
+        R.draw();
     }
-  }
+};
 
-  if(GS.is("Show AI Startup")) {
-    bootupAI();
-  }
-  
-  IM.update(dt)
-  R.update(dt);
-  AI.update(dt);
-  R.draw();
-}
+// ------------------------
+// Input events
+// ------------------------
+window.keyPressed = () => {
+    if (terminalMVC && terminalMVC.keyPressed) terminalMVC.keyPressed();
+};
 
-//block to handle initial AI startup Text
-window.bootupAI = function() {
-  let string  = '>_  H.A.L. - Heuristically Programmed Algorithmic Computer v 3.2.1 \n>_  INITIATING SECURE BOOT PROTOCOL... \n>_  NETWORK CONNECTION: SECURE';
-  AI.addText(string);
-  string  = '>_  LOADING VESSEL CONDITION... \n>_  MULTIPLE SYSTEMS CRITICAL \n>_  FAILURE IMMINENT - FIX IMMEDIATELY';
-  AI.addText(string);
-  GS.unset("Show AI Startup");
-} //ref | place somewhere else?
+window.mousePressed = () => {
+    if (fileCabinetMVC) fileCabinetMVC.mousePressed(VM.mouse());
+};
 
-window.windowResized = function() {
-  fit16x9();
-  VM.updateUnits();
-}
-
-window.mousePressed = function() {
-  // Dispatch mouse in 16:9 unit space
-  const mouse = VM.mouse();
-  if (!VM.insideUnits(mouse)) return;
-  // console.log(m.x, m.y);
-  if (R) R.dispatch('mousePressed', mouse);
-}
-
-window.mouseDragged = function() {
-  const mouse = VM.mouse();
-  if (!VM.insideUnits(mouse)) return;
-  R.dispatch('mouseDragged', mouse);
-}
-
-window.mouseReleased = function() {
-  const mouse = VM.mouse();
-  if (!VM.insideUnits(mouse)) return;
-  R.dispatch('mouseReleased', mouse);
-}
-
-window.keyPressed = function() {
-  if (R) R.dispatch('keyPressed');
-}
-
-// Debug function to check and reset interface state
-window.debugInterface = function() {
-  console.log("=== Interface Debug Info ===");
-  console.log("window.activeInterface:", window.activeInterface);
-  console.log("global activeInterface:", activeInterface);
-  console.log("Renderer objects count:", R ? R.objects.length : "No renderer");
-  return {
-    windowActive: window.activeInterface,
-    globalActive: activeInterface,
-    rendererCount: R ? R.objects.length : 0
-  };
-}
-
-// Function to force reset interface state
-window.resetInterface = function() {
-  console.log("Forcing interface reset");
-  window.activeInterface = null;
-  activeInterface = null;
-  console.log("Interface reset complete");
-}
-
-
-window.setupWorld = function() {
-  WORLD = new WorldManager();
-
-  const startRoom = new ViewManager();
-  const breakerRoom = new ViewManager();
-  const cryoRoom = new ViewManager();
-  const lifeSupportRoom = new ViewManager();
-  const reactorRoom = new ViewManager();
-  const botanicalRoom = new ViewManager();
-  const mapRoom = new ViewManager();
-  
-  // --- Room A (Start Room | start here) ---
-  const computerView = new ComputerView(); // start view (index 0)
-  const boxesView    = new BoxesView([ // is a sliderdoorview derived class takes you to map room (6)
-    {x:12, y:2.5, scale:0.8,
-    targetRoom: 6,         // <-- map room
-    targetViewIndex: 0,    // 
-    lockedCondition : () => GS.is("Pin Solved")
-    }
-  ]);
-  const fcView       = new FileCabinetView();
-
-  // Door in start room -> breaker room (index 1), land on view 0
-  const sdStartToBreaker = new SlidingDoorView([{
-    x:12, y:2.5, scale:0.8,
-    targetRoom: 1,         // <-- breaker room
-    targetViewIndex: 0,    //
-    lockedCondition : () => GS.is("Pin Solved")
-  }]);
-
-  
-  startRoom.addView(computerView);  // index 0 (start)
-  startRoom.addView(boxesView);
-  startRoom.addView(fcView);
-  startRoom.addView(sdStartToBreaker);
-  sdStartToBreaker.setRoom?.(startRoom);
-  
-  // --- Room B (Breaker Room)
-
-  const repairView = new RepairView();
-  const wiresView = new WiresView();
-  const LifeSupportDoorView = new EastWall();
-
-  // Door in breaker room -> back to start room (index 1), land on doorView (view 4)
-  const sdBreakerToStart = new SlidingDoorView([{
-    x:6, y:1.5, scale:2,
-    targetRoom: 0,        // <-- to start room
-    targetViewIndex: 4,
-    lockedCondition : () => true
-  }],SM.get("northWallBreaker"));
-
-  breakerRoom.addView(repairView);
-  breakerRoom.addView(wiresView);
-  breakerRoom.addView(sdBreakerToStart);
-  breakerRoom.addView(LifeSupportDoorView);
-  sdBreakerToStart.setRoom?.(breakerRoom);
-
-  // --- Room C (Cryo Chamber Room) ---
-  //class PlainView extends View { constructor(r,g,b,label){ super(r,g,b,label); } }
-
-  const windowView = new SpaceWindowView();
-  const cryoView1 = new CryoView(0);
-  const cryoView2 = new CryoView(1);
-  const cryoView3 = new CryoView(2);
-  const cryoView4 = new CryoView(3); 
-
-  // Door in Room C -> back to breaker room (index 1), land on wireView (view 1)
-  const sdCryoToBreaker = new SlidingDoorView([{
-    x:12, y:2, scale:1,
-    targetRoom: 1,        // <-- to breaker room
-    targetViewIndex: 1,
-    lockedCondition : () => true
-  }],SM.get("blankCryo"));
-
-  cryoRoom.addView(cryoView1);
-  cryoRoom.addView(cryoView2);
-  cryoRoom.addView(windowView);
-  cryoRoom.addView(cryoView3);
-  cryoRoom.addView(cryoView4);
-  cryoRoom.addView(sdCryoToBreaker);
-  sdCryoToBreaker.setRoom?.(cryoRoom);
-
-  // --- Room D (Life Support Room) ---
-  const oxygenPressureView = new OxygenPressureView();
-  const temperatureView    = new TemperaturePuzzleView();
-  const lifeSupportView = new LifeSupportView();
-  const sdLifeToBreaker = new SlidingDoorView([{
-    x:2, y:1.5, scale:1,
-    targetRoom: 1,        // back to breaker room
-    targetViewIndex: 3,   // eastWallView is at index 2
-    lockedCondition : () => true
-  }],SM.get("southWallSupport"));
-
-  lifeSupportRoom.addView(oxygenPressureView);
-  lifeSupportRoom.addView(temperatureView);
-  lifeSupportRoom.addView(sdLifeToBreaker);
-  lifeSupportRoom.addView(lifeSupportView);
-  sdLifeToBreaker.setRoom?.(lifeSupportRoom);
-  
-  // --- Room E (Reactor Room) ---
-  const operationReactorView = new OperationReactorPuzzleView();
-  const restartReactorView = new RestartReactorView();
-  const reactorStartup = new ReactorStartupView();  
-  const sdReactorToBreaker = new SlidingDoorView([{ // back to breaker
-    x:12, y:2.2, scale:0.8,
-    targetRoom: 1,         // <-- breaker room
-    targetViewIndex: 0, 
-    lockedCondition : () => true
-  }], SM.get("southWallReactor"));
-
-  reactorRoom.addView(reactorStartup);
-  reactorRoom.addView(operationReactorView);
-  reactorRoom.addView(restartReactorView);
-  reactorRoom.addView(sdReactorToBreaker);
-  //reactorRoom.addView(sdReactorToBotanical); -> removed door to botanical temporarily
-  
-  // --- Room F (Botanical Room) ---
-  const plantsView = new PlantsView();
-  const plantsView2 = new PlantsView2();
-  // const sdBotanicalToReactor = new SlidingDoorView([{ // to nuclear
-  //   x:12, y:2.5, scale:0.8,
-  //   targetRoom: 4,         // <-- nuclear index
-  //   targetViewIndex: 0, 
-  //   lockedCondition : () => {true}
-  // }], SM.get("MetalWall"));
-  const sdBotanicalToReactor = new PlantsView3([{ // has door to nuclear
-    x:12, y:2.5, scale:0.8,
-    targetRoom: 4,         // <-- nuclear index
-    targetViewIndex: 0, 
-    lockedCondition : () => !GS.is('BotanicalQuarantine')
-  }]);
-  const synthesisView = new SynthesisView();
-
-  botanicalRoom.addView(plantsView);
-  botanicalRoom.addView(plantsView2);
-  botanicalRoom.addView(sdBotanicalToReactor);
-  botanicalRoom.addView(synthesisView);
-  sdBotanicalToReactor.setRoom(botanicalRoom);
-
-  // --- Room G (Map Room) ---
-  const shipMapView = new ShipMapView();
-  const mapFiller = new PuzzleClueView();
-  const mapFiller2 = new PuzzleClueView();
-
-  const sdMapToStart = new SlidingDoorView([{
-    x:12, y:2.5, scale:0.8,
-    targetRoom: 0,         // <-- start room
-    targetViewIndex: 0,    //
-    lockedCondition : () => true
-  }], SM.get("MetalWall"));
-
-  mapRoom.addView(shipMapView);
-  mapRoom.addView(mapFiller);
-  mapRoom.addView(sdMapToStart);
-  mapRoom.addView(mapFiller2);
-
-  // register rooms (A=0, B=1, C=2) and let WORLD receive key events
-  WORLD.addRoom(startRoom);   // index 0
-  WORLD.addRoom(breakerRoom);   // index 1
-  WORLD.addRoom(cryoRoom);   // index 2
-  WORLD.addRoom(lifeSupportRoom);   // index 3
-  WORLD.addRoom(reactorRoom);   // index 4
-  WORLD.addRoom(botanicalRoom);   // index 5
-  WORLD.addRoom(mapRoom);   // index 6
-  R.add(WORLD, 1000);
-}
+window.windowResized = function () {
+    fit16x9();
+    VM.updateUnits();
+};

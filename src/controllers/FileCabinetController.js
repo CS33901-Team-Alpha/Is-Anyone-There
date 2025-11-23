@@ -1,5 +1,5 @@
 import { FileCabinetView, OpenCabinetUIView } from '../views/firstRoom/FileCabinetView.js';
-import { FileCabinetModel, OpenCabinetUIModel } from '../models/puzzles/first/FileCabinetModel.js';
+import { FileCabinetModel, OpenCabinetModel } from '../models/puzzles/first/FileCabinetModel.js';
 import { Button } from '../components/Button.js';
 import { TextNotificationHandler } from "../components/TextNotification.js";
 
@@ -13,13 +13,13 @@ export class FileCabinetController {
         this.cabinetModels = [];
         this.cabinetViews = [];
 
-        this.uiModel = new OpenCabinetUIModel();
+        this.uiModel = new OpenCabinetModel();
         this.uiView = new OpenCabinetUIView(this.uiModel);
 
         this.textNotificationHandler = new TextNotificationHandler(0.5, 0.85);
     }
 
-    async initSprites() {
+    initSprites() {
         this.background = SM.get("WestWall");
         if (this.background) this.background.setSize(16, 9);
 
