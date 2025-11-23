@@ -115,9 +115,6 @@ if (!window.SM) {
 
 export const SM = window.SM;
 
-
-
-
 export function loadSprites() {
     /**
      * Preload your sprites as images in this function, to use them in your code, use global SM

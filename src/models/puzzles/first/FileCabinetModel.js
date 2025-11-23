@@ -9,6 +9,7 @@ export class FileCabinetModel {
     }
 
     containsPoint(mx, my){
+    const m = mx != null && my != null ? { x: mx, y: my } : VM.mouse();
     return (
             m.x >= this.x &&
             m.x <= this.x + this.width &&

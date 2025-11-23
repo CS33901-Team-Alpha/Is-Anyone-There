@@ -5,16 +5,16 @@ import { TextNotificationHandler } from "../components/TextNotification.js";
 
 
 export class FileCabinetController {
-    constructor(secretId = 2) {
+    constructor() {
         this.background = null;
         this.scale = 0.3;
-        this.secretId = secretId;
 
         this.cabinetModels = [];
         this.cabinetViews = [];
 
         this.uiModel = new OpenCabinetModel();
         this.uiView = new OpenCabinetUIView(this.uiModel);
+        this.secretId = this.uiModel.number;
 
         this.textNotificationHandler = new TextNotificationHandler(0.5, 0.85);
     }

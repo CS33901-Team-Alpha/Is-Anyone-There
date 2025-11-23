@@ -31,7 +31,6 @@ function fit16x9() {
 // ------------------------
 function preload() {
     console.log("Preloading sprites...");
-    loadFirstRoomSprites(); // loads first room sprites
     loadSprites();          // loads general sprites
 }
 
@@ -60,11 +59,9 @@ window.setup = function () {
     terminalMVC.ctrl = new TerminalController(terminalMVC.model, terminalMVC.view);
     R.add(terminalMVC, 1000);
 
-    // // File Cabinet MVC
-    // fileCabinetMVC = new FileCabinetController();
-    // fileCabinetMVC.initSprites();
-    // fileCabinetMVC.onEnter();
-    // R.add(fileCabinetMVC, 900);
+    fileCabinetMVC = {
+      
+    }
 
 };
 

@@ -2,41 +2,36 @@ import { Button } from '../../components/Button.js';
 import { TextNotificationHandler } from '../../components/TextNotification.js';
 import { Renderer } from '../../core/Renderer.js';
 
-
-
-
-
 export class FileCabinetView {
-    constructor(model) {
-        this.model = model;
+    constructor() {
         this.sprite = null;
         this.highlight = null;
-        this.spriteName = `FileCabinet${this.model.id + 1}`;
     }
 
-    init() {
-        this.sprite = SM.get(this.spriteName);
+    /**
+     * @param {Object} config - { spriteName, x, y, scale, width, height }
+     */
+    init(config) {
+        const { spriteName, x, y, scale, width, height } = config;
+
+        this.sprite = SM.get(spriteName);
         if (this.sprite) {
-            this.sprite.setPos(this.model.x, this.model.y);
-            this.sprite.setScale(this.model.scale);
+            this.sprite.setPos(x, y);
+            this.sprite.setScale(scale);
         } else {
-            console.warn(`FileCabinetView: sprite '${this.spriteName}' not found`);
+            console.warn(`FileCabinetView: sprite '${spriteName}' not found`);
         }
 
-        this.highlight = new TextNotificationHandler(
-            this.model.x,
-            this.model.y,
-            this.model.width,
-            this.model.height
-        );
+        this.highlight = new TextNotificationHandler(x, y, width, height);
     }
 
-    draw() { } // sprites handled by renderer
+    draw() { } // handled by Renderer
 
     onEnter() {
         if (this.sprite) R.add(this.sprite, 9);
         R.add(this.highlight);
     }
+
     onExit() {
         if (this.sprite) R.remove(this.sprite);
         R.remove(this.highlight);
@@ -44,26 +39,27 @@ export class FileCabinetView {
 }
 
 export class OpenCabinetUIView {
-    constructor(model) {
-        this.model = model;
+    constructor() {
         this._closeBtn = new Button(11.5, 2.4, 0.6, (self) => {
             R.selfRemove(self);
             R.remove(this);
-            this.model.hide();
             AM.play('drawerClose');
         });
-
-        this.numberImage = null;
-        this.spriteName = 'secondNumber';
+        this.sprite = null;
     }
 
-    init() {
-        this.sprite = SM.get(this.spriteName); 
-        if (!this.sprite) console.warn('sprite', this.spriteName, 'not found');
+    /**
+     * @param {Object} config - { spriteName, visible }
+     */
+    init(config) {
+        const { spriteName } = config;
+        this.sprite = SM.get(spriteName); 
+        if (!this.sprite) console.warn('sprite', spriteName, 'not found');
     }
 
-    draw() {
-        if (!this.model.visible) return;
+    draw(config) {
+        if (!config.visible) return;
+
         const u = VM.u(), v = VM.v();
         push();
         fill(169, 169, 169);
@@ -73,14 +69,14 @@ export class OpenCabinetUIView {
         pop();
     }
 
-    onAdd() {
-        if (!this.model.visible) return;
+    onAdd(config) {
+        if (!config.visible) return;
         R.add(this._closeBtn, 11);
-        if (this.numberImage) R.add(this.numberImage, 15);
+        if (this.sprite) R.add(this.sprite, 15);
     }
+
     onRemove() {
         R.remove(this._closeBtn);
-        if (this.numberImage) R.remove(this.numberImage);
+        if (this.sprite) R.remove(this.sprite);
     }
 }
-
