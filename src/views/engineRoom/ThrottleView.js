@@ -190,11 +190,13 @@ class ThrottleView extends View
 
         if (btn.id === this.sequence[this.currentIndex]) // correct button
         {
+            AM.play("reactorBeep");
             btn.color = "lightgreen"; // change this specific button to lightgreen
             this.currentIndex++; // increment progress
 
             if (this.currentIndex >= this.sequence.length) // if index == length of solution or is greater somehow set all the buttons to green
             {
+                AM.play("reactorFix");
                 this.won = true; // puzzle is solved
                 this.inputLocked = true; // lock input
                 this.setAllColors("green"); // all green
@@ -202,6 +204,7 @@ class ThrottleView extends View
         } 
         else 
         { 
+            AM.play("badArrow");
             this.setAllColors("red"); // convert all the buttons to red to show a mistake
             this.inputLocked = true; // lock input during reset
             setTimeout(() => this.resetColors(), 1000); // delay then reset after 1 second

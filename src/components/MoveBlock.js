@@ -18,6 +18,8 @@ class MoveBlock {
     this.color = [random(255), random(255), random(255)];
 
     this.angle = 0; //new variable for rotating the block
+
+    this.solved = false;
   }
 
   rotate(dir) { //rotates the block based on the inputted direction
@@ -88,7 +90,7 @@ class MoveBlock {
     if (this.isMouseInBounds(p?.x, p?.y)) {
       const m = VM.mouse();
       this.drag = true;
-
+      AM.loop("gearTurn")
       // change in positions on drag
       this.dragDx = m.x - this.x;
       this.dragDy = m.y - this.y;
@@ -97,6 +99,7 @@ class MoveBlock {
 
   mouseReleased() {
     this.drag = false;
+    AM.stop("gearTurn")
   }
 
 }
