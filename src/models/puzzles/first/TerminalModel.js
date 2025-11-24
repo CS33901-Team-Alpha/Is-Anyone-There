@@ -4,7 +4,6 @@ class TerminalModel {
         this.history = []; 
         this.maxLines = 8;
         this.commands = {}; 
-        
     }
 
     getState() {
@@ -17,7 +16,7 @@ class TerminalModel {
 
     print(text) {
         this.history.push(text);
-        if (this.history.length > 200) {
+        if (this.history.length > this.maxLines) {
             this.history.shift();
         }
     }
