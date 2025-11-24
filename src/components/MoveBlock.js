@@ -1,4 +1,4 @@
-class MoveBlock {
+class GearBlock {
   /** x and y are the initial positions,
    * for now the size is just fixed to be a square.
    * 
@@ -6,7 +6,8 @@ class MoveBlock {
    * mouse is moving to). dragDx and dragDy are used in update to move the actual position of block (this.x
    * and this.y). And draw uses the new positions this.x and this.y to render the moved block.
    */
-  constructor(x, y, size) {
+  constructor(x, y, size, name) {
+    this.spriteName = name;
     this.x = x;
     this.y = y;
     this.size = size;
@@ -18,6 +19,8 @@ class MoveBlock {
     this.color = [random(255), random(255), random(255)];
 
     this.angle = 0; //new variable for rotating the block
+
+    this.ImageSprite = SM.get(this.spriteName);
 
     this.solved = false;
   }
@@ -75,13 +78,14 @@ class MoveBlock {
 
     noStroke();
     fill(this.color[0], this.color[1], this.color[2]);
-    rect(
-      -(this.size/2) * u,
-      -(this.size/2) * v,
-      this.size * u,
-      this.size * v,
-      8
-    );
+    //rect(
+      //-(this.size/2) * u,
+      //-(this.size/2) * v,
+      //this.size * u,
+      //this.size * v,
+     // 8
+    //);
+     image(this.ImageSprite.src, -(this.size/2) * u, -(this.size/2) * v, this.size * u,  this.size * v);
 
     pop();
   }

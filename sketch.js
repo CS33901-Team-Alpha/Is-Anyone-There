@@ -416,21 +416,21 @@ function setupWorld() {
   mapRoom.addView(shipMapView);
 
   // --- Room H (Engine Room) ---
-  //const engineControlView = new EngineControlView();
   const engineThrottle = new ThrottleView();
-  //const engineFiller2 = new PuzzleClueView();
-  const engineFiller3 = new GearView();
+  const EngineFiller = new PuzzleClueView("EngineRoom3");
+  const engineGears = new GearView();
 
   const sdEngineToStart = new SlidingDoorView([{
-    x:12, y:2.5, scale:0.8,
+    x:9, y:2.15, scale:0.8,
     targetRoom: 4,         // <-- nuclear
     targetViewIndex: 0,    //
     lockedCondition : () => true
-  }], SM.get("MetalWall"));
+  }], SM.get("EngineRoom1"));
 
+  engineRoom.addView(EngineFiller);
   engineRoom.addView(engineThrottle); // Puzzle wall 1
   engineRoom.addView(sdEngineToStart); // exit wall
-  engineRoom.addView(new GearView()); // Puzzle wall 2
+  engineRoom.addView(engineGears); // Puzzle wall 2
 
   // register rooms (A=0, B=1, C=2) and let WORLD receive key events
   WORLD.addRoom(startRoom);   // index 0

@@ -184,6 +184,33 @@ function loadSprites() {
     SM.add("minimap5", loadImage('assets/object/minimap5.png'))
     SM.add("minimap6", loadImage('assets/object/minimap6.png'))
     SM.add("minimap7", loadImage('assets/object/minimap7.png'))
+
+    //Engine Room
+    SM.add("BlueButtonOn", loadImage('assets/object/BlueButtonOn.png'))
+    SM.add("BlueButtonOff", loadImage('assets/object/BlueButtonOff.png'))
+    SM.add("BlueSwitchOn", loadImage('assets/object/BlueSwitchOn.png'))
+    SM.add("BlueSwitchOff", loadImage('assets/object/BlueSwitchOff.png'))
+    SM.add("GreenOn", loadImage('assets/object/GreenOn.png'))
+    SM.add("GreenOff", loadImage('assets/object/GreenOff.png'))
+    SM.add("OrangeOn", loadImage('assets/object/OrangeOn.png'))
+    SM.add("OrangeOff", loadImage('assets/object/OrangeOff.png'))
+    SM.add("PinkOn", loadImage('assets/object/PinkOn.png'))
+    SM.add("PinkOff", loadImage('assets/object/PinkOff.png'))
+    SM.add("PurpleOn", loadImage('assets/object/PurpleOn.png'))
+    SM.add("PurpleOff", loadImage('assets/object/PurpleOff.png'))
+    SM.add("RedOn", loadImage('assets/object/RedOn.png'))
+    SM.add("RedOff", loadImage('assets/object/RedOff.png'))
+    SM.add("YellowOn", loadImage('assets/object/YellowOn.png'))
+    SM.add("YellowOff", loadImage('assets/object/YellowOff.png'))
+
+    SM.add("SmallGear", loadImage('assets/object/SmallGear.png'))
+    SM.add("MediumGear", loadImage('assets/object/MediumGear.png'))
+    SM.add("LargeGear", loadImage('assets/object/LargeGear.png'))
+
+    SM.add("EngineRoom1", loadImage('assets/background/EngineEntrance.png'))
+    SM.add("EngineRoom2", loadImage('assets/background/GearboxView.png'))
+    SM.add("EngineRoom3", loadImage('assets/background/EngineView.png'))
+    SM.add("EngineRoom4", loadImage('assets/background/SequenceView.png'))
     
 }
 
