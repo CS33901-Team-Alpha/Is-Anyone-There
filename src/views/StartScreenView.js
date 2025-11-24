@@ -419,10 +419,6 @@ class EndScreenView extends View {
     localStorage.setItem('currentGameState', JSON.stringify(GS));
     GS.persistState()
 
-    const finalStateString = JSON.stringify(GS);
-    localStorage.setItem('completedGame', finalStateString);
-    console.log("Final score has been saved!");
-  
     location.reload();
   }
 }

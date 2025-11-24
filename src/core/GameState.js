@@ -112,7 +112,7 @@ class GameState {
     }
 
     persistState(){
-        // looks weird but this will convert the gamestate into a JSON string, then back into a JS object so we can add states to it (see getStatesAsObj)
+        // looks weird but this will convert the gamestate into a JSON string, then back into a JS object so we can add states to it (see getStatesAsArr)
         const gsObj = JSON.parse(JSON.stringify(this))
         gsObj.states = this.getStatesAsArr()
 
@@ -125,7 +125,7 @@ class GameState {
         localStorage.setItem('currentGameState', JSON.stringify(gsObj))
     }
 
-    // we need this because our this.states is a Set, and JSON.stringify (what we use to persist) does convert the elements of the set into
+    // we need this because our this.states is a Set, and JSON.stringify (what we use to persist) does NOT convert the elements of the set into
     // the output (they show up as {})
     getStatesAsArr(){
         return Array.from(this.states)
