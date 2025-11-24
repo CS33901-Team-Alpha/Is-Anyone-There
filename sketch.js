@@ -121,19 +121,11 @@ function setup() { //ref ? only ran once ever?
   userStartAudio(); 
   VM.updateUnits(); // compute VM.U / VM.V now that width/height exist
   canvas.oncontextmenu = () => false; // Disable browser right-click menu
+  
+  GS = new GameState();
+  GS.loadState()
 
-  const savedState = localStorage.getItem('currentGameState');
-
-  if(savedState){
-    const savedData = JSON.parse(savedState);
-    console.log(`saved state found...Current death count: ${savedData.deaths || 0}`);
-    GS = new GameState(); //ref
-    // Load the saved death count into the new GameState object
-    GS.deaths = savedData.deaths || 0;
-  } else {
-    console.log("no state found, creating new state...");
-    GS = new GameState(); //ref | basically do this no matter what.
-  }
+  console.log(`player has died ${GS.deaths} times 💀`)
 
   // insert checkers here
   GS.checkFor("Ended", () => { return GS.is("Game Complete") || GS.is("Timer Up") || GS.is("Player Died"); })
