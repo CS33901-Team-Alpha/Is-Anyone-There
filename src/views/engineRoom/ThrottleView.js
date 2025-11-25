@@ -220,6 +220,7 @@ class ThrottleView extends View
             if (this.currentIndex >= this.sequence.length) // if index == length of solution or is greater somehow set all the buttons to green
             {
                 AM.play("reactorFix");
+                GS.set("Engine Throttle Finished");
                 this.won = true; // puzzle is solved
                 this.inputLocked = true; // lock input
                 AI.addText('>_  MAIN ENGINE STATUS UPDATING... \n>_  THROTTLE SEQUENCE INITIATED \n>_  ENGINE STATUS: OPERATIONAL');

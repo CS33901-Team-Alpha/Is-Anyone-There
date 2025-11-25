@@ -330,32 +330,35 @@ class EndScreenView extends View {
     const u = VM.u();
     const v = VM.v();
 
-    const m = VM.mouse();
-    const hover =
-      m.x >= this.btnX &&
-      m.x <= this.btnX + this.btnW &&
-      m.y >= this.btnY &&
-      m.y <= this.btnY + this.btnH;
+    if(!this.solved) {
 
-    if (hover) {
-      fill(100, 150, 255, 200);
-      stroke(150, 200, 255, 150);
-      strokeWeight(0.08 * u);
-    } else {
-      fill(50, 100, 200, 200);
+      const m = VM.mouse();
+      const hover =
+        m.x >= this.btnX &&
+        m.x <= this.btnX + this.btnW &&
+        m.y >= this.btnY &&
+        m.y <= this.btnY + this.btnH;
+
+      if (hover) {
+        fill(100, 150, 255, 200);
+        stroke(150, 200, 255, 150);
+        strokeWeight(0.08 * u);
+      } else {
+        fill(50, 100, 200, 200);
+        noStroke();
+      }
+
+      rect(this.btnX * u, this.btnY * v, this.btnW * u, this.btnH * v, 0.5 * u);
+
+      fill(255);
       noStroke();
+      textAlign(CENTER, CENTER);
+      textFont(gameFont);
+      textSize(0.25 * v);
+      const cx = (this.btnX + this.btnW / 2) * u;
+      const cy = (this.btnY + this.btnH / 2) * v;
+      text('Restart', Math.round(cx), Math.round(cy));
     }
-
-    rect(this.btnX * u, this.btnY * v, this.btnW * u, this.btnH * v, 0.5 * u);
-
-    fill(255);
-    noStroke();
-    textAlign(CENTER, CENTER);
-    textFont(gameFont);
-    textSize(0.25 * v);
-    const cx = (this.btnX + this.btnW / 2) * u;
-    const cy = (this.btnY + this.btnH / 2) * v;
-    text('Restart', Math.round(cx), Math.round(cy));
   }
 
   draw() {
@@ -385,7 +388,6 @@ class EndScreenView extends View {
     text(GS.getString(), 8 * u, 5.35 * v);
 
     this.drawButton();
-
   }
 
   mousePressed(p) {

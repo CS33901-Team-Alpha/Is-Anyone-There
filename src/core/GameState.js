@@ -31,6 +31,8 @@ Game State Variables Currently in Use:
 - "BotanicalQuarantine" - whether the quarantine is currently active. Can be used to play alarms and other things during the event. 
 - "BotanicalComponentOpen" - When a plant has been clicked on, denotes the info page is open; used for fixing hitbox issue
 - "Minimap Unlocked" - denotes when the map puzzle is solved; allows minimap to be used
+- "Engine Gears Fixed" - denotes when the gear puzzle has been fixed in engine room; needed for throttle to be valid
+- "Engine Throttle Finished" - denotes when the throttle sequence in the engine room is done; final engine puzzle
 */
 
 class GameState {
@@ -119,7 +121,9 @@ class GameState {
         // make a filter list of states that we wanna save
         const save = ['Pin Solved','fixedElectricalComponent', 'Wires Solved', 'reactorStartupComplete', 
                         'restartReactorComplete', 'operationRodComplete', 'regulateOxygenPuzzleSolved', 
-                        'regulateTempPuzzleSolved', 'Life Support Access Granted', 'Minimap Unlocked']; // save these states, drop others
+                        'regulateTempPuzzleSolved', 'Life Support Access Granted', 'Minimap Unlocked', 
+                        'Engine Gears Fixed', "Engine Throttle Finished"
+                    ]; // save these states, drop others
         gsObj.states = gsObj.states.filter((state) => save.includes(state))
 
         localStorage.setItem('currentGameState', JSON.stringify(gsObj))

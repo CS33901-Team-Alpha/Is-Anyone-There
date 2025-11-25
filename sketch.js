@@ -135,10 +135,13 @@ function setup() { //ref ? only ran once ever?
 
   console.log(`player has died ${GS.deaths} times 💀`)
 
-  // insert checkers here
-  GS.checkFor("Ended", () => { return GS.is("Game Complete") || GS.is("Timer Up") || GS.is("Player Died"); })
+  // insert checkers for End/Win Conditions Here
+  GS.checkFor("Game Complete", () => {return GS.is("Pin Solved") && GS.is("fixedElectricalComponent") && GS.is("Wires Solved") && GS.is("reactorStartupComplete") &&
+                                              GS.is("restartReactorComplete") && GS.is("operationRodComplete") && GS.is("regulateOxygenPuzzleSolved") && GS.is("regulateTempPuzzleSolved") &&
+                                              GS.is("Life Support Access Granted") && GS.is("Minimap Unlocked") && GS.is("Engine Gears Fixed") && GS.is("Engine Throttle Finished")});
+  GS.checkFor("Ended", () => { return GS.is("Game Complete") || GS.is("Timer Up") || GS.is("Player Died"); });
 
-  GS.setString("You Have Survived and Fixed the Spaceship! Thank you for Playing!")
+  GS.setString("Congratulations! You Have Survived, Fixed the Spaceship, \n and won \'Is Anyone There\'! Thank you so much for playing! \nClose This tab and Re-open the game to play again!")
 
   R = new Renderer(); //ref
 
@@ -173,10 +176,6 @@ function draw() {
 
   if(GS.is("Ended")) {
     ended = true;
-    /* -- Implement Tracking Deaths across restarts -- */
-    //if(!GS.getSolved()) {
-      //GS.incrementDeaths();
-    //}
 
     if(!endscreenShown) {
       R.remove(screenTimer)
