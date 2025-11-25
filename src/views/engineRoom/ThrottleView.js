@@ -15,6 +15,8 @@ class ThrottleView extends View
         this.won = false; // puzzle completion status
         this.inputLocked = false; // prevent input during reset
 
+        this.textHandler = new TextNotificationHandler(0.5, 1);
+
         this.defineButtons(); // define buttons
         this.assignCoordinates(); // assign button positions
         this.randomizeSequence(); // randomize correct sequence only on start creation
@@ -105,7 +107,13 @@ class ThrottleView extends View
     randomizeSequence() 
     {
         // create randomized sequence of button IDs
-        const ids = [6, 3, 2, 0, 4, 1, 7, 5];
+        //const ids = [6, 3, 2, 0, 4, 1, 7, 5]; uncomment for set sequence every time
+         const ids = Object.values(this.buttons).map(b => b.id); // grab the ids and put them in an array. b is each button object and b.id is the id property of that object
+        
+        for (let i = ids.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [ids[i], ids[j]] = [ids[j], ids[i]]; // swap
+        }
 
         this.sequence = ids;
         this.currentIndex = 0; // reset progress
@@ -162,6 +170,10 @@ class ThrottleView extends View
         }
     }
 
+    update(dt) {
+        this.textHandler.update(dt);
+    }
+
     mousePressed(m) 
     {
         if(this.activeInterface == "PuzzleView") {
@@ -215,6 +227,7 @@ class ThrottleView extends View
         } 
         else 
         { 
+            this.textHandler.addText(`Incorrect Input Pressed`, color('#00BFFF'));
             AM.play("badArrow");
             this.inputLocked = true; // lock input during reset
             this.resetImages();
@@ -240,5 +253,6 @@ class ThrottleView extends View
         R.remove(this.highlight);
         R.remove(this.PadSprite);
         this.activeInterface = "ScreenView";
+        this.textHandler.cleanup();
     }
 }
