@@ -35,7 +35,7 @@ class GearView extends View {
     });
 
     // clickable highlight
-    this.highlight = new HighlightEvent(5.4, 2.45, 4.7, 3.7, 255,255,255,() =>{
+    this.highlight = new HighlightEvent(7.1, 6.1, 2.7, 2.2, 255,255,255,() =>{
       this.activeInterface = "PuzzleView";
       R.remove(this.highlight);
       R.add(this.closeBtn);

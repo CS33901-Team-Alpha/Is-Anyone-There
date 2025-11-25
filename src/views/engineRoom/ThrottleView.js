@@ -26,7 +26,7 @@ class ThrottleView extends View
         });
 
         // clickable highlight
-        this.highlight = new HighlightEvent(5.4, 2.45, 4.7, 3.7, 255,255,255,() =>{
+        this.highlight = new HighlightEvent(5.2, 5.75, 3.3, 2, 255,255,255,() =>{
             this.activeInterface = "PuzzleView";
             R.remove(this.highlight);
             R.add(this.closeBtn);
