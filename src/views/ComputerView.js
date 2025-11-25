@@ -127,6 +127,15 @@ class Terminal {
         GS.set('fixedElectricalComponent')
       }
     });
+
+    this.registerCommand("compass", () => {
+      this.print("This is a test");
+    });
+
+    this.registerCommand("unlock-map", () => {
+        GS.set("Minimap Unlocked");
+        this.print("Map Unlocked");
+    });
   }
 
   registerCommand(name, fn) {
@@ -321,11 +330,11 @@ class PinButton extends Button {
 }
 
 class Pinpad {
-    constructor( onExit = () => {}) {
+    constructor(pass, onExit = () => {}) {
         this.code = [];
         this.onExit = onExit;
         this.label = "";
-        this.pass = '749'; // based on RGB pattern of clues
+        this.pass = pass; // based on RGB pattern of clues
         this.isProcessing = false;
         this.feedbackColor = null; // null, 'green', or 'red'
         
@@ -485,8 +494,10 @@ class ComputerView extends View {
         this.pinpad.setScale(0.5);
         this.pinpad.setPos(12.5, 6);
 
+        this.pass = GS.getPassword();
+
         this.terminalHighlight = new HighlightEvent(
-            2.33, 0.25, 10.1, 6.6, 255, 255, 0,
+            2.33, 0.25, 10.1, 6.6, 255, 255, 255,
             (self) => {
                 // Don't open terminal if another interface is active
                 if (window.activeInterface) {
@@ -512,7 +523,7 @@ class ComputerView extends View {
         );
 
 
-        this.pinpadHighlight = new HighlightEvent(12.5, 6, 1.3, 1.85, 255, 255, 0, (self) => {
+        this.pinpadHighlight = new HighlightEvent(12.5, 6, 1.3, 1.85, 255, 255, 255, (self) => {
             // Don't open pinpad if another interface is active
             if (window.activeInterface) {
                 return;
@@ -522,7 +533,7 @@ class ComputerView extends View {
             R.selfRemove(self);
             R.remove(this.terminalHighlight);
 
-            R.add(new Pinpad(() => {
+            R.add(new Pinpad(this.pass, () => {
                 // Add a small delay before re-enabling highlights to prevent immediate re-triggering
                 setTimeout(() => {
                     R.add(this.terminalHighlight);

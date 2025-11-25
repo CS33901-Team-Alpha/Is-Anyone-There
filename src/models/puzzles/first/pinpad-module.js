@@ -331,3 +331,7 @@ export class Pinpad {
 }
 
 let pad = new Pinpad();
+
+
+
+export { constrain, random };
