@@ -41,7 +41,7 @@ class OxygenPressureModel {
             [0.3, 0.2, 0.1, 0.1]
         ];
 
-        this.seed = int(random(0,5))
+        this.seed = Math.floor(Math.random() * 5);
         this.influenceMatrix = this.influenceMatrixLayouts[this.seed];
         this.startingPressures = this.pressureLayouts[this.seed];
 
@@ -83,3 +83,6 @@ class OxygenPressureModel {
         return this.bars.every(b => b.pressure >= this.targetPressure - 0.00001);
     }
 }
+
+
+export default OxygenPressureModel;

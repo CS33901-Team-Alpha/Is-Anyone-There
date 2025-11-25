@@ -18,6 +18,60 @@ export class WiresModel{
   this.paths = {};
   this.draggingColor = null;
   this.endpoints = [];
+
+  this.layouts = [
+    [
+      { x: 0, y: 0, color: 'red' },
+      { x: 1, y: 4, color: 'red' },
+      { x: 2, y: 2, color: 'blue' },
+      { x: 4, y: 0, color: 'blue' },
+      { x: 1, y: 0, color: 'green' },
+      { x: 1, y: 3, color: 'green' },
+      { x: 4, y: 1, color: 'yellow' },
+      { x: 4, y: 4, color: 'yellow' }
+    ],
+    [
+      { x: 0, y: 0, color: 'red' },
+      { x: 4, y: 2, color: 'red' },
+      { x: 3, y: 1, color: 'blue' },
+      { x: 0, y: 2, color: 'blue' },
+      { x: 1, y: 2, color: 'green' },
+      { x: 3, y: 3, color: 'green' },
+      { x: 0, y: 3, color: 'yellow' },
+      { x: 4, y: 3, color: 'yellow' }
+    ],
+    [
+      { x: 3, y: 1, color: 'red' },
+      { x: 2, y: 3, color: 'red' },
+      { x: 2, y: 4, color: 'blue' },
+      { x: 0, y: 0, color: 'blue' },
+      { x: 2, y: 2, color: 'green' },
+      { x: 1, y: 4, color: 'green' },
+      { x: 2, y: 1, color: 'yellow' },
+      { x: 0, y: 4, color: 'yellow' }
+    ],
+    [
+      { x: 2, y: 1, color: 'red' },
+      { x: 4, y: 1, color: 'red' },
+      { x: 3, y: 3, color: 'blue' },
+      { x: 4, y: 0, color: 'blue' },
+      { x: 2, y: 0, color: 'green' },
+      { x: 0, y: 4, color: 'green' },
+      { x: 1, y: 1, color: 'yellow' },
+      { x: 1, y: 4, color: 'yellow' }
+    ],
+    [
+      { x: 1, y: 1, color: 'red' },
+      { x: 2, y: 4, color: 'red' },
+      { x: 1, y: 2, color: 'blue' },
+      { x: 3, y: 4, color: 'blue' },
+      { x: 0, y: 0, color: 'green' },
+      { x: 4, y: 1, color: 'green' },
+      { x: 2, y: 2, color: 'yellow' },
+      { x: 4, y: 4, color: 'yellow' }
+    ]
+  ];
+
   this.flashEmptyCells = false;
   this.flashTimer = 0;
 
@@ -41,13 +95,7 @@ export class WiresModel{
   }
 
   _placeEndpoints() {
-    // Manually define endpoint positions and colors
-    this.endpoints = [
-      { x: 0, y: 0, color: 'red' }, { x: 1, y: 4, color: 'red' },
-      { x: 2, y: 2, color: 'blue' }, { x: 4, y: 0, color: 'blue' },
-      { x: 1, y: 0, color: 'green' }, { x: 1, y: 3, color: 'green' },
-      { x: 4, y: 1, color: 'yellow' }, { x: 4, y: 4, color: 'yellow' }
-    ];
+    this.endpoints = this.layouts[int(random(0,5))];
 
     // Assign endpoint colors to grid cells and reset paths
     for (const ep of this.endpoints) {

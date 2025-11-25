@@ -10,3 +10,5 @@ dist/
 .env
 PLAYGROUND.js
 package.json
+
+node_modules
