@@ -34,7 +34,7 @@ class ScreenTimer {
      *          - Also NOTE: any timer that is not called overall will be placed below the overall
      */
     constructor(onEnd = () => {}, options = {}) {
-        this.timer = new Timer(!options.time ? 240000 : options.time);   
+        this.timer = new Timer(!options.time ? 180000 : options.time);   
         this.label = '';
         this.onEnd = onEnd;
 
@@ -60,9 +60,12 @@ class ScreenTimer {
             // value of 10000 miliseconds is threshold for starting fadeout to black
             if((this.timerName == 'contagion' || this.timerName == 'overall') && (this.overlay == undefined)){ // less than 10 seconds
                 this.overlay = new DarkeningOverlay(10000);
+                let DeathAIString = this.timerName == 'contagion' ? ">_ ESTIMATED BOTANICAL CONTAGION INCUBATION FINISHED \n>_ HOST CONDITION: DEATH IMMINENT \n>_ CACHING NEW WAKE-UP PROCEDURE..." : ">_ SHIP HABITABILITY FALLING BELOW HUMAN STANDARDS \n>_ LOADING CLEAN-SLATE PROTOCOL... \n>_ CACHING NEW WAKE-UP PROCEDURE...";
                 R.add(this.overlay, 99123)
 
-                GS.setString("Avoiding Lethal Contagions are probably better to avoid going forward");
+                AI.addText(DeathAIString);
+
+                GS.setString("Fatal diseases are probably better to avoid going forward");
                 
                 AM.fadeOut('contagionAlarm', 10000)
                 setTimeout(() => { R.remove(this.overlay)}, 10600) // remove overlay (which will be all black) after time + 600 miliseconds since gameover screen only appears after 500ms
@@ -88,7 +91,6 @@ class ScreenTimer {
                 this.label = '0:00';
                 if(this.timerName == 'overall'){
                     GS.setString("Looks like you have to speed up a little...")
-                    AI.addText('>_ \n>_ \n>_ ');
                     GS.set("Timer Up");
                 }
                 else{

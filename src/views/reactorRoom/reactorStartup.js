@@ -204,7 +204,7 @@ class ReactorStartupView extends View {
                     this.started = true;
                         if(!GS.is('reactorStabilized')) {
                             GS.set("reactorStartupInitialized");
-                            secondaryTimer = new ScreenTimer(() => { }, {time: 120000, timerName: 'reactor'})
+                            secondaryTimer = new ScreenTimer(() => { }, {time: 90000, timerName: 'reactor'})
                             R.add(secondaryTimer, 1)
                         }
                         this.timerRunning = false;

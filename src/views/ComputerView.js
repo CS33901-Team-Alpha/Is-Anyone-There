@@ -75,7 +75,7 @@ class Terminal {
       this.print("(screen cleared)");
     });
 
-    this.registerCommand("win", () => {
+    /*this.registerCommand("win", () => {
       this.print("FORCING MISSION SUCCESS...");
       this.forceEndGame();
     });
@@ -83,7 +83,7 @@ class Terminal {
     this.registerCommand("lose", () => {
       this.print("FORCING MISSION FAILURE...");
       GS.set("Player Died");
-    });
+    });*/
 
     this.registerCommand("*henry", () => {
       this.print("CONNECTION: HENRY CHANNEL OPEN");
@@ -104,7 +104,7 @@ class Terminal {
       this.close();
     });
 
-    this.registerCommand("*lab", () => {
+    /*this.registerCommand("*lab", () => {
       this.print("ACCESS: LAB SECURITY OVERRIDE ACCEPTED");
 
       if (typeof GS !== "undefined" && GS.set) {
@@ -135,7 +135,7 @@ class Terminal {
     this.registerCommand("unlock-map", () => {
         GS.set("Minimap Unlocked");
         this.print("Map Unlocked");
-    });
+    });*/
   }
 
   registerCommand(name, fn) {

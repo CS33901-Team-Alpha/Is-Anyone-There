@@ -180,10 +180,19 @@ function draw() {
     if(!endscreenShown) {
       R.remove(screenTimer)
       R.remove(secondaryTimer)
-
-      R.add(endScreen, 999);
       endscreenShown = true;
-      AI.cleanup();
+
+      if(GS.is("Game Complete")) {
+        AI.addText('>_ SHIP CONDITION RETURNING TO NORMAL... \n>_ STANDARD DIAGNOSTICS BOOTING UP... \n>_ GOOD WORK, USER');
+        setTimeout(() => { 
+          R.add(endScreen, 999);
+          AI.cleanup();   
+        }, 10000)
+      }
+      else {
+        R.add(endScreen, 999);
+        AI.cleanup();   
+      }
     }
   }
 
