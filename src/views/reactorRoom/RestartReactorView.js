@@ -18,7 +18,7 @@ class RestartReactorView extends View {
 
     this.textNotificationHandler = new TextNotificationHandler(0.5, 1);
 
-    this.arrows = ['↑', '↓', '←', '→'];
+    this.arrows = ['W', 'S', 'A', 'D'];
     //this.arrows = ['W', 'S', 'A', 'D'];
 
     this.closeBtn = new Button(14, 1.2, 0.8, (self) => {
@@ -109,10 +109,10 @@ class RestartReactorView extends View {
   // converts WASD keys to arrows
   mapKeyToArrow(key) {
     switch (key.toLowerCase()) {
-      case 'w': return '↑';
-      case 's': return '↓';
-      case 'a': return '←';
-      case 'd': return '→';
+      case 'w': return 'W';
+      case 's': return 'S';
+      case 'a': return 'A';
+      case 'd': return 'D';
       default: return null;
     }
   }
