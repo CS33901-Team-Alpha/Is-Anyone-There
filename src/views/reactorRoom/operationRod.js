@@ -89,6 +89,20 @@ class OperationReactorPuzzleView extends View {
     onEnter() {
         this.showStartText = true; 
         R.add(this.highlight);
+
+        if (GS.is("reactorStartupComplete") && GS.is("operationRodComplete") && GS.is("restartReactorComplete")) {
+            if (secondaryTimer) {
+                secondaryTimer.setFinished();
+                R.remove(secondaryTimer);
+                secondaryTimer = null;
+            }
+        }
+        
+        if (GS.is("operationRodComplete")) {
+            this.finished = true;
+            this.locked = true;
+            AI.addText(">_  NUCLEAR REACTOR CONTROL RODS INSERTED \n>_  PROCEDURE COMPLETE \n>_  STANDING BY...");
+        }
     }
 
     onExit() {

@@ -61,8 +61,14 @@ class ReactorStartupView extends View {
         this.textHandler.cleanup()
         R.add(this.highlight);
 
-         // Auto‑resume based on saved state
-        if (GS.is("reactorStartupComplete")) {
+        if (GS.is("reactorStartupComplete") && GS.is("operationRodComplete") && GS.is("restartReactorComplete")) {
+            if (secondaryTimer) {
+                secondaryTimer.setFinished();
+                R.remove(secondaryTimer);
+                secondaryTimer = null;
+            }
+        }
+        else if (GS.is("reactorStartupComplete")) {
             // Already solved in a previous iteration
             this.completed = true;
             this.solved = true;

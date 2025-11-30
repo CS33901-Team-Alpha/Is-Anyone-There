@@ -164,6 +164,14 @@ class RestartReactorView extends View {
   onEnter() {
     R.add(this.highlight);
     this.slidingDoor.onEnter();
+
+    if (GS.is("reactorStartupComplete") && GS.is("operationRodComplete") && GS.is("restartReactorComplete")) {
+        if (secondaryTimer) {
+            secondaryTimer.setFinished();
+            R.remove(secondaryTimer);
+            secondaryTimer = null;
+        }
+    }
   }
 
   onExit() {
