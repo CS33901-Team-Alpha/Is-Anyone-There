@@ -60,6 +60,20 @@ class ReactorStartupView extends View {
         this.door.onEnter()
         this.textHandler.cleanup()
         R.add(this.highlight);
+
+         // Auto‑resume based on saved state
+        if (GS.is("reactorStartupComplete")) {
+            // Already solved in a previous iteration
+            this.completed = true;
+            this.solved = true;
+            this.locked = true;
+
+            // create and add the timer
+            secondaryTimer = new ScreenTimer(() => { }, { time: 90000, timerName: "reactor" });
+            R.add(secondaryTimer, 1);
+            this.timerRunning = true;
+            AI.addText('>_  NUCLEAR REACTOR STARTUP COMPLETE \n>_  CONTINUE PROCEDURE TO PREVENT MELTDOWN \n>_  STANDING BY...');
+        }
     }
 
     onExit() {
@@ -86,6 +100,8 @@ class ReactorStartupView extends View {
     }
 
     startSequence(length = 4) {
+        if(this.completed) return;
+
         this.textHandler.cleanup();
         this.resetState();
         this.sequenceLength = length; 
