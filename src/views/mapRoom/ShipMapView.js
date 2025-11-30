@@ -197,16 +197,19 @@ class ShipMapView extends View {
     if(this.activeInterface == "PuzzleView") {
       if (this.normalized) return;
       // Check if any room was clicked
-      for (var [name, pos] of Object.entries(this.roomsRandomized)) {
-        var u = VM.u();
-        var v = VM.v();
+      var u = VM.u();
+      var v = VM.v();
+      var mx = m.x * u; // Convert mouse to pixel coordinates
+      var my = m.y * v; // ... pixel coordinates
+
+      let roomEntries = Object.entries(this.roomsRandomized);
+      for (let i = roomEntries.length - 1; i >= 0; i--) {
+        let [name, pos] = roomEntries[i];
+
         var w = 2 * u; // Room dimensions
         var h = 1.4 * v; // ... dimensions
         var x = pos.x * u;
         var y = pos.y * v;
-        var mx = m.x * u; // Convert mouse to pixel coordinates
-        var my = m.y * v; // ... pixel coordinates
-
 
         var inX = mx >= x - w / 2 && mx <= x + w / 2; // within x bounds
         var inY = my >= y - h / 2 && my <= y + h / 2; // ... y bounds
