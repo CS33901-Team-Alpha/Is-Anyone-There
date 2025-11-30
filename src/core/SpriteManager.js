@@ -211,7 +211,15 @@ function loadSprites() {
     SM.add("EngineRoom2", loadImage('assets/background/GearboxView.png'))
     SM.add("EngineRoom3", loadImage('assets/background/EngineView.png'))
     SM.add("EngineRoom4", loadImage('assets/background/SequenceView.png'))
-    
+
+    SM.add("Blue Button", loadImage('assets/object/Blue Button.png'))
+    SM.add("Yellow Button", loadImage('assets/object/Yellow Button.png'))
+    SM.add("Green Button", loadImage('assets/object/Green Button.png'))
+    SM.add("Purple Button", loadImage('assets/object/Purple Button.png'))
+    SM.add("Blue Switch", loadImage('assets/object/Blue Switch.png'))
+    SM.add("Red Switch", loadImage('assets/object/Red Switch.png'))
+    SM.add("Pink Switch", loadImage('assets/object/Pink Switch.png'))
+    SM.add("Orange Switch", loadImage('assets/object/Orange Switch.png'))
 }
 
 

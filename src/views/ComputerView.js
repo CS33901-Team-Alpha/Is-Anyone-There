@@ -67,7 +67,7 @@ class Terminal {
   _registerCommands() {
     this.registerCommand("help", () => {
       this.print("Available commands:");
-      this.print(Object.keys(this.commands).join(", "));
+      this.print(Object.keys(this.commands).join("  "));
     });
 
     this.registerCommand("clear", () => {
@@ -102,6 +102,44 @@ class Terminal {
       }
 
       this.close();
+    });
+
+    this.registerCommand("ship-condition.status", () => {
+      this.print("============== Ship Systems Condition ==============");
+      let ClassText = "Electrical Systems: ";
+      let StatusText =  GS.is("fixedElectricalComponent") ? "Operational" : "Non-Functional"
+      let PrintText = ClassText + StatusText;
+      this.print(PrintText);
+
+      ClassText = "Nuclear Power System: ";
+      StatusText =  GS.is("reactorStabilized") ? "Operational" : "Non-Functional"
+      PrintText = ClassText + StatusText;
+      this.print(PrintText);
+
+      ClassText = "Engine Systems: ";
+      StatusText =  GS.is("Engine Throttle Finished") ? "Operational" : "Non-Functional"
+      PrintText = ClassText + StatusText;
+      this.print(PrintText);
+
+      ClassText = "Temperature Systems: ";
+      StatusText =  GS.is("regulateTempPuzzleSolved") ? "Operational" : "Non-Functional"
+      PrintText = ClassText + StatusText;
+      this.print(PrintText);
+
+      ClassText = "Oxygen Systems: ";
+      StatusText =  GS.is("regulateOxygenPuzzleSolved") ? "Operational" : "Non-Functional"
+      PrintText = ClassText + StatusText;
+      this.print(PrintText);
+
+      ClassText = "Cryogenic Systems: ";
+      StatusText = "Operational";
+      PrintText = ClassText + StatusText;
+      this.print(PrintText);
+
+      ClassText = "Map Systems: ";
+      StatusText =  GS.is("Minimap Unlocked") ? "Operational" : "Non-Functional"
+      PrintText = ClassText + StatusText;
+      this.print(PrintText);
     });
 
     /*this.registerCommand("*lab", () => {

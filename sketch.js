@@ -283,13 +283,15 @@ function setupWorld() {
   
   // --- Room A (Start Room | start here) ---
   const computerView = new ComputerView(); // start view (index 0)
-  const boxesView    = new BoxesView([ // is a sliderdoorview derived class takes you to map room (6)
-    {x:12, y:1.7, scale:0.8,
-    targetRoom: 6,         // <-- map room 
-    targetViewIndex: 2,    // 
+  //Door in start room -> map room
+  const passNum = GS.getPassword3();
+  const backgroundName1 = 'EastWall' + passNum;
+  const boxesView = new SlidingDoorView([{ // is a sliderdoorview derived class takes you to map room (6)
+    x:12, y:1.7, scale:0.8,
+    targetRoom: 6,          // <-- map room 
+    targetViewIndex: 2,    
     lockedCondition : () => GS.is("Pin Solved")
-    }
-  ], GS.getPassword3());
+  }], SM.get(backgroundName1));
   const fcView = new FileCabinetView();
   // Door in start room -> breaker room (index 1), land on view 0
   const backgroundName = 'SouthWall' + GS.getPassword1();
@@ -304,6 +306,7 @@ function setupWorld() {
   startRoom.addView(fcView);
   startRoom.addView(sdStartToBreaker);
   sdStartToBreaker.setRoom?.(startRoom);
+  boxesView.setRoom?.(startRoom);
   
   // --- Room B (Breaker Room)
 
@@ -358,7 +361,7 @@ function setupWorld() {
     x:2, y:1.5, scale:1,
     targetRoom: 1,        // back to breaker room
     targetViewIndex: 3,   // eastWallView is at index 2
-    lockedCondition : () => true
+    lockedCondition : () => GS.is("Life Support Access Granted")
   }],SM.get("southWallSupport"));
 
   lifeSupportRoom.addView(oxygenPressureView);
@@ -415,7 +418,7 @@ function setupWorld() {
     x:5.5, y:2.4, scale:0.8,
     targetRoom: 0,         // <-- start room
     targetViewIndex: 1,    //
-    lockedCondition : () => true
+    lockedCondition : () => GS.is("Pin Solved")
   }], SM.get("northWallMap"));
 
   mapRoom.addView(mapFiller);
