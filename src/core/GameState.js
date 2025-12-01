@@ -39,7 +39,7 @@ class GameState {
     constructor() {
         this.states = new Set(); // simple states, string set
         this.checks = new Map(); // array for functions
-        this.deaths = 14          // count for deaths 
+        this.deaths = 0          // count for deaths 
         this.password = this.generatePassword();
         this.password1 = this.password[0];
         this.password2 = this.password[1];
