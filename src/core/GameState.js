@@ -130,7 +130,7 @@ class GameState {
         gsObj.states = this.getStatesAsArr()
 
         // make a filter list of states that we wanna save
-        const save = ['Pin Solved','fixedElectricalComponent', 'Wires Solved', 'reactorStartupComplete', 
+        const save = ['fixedElectricalComponent', 'Wires Solved', 'reactorStartupComplete', 
                         'restartReactorComplete', 'operationRodComplete', 'regulateOxygenPuzzleSolved', 
                         'regulateTempPuzzleSolved', 'Life Support Access Granted', 'Minimap Unlocked', 
                         'Engine Gears Fixed', "Engine Throttle Finished"
