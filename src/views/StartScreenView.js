@@ -387,18 +387,26 @@ class EndScreenView extends View {
     textSize(0.2 * v);
     text(GS.getString(), 8 * u, 5.35 * v);
 
-    this.drawButton();
+    if(GS.getDeaths() < 16) {
+      this.drawButton();
+    }
+    else {
+      textSize(0.2 * v);
+      text("You have died sixteen consecutive times; the maximum allowed for one run.\n Please close and re-open this game to restart and try again!", 8 * u, 6.2 * v);
+    }
   }
 
   mousePressed(p) {
-    const starthit =
-      p.x >= this.btnX &&
-      p.x <= this.btnX + this.btnW &&
-      p.y >= this.btnY &&
-      p.y <= this.btnY + this.btnH;
+    if(GS.getDeaths() < 16) {
+      const starthit =
+        p.x >= this.btnX &&
+        p.x <= this.btnX + this.btnW &&
+        p.y >= this.btnY &&
+        p.y <= this.btnY + this.btnH;
 
-    if (starthit) {
-      this.restartGame();
+      if (starthit) {
+        this.restartGame();
+      }
     }
   }
 
