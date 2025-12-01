@@ -1,5 +1,6 @@
 import { loadSprites, SM } from "./src/core/SpriteManager.js";
 import { Renderer } from "./src/core/Renderer.js";
+import { AudioManager } from './src/core/AudioManager.js';
 
 import { TerminalModel } from './src/models/TerminalModel.js';
 import { TerminalView } from './src/views/firstRoom/TerminalView.js';
@@ -29,9 +30,13 @@ function fit16x9() {
 // ------------------------
 // p5.js preload
 // ------------------------
-function preload() {
+window.preload = function () {
     console.log("Preloading sprites...");
     loadSprites();          // loads general sprites
+    // create audio manager and load sounds during preload so loadSound is used correctly
+        window.AM = new AudioManager();
+        window.AM.loadSounds();
+        console.log('AudioManager: loadSounds called during preload.');
 }
 
 // ------------------------
@@ -59,9 +64,11 @@ window.setup = function () {
     // terminalMVC.ctrl = new TerminalController(terminalMVC.model, terminalMVC.view);
     // R.add(terminalMVC, 1000);
 
-    fileCabinetMVC = new FileCabinetController(); 
-    R.add(fileCabinetMVC, 1000);
-
+    setTimeout(() => {
+        fileCabinetMVC = new FileCabinetController(R);
+        R.add(fileCabinetMVC, 1000);
+        fileCabinetMVC.onEnter(); 
+    }, 0);
 
 };
 

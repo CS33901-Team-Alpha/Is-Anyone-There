@@ -1,10 +1,13 @@
 export class FileCabinetModel {
-    constructor(id, x, y, width = 1.93, height = 2.3){
+    constructor(id, x, y, width = 1.93, height = 2.3, spriteName = "FileCabinet", isSecret = false){
         this.id = id; 
         this.x = x; 
         this.y = y; 
         this.width = width; 
         this.height = height; 
+        this.spriteName = spriteName;
+        this.isSecret = isSecret;
+        this.scale = 1; 
         this.locked = true; // controller can set this to false 
     }
 
@@ -22,6 +25,14 @@ export class FileCabinetModel {
 export class OpenCabinetModel {
     constructor(){
         this.number = Math.trunc(Math.random() * 4); 
-        this.active = false; // whether cabinet is open
+        this.visible = false; // whether cabinet UI is visible
+    }
+
+    show() {
+        this.visible = true;
+    }
+
+    hide() {
+        this.visible = false;
     }
 }

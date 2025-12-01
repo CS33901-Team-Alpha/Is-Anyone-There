@@ -1,46 +1,43 @@
-
-
 class AudioManager{
     loadSounds(){
-        AM.add("titleScreen", loadSound('assets/Is_Anybody_There.mp3'));
-    // cryo chamber
-        AM.add("creepyBackground", loadSound('assets/sounds/creepy-background.mp3'));
-    // first room
-        AM.add("buttonBeep", loadSound('assets/sounds/buttonPressBeep.mp3'));
-        AM.add("successPinpad", loadSound('assets/sounds/successPinpad.mp3'));
-        AM.add("failurePinpad", loadSound('assets/sounds/pinpadFailure.mp3'));
+        // use this.add so the sounds are stored on this instance
+        this.add("titleScreen", loadSound('assets/Is_Anybody_There.mp3'));
+        // cryo chamber
+        this.add("creepyBackground", loadSound('assets/sounds/creepy-background.mp3'));
+        // first room
+        this.add("buttonBeep", loadSound('assets/sounds/buttonPressBeep.mp3'));
+        this.add("successPinpad", loadSound('assets/sounds/successPinpad.mp3'));
+        this.add("failurePinpad", loadSound('assets/sounds/pinpadFailure.mp3'));
 
-        AM.add("drawerOpen", loadSound('assets/sounds/drawerOpen.mp3'));
-        AM.add("drawerClose", loadSound('assets/sounds/drawerClose.mp3'));
-        AM.add("drawerLocked", loadSound('assets/sounds/drawerLocked.mp3'));
-        AM.add("door-lock", loadSound('assets/sounds/door-lock.mp3'));
-        AM.add("doorOpen", loadSound('assets/sounds/doorOpen.mp3'));
-        AM.add("technoLoop", loadSound('assets/sounds/technoLoop.mp3'));
-        AM.add("startGame", loadSound('assets/sounds/startGame.mp3'));
-        AM.add("cryoLoop", loadSound('assets/sounds/cryoLoop.mp3'));
-    //sounds added recently
-        AM.add("doorLock", loadSound('assets/sounds/doorLock.mp3'));
-        AM.add("lockBreak", loadSound('assets/sounds/lockBreak.mp3'));
-        AM.add("wireConnect", loadSound('assets/sounds/wireConnect.mp3'));
-        AM.add("allWires", loadSound('assets/sounds/allWires.mp3'));
-        AM.add("componentGood", loadSound('assets/sounds/componentGood.mp3'));
-        AM.add("componentBad", loadSound('assets/sounds/componentBad.mp3'));
-        AM.add("electricDeath", loadSound('assets/sounds/electricDeath.mp3'));
-        AM.add("fixElectronic", loadSound('assets/sounds/fixElectronic.mp3'));
-        AM.add("reactorZap", loadSound('assets/sounds/reactorZap.mp3'));
-        AM.add("reactorExplosion", loadSound('assets/sounds/reactorExplosion.mp3'));
-        AM.add("checkpoint", loadSound('assets/sounds/checkpoint.mp3'));
-        AM.add("reactorFix", loadSound('assets/sounds/reactorFix.mp3'));
-        AM.add("goodArrow", loadSound('assets/sounds/goodArrow.mp3'));
-        AM.add("goodArrow2", loadSound('assets/sounds/goodArrow2.mp3'));
-        AM.add("badArrow", loadSound('assets/sounds/badArrow.mp3'));
-        AM.add("reactorRestart", loadSound('assets/sounds/reactorRestart.mp3'));
-    
+        this.add("drawerOpen", loadSound('assets/sounds/drawerOpen.mp3'));
+        this.add("drawerClose", loadSound('assets/sounds/drawerClose.mp3'));
+        this.add("drawerLocked", loadSound('assets/sounds/drawerLocked.mp3'));
+        this.add("door-lock", loadSound('assets/sounds/door-lock.mp3'));
+        this.add("doorOpen", loadSound('assets/sounds/doorOpen.mp3'));
+        this.add("technoLoop", loadSound('assets/sounds/technoLoop.mp3'));
+        this.add("startGame", loadSound('assets/sounds/startGame.mp3'));
+        this.add("cryoLoop", loadSound('assets/sounds/cryoLoop.mp3'));
+        // sounds added recently
+        this.add("doorLock", loadSound('assets/sounds/doorLock.mp3'));
+        this.add("lockBreak", loadSound('assets/sounds/lockBreak.mp3'));
+        this.add("wireConnect", loadSound('assets/sounds/wireConnect.mp3'));
+        this.add("allWires", loadSound('assets/sounds/allWires.mp3'));
+        this.add("componentGood", loadSound('assets/sounds/componentGood.mp3'));
+        this.add("componentBad", loadSound('assets/sounds/componentBad.mp3'));
+        this.add("electricDeath", loadSound('assets/sounds/electricDeath.mp3'));
+        this.add("fixElectronic", loadSound('assets/sounds/fixElectronic.mp3'));
+        this.add("reactorZap", loadSound('assets/sounds/reactorZap.mp3'));
+        this.add("reactorExplosion", loadSound('assets/sounds/reactorExplosion.mp3'));
+        this.add("checkpoint", loadSound('assets/sounds/checkpoint.mp3'));
+        this.add("reactorFix", loadSound('assets/sounds/reactorFix.mp3'));
+        this.add("goodArrow", loadSound('assets/sounds/goodArrow.mp3'));
+        this.add("goodArrow2", loadSound('assets/sounds/goodArrow2.mp3'));
+        this.add("badArrow", loadSound('assets/sounds/badArrow.mp3'));
+        this.add("reactorRestart", loadSound('assets/sounds/reactorRestart.mp3'));
 
 
-  // botanical room
-        AM.add("contagionAlarm", loadSound('assets/sounds/contagionAlarm.mp3'));
-
+        // botanical room
+        this.add("contagionAlarm", loadSound('assets/sounds/contagionAlarm.mp3'));
     }
     constructor() {
         this.sounds = new Map();
@@ -165,4 +162,7 @@ class AudioManager{
         return sound ? sound.isLooping() : false;
     }
 }
-    
+
+// export class so callers can instantiate
+export { AudioManager };
+

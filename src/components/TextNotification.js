@@ -55,36 +55,49 @@ export class TextNotificationHandler {
      * @param {Number} y - y coordinate to place text
      * @param {{zind: Number, fadeoutRate: Number, holdFadeoutFor: Number}} options - options 
      */
-    constructor(x, y, options={}){
+    // - old usage: new TextNotificationHandler(x, y, options)
+    // - new usage: new TextNotificationHandler(x, y, w=null, h=null, renderer=null)
+    constructor(x, y, w = null, h = null, renderer = null) {
+        // support old calling form where third arg is an options object
+        let options = {};
+        if (w && typeof w === "object") {
+            options = w;
+            w = options.w ?? null;
+            h = options.h ?? null;
+            renderer = options.renderer ?? renderer;
+        }
+
         this.x = x;
         this.y = y;
+        this.w = w;
+        this.h = h;
+
+        // use provided renderer or fall back to global window.R if available
+        this.R = renderer || (typeof window !== "undefined" ? window.R : null);
 
         // defaults for options
         this.z_index = options.zind ?? 100;
         this.fadeoutRate = options.fadeoutRate ?? 0.03;
-        this.holdFadeoutFor = options.holdFadeoutFor ?? 1; // how many seconds to hold fadeout for
+        this.holdFadeoutFor = options.holdFadeoutFor ?? 1; // seconds to hold before fading
 
-        this.size = 20; // just have it as constant so it's uniform across all views
-        this.alphaCutoff = 5; // remove text notif when alpha less than this value
-
-        // each element is an array where index: 0 is the text object, 1 is the timer for that object's fading mechanics
-        // will look something like [[textObject1, 0.3],[textObject2, 0.93],[textObject3, 3.1],...]
-        this.textContainer = []
+        this.size = 20;
+        this.alphaCutoff = 5;
+        this.textContainer = [];
     }
 
     update(dt){
-        // NOTE: if game starts lagging with text notifications this may be the culprit...
-        for(let i = 0; i < this.textContainer.length; i++){
-            this.textContainer[i][1] += dt
-            const textObj = this.textContainer[i][0]
+        for (let i = 0; i < this.textContainer.length; i++) {
+            this.textContainer[i][1] += dt;
+            const textObj = this.textContainer[i][0];
 
-            /* Fadeout logic, expoentially decay alpha value for text. If alpha gets too low ( < this.alphaCutoff)), make text disappear (looks smoother this way) */
-            if(this.textContainer[i][1] > this.holdFadeoutFor){
-                textObj.setAlpha(textObj.getAlpha()*(1-this.fadeoutRate)) // new_alpha = old_alpha * (1-fadeout_rate)
+            if (this.textContainer[i][1] > this.holdFadeoutFor) {
+                textObj.setAlpha(textObj.getAlpha() * (1 - this.fadeoutRate));
 
-                if(textObj.getAlpha() < this.alphaCutoff){
-                    R.remove(textObj)
-                    this.textContainer.splice(i, 1) // delete from array
+                if (textObj.getAlpha() < this.alphaCutoff) {
+                    if (this.R) this.R.remove(textObj);
+                    else if (typeof window !== 'undefined' && window.R) window.R.remove(textObj);
+                    this.textContainer.splice(i, 1);
+                    i--;
                 }
             }
         }
@@ -92,26 +105,27 @@ export class TextNotificationHandler {
 
     // add text at position specified at constructor
     addText(text){
-        let textCount = this.textContainer.length
-
-        // push others down
-        for(let i = 0; i < textCount; i++){
-            const textObj = this.textContainer[i][0]
-            textObj.setY(this.y+(i+1)*0.6) // fixed offset for now. change later
+        const textCount = this.textContainer.length;
+        for (let i = 0; i < textCount; i++) {
+            const textObj = this.textContainer[i][0];
+            textObj.setY(this.y + (i + 1) * 0.6);
         }
 
-        // add to front at top
-        this.textContainer.unshift([new DisplayText(this.x, this.y, text, this.size), 0])
-        R.add(this.textContainer[0][0], this.z_index)
+        this.textContainer.unshift([new DisplayText(this.x, this.y, text, this.size), 0]);
+        const dtObj = this.textContainer[0][0];
+        if (this.R) this.R.add(dtObj, this.z_index);
+        else if (typeof window !== 'undefined' && window.R) window.R.add(dtObj, this.z_index);
 
     }
 
     // call this in onExit in your view.
     cleanup(){
-        for(let i = 0; i < this.textContainer.length; i++){
-            R.remove(this.textContainer[i][0])
+        for (let i = 0; i < this.textContainer.length; i++) {
+            const t = this.textContainer[i][0];
+            if (this.R) this.R.remove(t);
+            else if (typeof window !== 'undefined' && window.R) window.R.remove(t);
         }
-        this.textContainer = [] // wipe array
+        this.textContainer = [];
     }
 
 }
