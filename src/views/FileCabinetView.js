@@ -106,6 +106,133 @@ class OpenCabinetUI {
   }
 } 
 
+class SequenceHintUI {
+  constructor(onExit = () => {}) {
+    this.onExit = onExit;
+
+    // close button removes itself and calls cleanup onRemove
+    this._closeBtn = new Button(11.5, 2.4, 0.6, (self) => {
+      R.selfRemove(self);
+      R.remove(this);
+      onExit();
+      this.onRemove()
+
+      AM.play('drawerClose')
+    });
+
+    this.sequence = GS.getNamesArray();
+
+    const SpriteName1 = this.sequence[0];
+    const SpriteName2 = this.sequence[1];
+    const SpriteName3 = this.sequence[2];
+    const SpriteName4 = this.sequence[3];
+    const SpriteName5 = this.sequence[4];
+    const SpriteName6 = this.sequence[5];
+    const SpriteName7 = this.sequence[6];
+    const SpriteName8 = this.sequence[7];
+
+    this.inputSprite1 = SM.get(SpriteName1);
+    this.inputSprite2 = SM.get(SpriteName2);
+    this.inputSprite3 = SM.get(SpriteName3);
+    this.inputSprite4 = SM.get(SpriteName4);
+    this.inputSprite5 = SM.get(SpriteName5);
+    this.inputSprite6 = SM.get(SpriteName6);
+    this.inputSprite7 = SM.get(SpriteName7);
+    this.inputSprite8 = SM.get(SpriteName8);
+
+ 
+    this.inputSprite1.setPos(4, 3);
+    this.inputSprite2.setPos(6, 3);
+    this.inputSprite3.setPos(8, 3);
+    this.inputSprite4.setPos(10, 3);
+    this.inputSprite5.setPos(4, 5);
+    this.inputSprite6.setPos(6, 5);
+    this.inputSprite7.setPos(8, 5);
+    this.inputSprite8.setPos(10, 5);
+
+    if(SpriteName1 == "Red Switch" || SpriteName1 == "Blue Switch" || SpriteName1 == "Pink Switch" || SpriteName1 == "Orange Switch") {
+        this.inputSprite1.setScale(0.7);
+    }
+    else {this.inputSprite1.setScale(0.4);}
+    if(SpriteName2 == "Red Switch" || SpriteName2 == "Blue Switch" || SpriteName2 == "Pink Switch" || SpriteName2 == "Orange Switch") {
+        this.inputSprite2.setScale(0.7);
+    }
+    else {this.inputSprite2.setScale(0.4);}
+    if(SpriteName3 == "Red Switch" || SpriteName3 == "Blue Switch" || SpriteName3 == "Pink Switch" || SpriteName3 == "Orange Switch") {
+        this.inputSprite3.setScale(0.7);
+    }
+    else {this.inputSprite3.setScale(0.4);}
+    if(SpriteName4 == "Red Switch" || SpriteName4 == "Blue Switch" || SpriteName4 == "Pink Switch" || SpriteName4 == "Orange Switch") {
+        this.inputSprite4.setScale(0.7);
+    }
+    else {this.inputSprite4.setScale(0.4);}
+    if(SpriteName5 == "Red Switch" || SpriteName5 == "Blue Switch" || SpriteName5 == "Pink Switch" || SpriteName5 == "Orange Switch") {
+        this.inputSprite5.setScale(0.7);
+    }
+    else {this.inputSprite5.setScale(0.4);}
+    if(SpriteName6 == "Red Switch" || SpriteName6 == "Blue Switch" || SpriteName6 == "Pink Switch" || SpriteName6 == "Orange Switch") {
+        this.inputSprite6.setScale(0.7);
+    }
+    else {this.inputSprite6.setScale(0.4);}
+    if(SpriteName7 == "Red Switch" || SpriteName7 == "Blue Switch" || SpriteName7 == "Pink Switch" || SpriteName7 == "Orange Switch") {
+        this.inputSprite7.setScale(0.7);
+    }
+    else {this.inputSprite7.setScale(0.4);}
+    if(SpriteName8 == "Red Switch" || SpriteName8 == "Blue Switch" || SpriteName8 == "Pink Switch" || SpriteName8 == "Orange Switch") {
+        this.inputSprite8.setScale(0.7);
+    }
+    else {this.inputSprite8.setScale(0.4);}
+
+    console.log("Input sprites imported");
+  }
+
+  draw() {
+    const u = VM.u(), v = VM.v();
+
+    push();
+    fill(169,169,169);
+    stroke(255);
+    strokeWeight(2);
+    rect(3.5 * u, 2.2 * v, 9 * u, 4.6666 * v, 10);
+
+    pop();
+  }
+
+  update(dt) {}
+
+  keyPressed() {
+    return false; // Event not handled
+  }
+
+  /* The following two member functions just for removing what's on the UI. Call add before adding OpenCabinetUI to R
+  and call remove when removing OpenCabinetUI to R
+  
+  TODO: I'm sure there is a way of doing this without these*/
+  onAdd(){
+    R.add(this._closeBtn, 11);
+    R.add(this.inputSprite1, 15);
+    R.add(this.inputSprite2, 15);
+    R.add(this.inputSprite3, 15);
+    R.add(this.inputSprite4, 15);
+    R.add(this.inputSprite5, 15);
+    R.add(this.inputSprite6, 15);
+    R.add(this.inputSprite7, 15);
+    R.add(this.inputSprite8, 15);
+  }
+
+  onRemove() {
+    R.remove(this._closeBtn);
+    R.remove(this.inputSprite1);
+    R.remove(this.inputSprite2);
+    R.remove(this.inputSprite3);
+    R.remove(this.inputSprite4);
+    R.remove(this.inputSprite5);
+    R.remove(this.inputSprite6);
+    R.remove(this.inputSprite7);
+    R.remove(this.inputSprite8);
+  }
+} 
+
 class FileCabinetView extends View {
     constructor() {
         super(0,0,0,'');
@@ -114,8 +241,10 @@ class FileCabinetView extends View {
 
         this.textNotificationHandler = new TextNotificationHandler(0.5, 0.85);
         this.secretId = 2; // index of cabinet that will be unlocked
+        this.secondsecretId = 0; //index of cabinet that has sequence hint
         
         this.cabinetUI = new OpenCabinetUI();
+        this.sequenceUI = new SequenceHintUI();
 
         this.scale = 0.3
         this.allFileCabinets = [];
@@ -124,10 +253,15 @@ class FileCabinetView extends View {
                 console.log(`File Cabinet ${i} Clicked`)
 
                 if(obj.id == this.secretId){
-                    console.log('this is the secret cabinet.')
                     this.textNotificationHandler.addText('You opened a mysterious file cabinet.')
                     this.cabinetUI.onAdd()
                     R.add(this.cabinetUI, 10)
+                    AM.play('drawerOpen')
+                }
+                else if(obj.id == this.secondsecretId){
+                    this.textNotificationHandler.addText('You opened a mysterious file cabinet.')
+                    this.sequenceUI.onAdd()
+                    R.add(this.sequenceUI, 10)
                     AM.play('drawerOpen')
                 }else{
                     this.textNotificationHandler.addText('This file cabinet appears to be locked...')

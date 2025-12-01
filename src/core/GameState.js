@@ -44,6 +44,17 @@ class GameState {
         this.password1 = this.password[0];
         this.password2 = this.password[1];
         this.password3 = this.password[2];
+        
+        //Throttle Sequence stuff
+        this.buttons = {}; // button definitions
+        this.coordinates = {}; // button positions
+        this.sequence = []; // correct sequence of button IDs
+        this.namesArray = [];
+        this.currentIndex = 0; // progress in sequence
+
+        this.defineButtons(); // define buttons
+        this.assignCoordinates(); // assign button positions
+        this.randomizeSequence(); // randomize correct sequence only on start creation
 
         this.endString = "";
     }
@@ -174,6 +185,109 @@ class GameState {
 
     getPassword3() {
         return this.password3;
+    }
+
+    getNames(array) {
+        return array;
+    }
+
+    //Throttle sequence functions
+    defineButtons() 
+    {
+        // Define buttons with shapes/colors
+        const buttonDefs = [
+        { name: "Yellow Button", color: "yellow", activeImage: "YellowOff", onImage: "YellowOn", offImage: "YellowOff"},
+        { name: "Blue Button", color: "blue", activeImage: "BlueButtonOff", onImage: "BlueButtonOn", offImage: "BlueButtonOff"},
+        { name: "Green Button", color: "green", activeImage: "GreenOff", onImage: "GreenOn", offImage: "GreenOff"},
+        { name: "Purple Button", color: "purple", activeImage: "PurpleOff", onImage: "PurpleOn", offImage: "PurpleOff"},
+        { name: "Orange Switch", color: "orange", activeImage: "OrangeOff", onImage: "OrangeOn", offImage: "OrangeOff"},
+        { name: "Pink Switch", color: "pink", activeImage: "PinkOff", onImage: "PinkOn", offImage: "PinkOff"},
+        { name: "Blue Switch", color: "cyan", activeImage: "BlueSwitchOff", onImage: "BlueSwitchOn", offImage: "BlueSwitchOff"},
+        { name: "Red Switch", color: "red", activeImage: "RedOff", onImage: "RedOn", offImage: "RedOff"}
+        ];
+
+        
+
+        // Assign positions in a grid
+        for (let i = 0; i < buttonDefs.length; i++) // create button objects
+        {
+            const def = buttonDefs[i];
+            this.buttons[def.name] = {
+                id: i, // unique id
+                color: def.color, // current color
+                original: def.color, // store original color
+                name: def.name, // button name
+                activeImage: def.activeImage, //active sprite image
+                onImage: def.onImage, //on sprite
+                offImage: def.offImage,  //off sprite
+                col: i % 4,
+                row: Math.floor(i / 4)
+            };
+        }
+    }
+
+    assignCoordinates() // position buttons on screen 
+    {
+        const spacingX = 3, spacingY = 2.5; // spacing between buttons
+
+        const cols = 4;
+        const rows = 2;
+        
+        const totalWidth = (cols - 1) * spacingX;
+        const totalHeight = (rows - 1) * spacingY;
+
+        const startX = (16 - totalWidth) / 2;
+        const startY = (9 - totalHeight) / 2;
+
+        // Shuffle button names before assigning positions
+        const shapeNames = this.getNames(Object.keys(this.buttons)); // can comment out for fixed button locations. here
+
+        shapeNames.forEach((name, index) => {
+            const col = index % cols;
+            const row = Math.floor(index / cols);
+
+            this.coordinates[name] = {
+                x: startX + col * spacingX,
+                y: startY + row * spacingY
+            };
+        });
+    }
+
+    randomizeSequence() 
+    {
+        // create randomized sequence of button IDs
+        //const ids = [6, 3, 2, 0, 4, 1, 7, 5]; uncomment for set sequence every time
+         const ids = Object.values(this.buttons).map(b => b.id); // grab the ids and put them in an array. b is each button object and b.id is the id property of that object
+        
+        for (let i = ids.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [ids[i], ids[j]] = [ids[j], ids[i]]; // swap
+        }
+
+        this.sequence = ids;
+        this.currentIndex = 0; // reset progress
+
+        this.namesArray = this.sequence.map(id => {
+        return Object.values(this.buttons).find(b => b.id === id).name;
+        });
+
+        console.log("Intended order:", this.namesArray);
+    }
+
+    getButtons() {
+        return this.buttons;
+    }
+
+    getCoordinates() {
+        return this.coordinates;
+    }
+
+    getSequence() {
+        return this.sequence;
+    }
+
+    getNamesArray() {
+        return this.namesArray;
     }
 
     // Object?

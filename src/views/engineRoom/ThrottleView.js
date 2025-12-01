@@ -7,9 +7,9 @@ class ThrottleView extends View
         this.background = SM.get("EngineRoom4");
         this.background.setSize(16, 9);
 
-        this.buttons = {}; // button definitions
-        this.coordinates = {}; // button positions
-        this.sequence = []; // correct sequence of button IDs
+        this.buttons = GS.getButtons(); // button definitions
+        this.coordinates = GS.getCoordinates(); // button positions
+        this.sequence = GS.getSequence(); // correct sequence of button IDs
         this.currentIndex = 0; // progress in sequence
 
         this.won = false; // puzzle completion status
@@ -17,9 +17,9 @@ class ThrottleView extends View
 
         this.textHandler = new TextNotificationHandler(0.5, 1);
 
-        this.defineButtons(); // define buttons
-        this.assignCoordinates(); // assign button positions
-        this.randomizeSequence(); // randomize correct sequence only on start creation
+        //this.defineButtons(); // define buttons
+        //this.assignCoordinates(); // assign button positions
+        //this.randomizeSequence(); // randomize correct sequence only on start creation
 
         this.closeBtn = new Button(14, 1.2, 0.8, (self) => {
             this.activeInterface = "ScreenView";
@@ -39,6 +39,7 @@ class ThrottleView extends View
         this.activeInterface = "ScreenView";
     }
 
+    /*
     getNames(array) {
         return array;
     }
@@ -122,7 +123,8 @@ class ThrottleView extends View
         return Object.values(this.buttons).find(b => b.id === id).name;
         }));
     }
-
+    */
+   
     draw() 
     {
         this.background?.draw();
