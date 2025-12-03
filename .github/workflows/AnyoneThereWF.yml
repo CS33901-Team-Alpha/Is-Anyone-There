@@ -3,7 +3,7 @@ name: AnyoneThereWF
 on: 
   push:
     branches:
-      - main
+      - Live-Demo
   workflow_dispatch:
 
 env:
