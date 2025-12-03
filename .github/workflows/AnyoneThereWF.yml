@@ -1,6 +1,9 @@
 name: AnyoneThereWF
 
 on: 
+  push:
+    branches:
+      - main
   workflow_dispatch:
 
 env:
@@ -15,7 +18,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
-  
       - name: Get our files
         uses: actions/checkout@v4
 
@@ -33,14 +35,11 @@ jobs:
           echo $ whoami
           whoami 
 
-
       - name: Check out cassini
         run: |
-        
           echo $RUN ls -la
           $RUN ls -la
 
-  
           echo $ ssh anyonethere@cassini.cs.kent.edu ls -la
           ssh anyonethere@cassini.cs.kent.edu ls -la 
           echo $ ssh anyonethere@cassini.cs.kent.edu whoami
@@ -54,15 +53,16 @@ jobs:
           zip -r anyonethere.zip . 
           ls -lh anyonethere.zip
 
+          echo "Clean up old project on Cassini"
+          $RUN "rm -rf ~/web/Is-Anyone-There"
+          $RUN "rm -f ~/web/anyonethere.zip"
 
-          echo "Clean up old zips"
-          $RUN "rm -rf ~/web/Is-Anyone-There ~/web/anyonethere.zip"
-          
           echo " Copying zip to Cassini "
           echo $COPY anyonethere.zip anyonethere@cassini.cs.kent.edu:./web
           $COPY anyonethere.zip anyonethere@cassini.cs.kent.edu:./web
 
-
           echo " Unzipping on Cassini "
           $RUN "cd ~/web && python3 -m zipfile -e anyonethere.zip ."
-   
+
+          echo " Move extracted folder into place (if needed)"
+          $RUN "cd ~/web && if [ -d './Is-Anyone-There-main' ]; then mv Is-Anyone-There-main Is-Anyone-There; fi"
