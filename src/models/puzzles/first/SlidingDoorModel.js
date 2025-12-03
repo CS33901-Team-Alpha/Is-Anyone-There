@@ -19,6 +19,9 @@ export class SlidingDoorModel {
     }
 
     toggle() {
+        if(!this.isOpen && (this.locked || this.lockedCondition())){
+            return;
+        }
         this.isOpen = !this.isOpen;
         this.animating = true;
         this.animationTimer = 0;
