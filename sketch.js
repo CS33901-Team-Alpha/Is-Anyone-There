@@ -231,13 +231,13 @@ function mousePressed() {
 function mouseDragged() {
   const mouse = VM.mouse();
   if (!VM.insideUnits(mouse)) return;
-  R.dispatch('mouseDragged', mouse);
+  if (R) R.dispatch('mouseDragged', mouse);
 }
 
 function mouseReleased() {
   const mouse = VM.mouse();
   if (!VM.insideUnits(mouse)) return;
-  R.dispatch('mouseReleased', mouse);
+  if (R) R.dispatch('mouseReleased', mouse);
 }
 
 function keyPressed() {
