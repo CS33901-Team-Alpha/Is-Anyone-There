@@ -279,12 +279,12 @@ class StartScreenView extends View {
     
       textSize(0.3 * v);
       fill(100, 150, 255);
-      text("Huge Thank You to the Developers who",  2.5* u, 2.5 * v);
+      text("Huge thank you to the developers who",  2.5* u, 2.5 * v);
       text("made this game possible!",  4* u, 3 * v);
 
-      textSize(0.25 * v);
+      textSize(0.28 * v);
       fill(100, 150, 255);
-      text("",  2* u, 4.5 * v);
+      text("Adri Thomas | github.com/m1ngzii\nAntek Chelstowski | github.com/PusiaPaker\nBen Garcia | github.com/edvin-bite\nBrandon Renner | github.com/brandon-renner\nBrandon Sainiak | github.com/edvin-bite\nCarson Sherrill | github.com/CarsonSherrill\nCaroline Shantery | github.com/cshantery\nJerome Warren | github.com/jwarre-syscall\nJoão Vitor Donaton | github.com/joaovdonaton\nSam Ruby | github.com/sam-rubyy",  1.9 * u, 5.5 * v);
       text("",  2* u, 7 * v);
     }
   }
@@ -311,10 +311,10 @@ class StartScreenView extends View {
     if (starthit && this.onStart && !this.clickedHowTo && !this.clickedCredit) {
       this.onStart();
     }
-    else if (howtohit && this.onStart && !this.clickedHowTo) {
+    else if (howtohit && this.onStart && !this.clickedHowTo && !this.clickedCredit) {
       this.clickedHowTo = true;
     }
-    else if (credithit && this.onStart && !this.clickedCredit) {
+    else if (credithit && this.onStart && !this.clickedCredit && !this.clickedHowTo) {
       this.clickedCredit = true;
     } 
     else if (!starthit && !howtohit && !this.clickedHowTo && !this.clickedCredit && !this.musicStarted) {
