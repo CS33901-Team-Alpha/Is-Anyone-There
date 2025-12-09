@@ -15,6 +15,12 @@ class StartScreenView extends View {
     this.HTbtnX = 8 - this.HTbtnW / 2;
     this.HTbtnY = 7;
 
+    // Credits Button in 16:9 units (centered horizontally)
+    this.CbtnW = 2.8;
+    this.CbtnH = 0.9;
+    this.CbtnX = 14.5 - this.CbtnW / 2;
+    this.CbtnY = 8;
+
     this.title = 'Is Anyone There?';
     this.instruction = 'Click anywhere to start music!';
     this.musicStarted = false;
@@ -35,6 +41,7 @@ class StartScreenView extends View {
     this.step = 3;
 
     this.clickedHowTo = false;
+    this.clickedCredit = false;
   }
 
   drawStarField() {
@@ -116,6 +123,38 @@ class StartScreenView extends View {
     text('How To Play', Math.round(cx), Math.round(cy));
   }
 
+  drawCredit() {
+    const u = VM.u();
+    const v = VM.v();
+
+    const m = VM.mouse();
+    const hover =
+      m.x >= this.CbtnX &&
+      m.x <= this.CbtnX + this.CbtnW &&
+      m.y >= this.CbtnY &&
+      m.y <= this.CbtnY + this.CbtnH;
+
+    if (hover && !this.clickedHowTo) {
+      fill(100, 150, 255, 200);
+      stroke(150, 200, 255, 150);
+      strokeWeight(0.08 * u);
+    } else {
+      fill(50, 100, 200, 200);
+      noStroke();
+    }
+
+    rect(this.CbtnX * u, this.CbtnY * v, this.CbtnW * u, this.CbtnH * v, 0.5 * u);
+
+    fill(255);
+    noStroke();
+    textAlign(CENTER, CENTER);
+    textFont(gameFont);
+    textSize(0.25 * v);
+    const cx = (this.CbtnX + this.CbtnW / 2) * u;
+    const cy = (this.CbtnY + this.CbtnH / 2) * v;
+    text('Credits', Math.round(cx), Math.round(cy));
+  }
+
   drawButton() {
     const u = VM.u();
     const v = VM.v();
@@ -169,6 +208,7 @@ class StartScreenView extends View {
 
     this.drawButton();
     this.drawHowTo();
+    this.drawCredit();
 
     if(this.clickedHowTo) {
       // background / frame
@@ -208,6 +248,45 @@ class StartScreenView extends View {
       text("This is a point-and-click style adventure game. \nYou have woken up on your spaceship, with no \nmemory of what is going on. The ship's computer \nassistant informs you that the ship is in \ncritical condition, and you alone must fix it! \nExplore, gather information, solve puzzles to \nfix systems, and do so before time runs out in \norder to survive and win!",  2* u, 4.5 * v);
       text("Use left and right arrow keys to change view \norientation, click on items you find to interact \nwith them. Items that highlight when you hover \nover them can be interacted with, but not all \ninteractable items have highlights on them... \nso look carefully, and have fun!",  2* u, 7 * v);
     }
+    else if(this.clickedCredit) {
+      // background / frame
+      const screenSprite = SM.get("screen");
+      if (screenSprite && screenSprite.src) {
+        image(screenSprite.src, 1.5 * u, 0.75 * v, 13 * u, 7.5 * v);
+        fill(0,0,0,200);
+        stroke(100, 150, 255, 200);
+        strokeWeight(5);
+        rect(1.5*u, 0.75*v, 13*u, 7.5*v);
+      } else {
+        fill(0);
+        stroke(128);
+        strokeWeight(2);
+        rect(1.5 * u, 1 * v, 13 * u, 7 * v, 10);
+      }
+
+      // text w/ glow
+      strokeWeight(1);
+      stroke(255,255,255);
+      textAlign(LEFT, CENTER);
+      textFont(gameFont);
+      textSize(0.45 * v);
+
+       fill(100, 150, 255);
+      text("Game Credits : ESC to exit", 2.2 * u + 1, 1.5 * v + 1);
+
+      fill(100, 150, 255);
+      text("Game Credits : ESC to exit", 2.2 * u, 1.5 * v);
+    
+      textSize(0.3 * v);
+      fill(100, 150, 255);
+      text("Huge Thank You to the Developers who",  2.5* u, 2.5 * v);
+      text("made this game possible!",  4* u, 3 * v);
+
+      textSize(0.25 * v);
+      fill(100, 150, 255);
+      text("",  2* u, 4.5 * v);
+      text("",  2* u, 7 * v);
+    }
   }
 
   mousePressed(p) {
@@ -223,12 +302,22 @@ class StartScreenView extends View {
       p.y >= this.HTbtnY &&
       p.y <= this.HTbtnY + this.HTbtnH;
 
-    if (starthit && this.onStart && !this.clickedHowTo) {
+    const credithit =
+      p.x >= this.CbtnX &&
+      p.x <= this.CbtnX + this.CbtnW &&
+      p.y >= this.CbtnY &&
+      p.y <= this.CbtnY + this.CbtnH;
+
+    if (starthit && this.onStart && !this.clickedHowTo && !this.clickedCredit) {
       this.onStart();
     }
     else if (howtohit && this.onStart && !this.clickedHowTo) {
       this.clickedHowTo = true;
-    } else if (!starthit && !howtohit && !this.clickedHowTo && !this.musicStarted) {
+    }
+    else if (credithit && this.onStart && !this.clickedCredit) {
+      this.clickedCredit = true;
+    } 
+    else if (!starthit && !howtohit && !this.clickedHowTo && !this.clickedCredit && !this.musicStarted) {
       // Start music on any click on the start screen (not just the button)
       if (startScreenMusic && !startScreenMusic.isPlaying()) {
         startScreenMusic.setLoop(true);
@@ -240,8 +329,9 @@ class StartScreenView extends View {
   }
 
   keyPressed() {
-    if (keyCode === ESCAPE && this.clickedHowTo) {
+    if (keyCode === ESCAPE && (this.clickedHowTo || this.clickedCredit)) {
       this.clickedHowTo = false;
+      this.clickedCredit = false;
     }
   }
 }
